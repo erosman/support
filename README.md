@@ -1,3 +1,5 @@
+![Copy PlainText](https://github.com/erosman/support/blob/master/image/icon48.png)
+
 # Support
 Support Location for all my extensions
 
