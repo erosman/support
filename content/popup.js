@@ -1,4 +1,4 @@
-﻿import {pref, App, Meta, CheckMatches} from './app.js';
+import {pref, App, Meta, CheckMatches} from './app.js';
 
 // ----------------- Internationalization ------------------
 App.i18n();
@@ -330,4 +330,3 @@ class Popup {
   }
 }
 const popup = new Popup();
-
