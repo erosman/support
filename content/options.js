@@ -1,4 +1,4 @@
-﻿import {pref, App, Meta, RemoteUpdate} from './app.js';
+import {pref, App, Meta, RemoteUpdate} from './app.js';
 const RU = new RemoteUpdate();
 
 // ----------------- Internationalization ------------------
@@ -961,9 +961,8 @@ class Script {
     }
 
     // --- update from previous version
-    data.updateURL = pref[id].updateURL;
-    data.enabled = pref[id].enabled;
-    data.autoUpdate = pref[id].autoUpdate;
+    ['updateURL', 'enabled', 'autoUpdate', 'storage', 'userMeta'].forEach(item => data[item] = pref[id][item]);
+
 
     App.notify(browser.i18n.getMessage('scriptUpdated', data.version), name);
     pref[id] = data;                                        // save to pref
@@ -1023,10 +1022,8 @@ class Script {
         if (pref[id]) { throw `${data.name}: Update new name already exists`; } // name already exists
       }
 
-      // --- update/import from previous version
-      data.enabled = pref[id].enabled;
-      data.autoUpdate = pref[id].autoUpdate;
-      data.userMeta = pref[id].userMeta;
+      // --- update from previous version
+      ['enabled', 'autoUpdate', 'storage', 'userMeta'].forEach(item => data[item] = pref[id][item]);
     }
 
     pref[id] = data;                                        // save to pref
