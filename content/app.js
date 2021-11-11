@@ -1,4 +1,4 @@
-﻿export {pref, App, Meta, RemoteUpdate, CheckMatches};
+export {pref, App, Meta, RemoteUpdate, CheckMatches};
 
 // ----------------- Default Preference --------------------
 let pref = {
