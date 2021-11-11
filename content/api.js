@@ -1,4 +1,4 @@
-﻿browser.userScripts.onBeforeScript.addListener(script => {
+browser.userScripts.onBeforeScript.addListener(script => {
   // --- globals
   const {name, resource, info, id = `_${name}`} = script.metadata; // set id as _name
   const cache = {};
