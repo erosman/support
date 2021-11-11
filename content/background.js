@@ -51,7 +51,7 @@ class Counter {
   }
 
   init() {
-    browser.tabs.onUpdated.addListener(this.process, {urls: ['http://*/*', 'https://*/*', 'file:///*']});
+    browser.tabs.onUpdated.addListener(this.process, {urls: ['*://*/*', 'file:///*']});
   }
 
   terminate() {
@@ -109,7 +109,7 @@ class ScriptRegister {
 
     // --- prepare for include/exclude
     (script.includes[0] || script.excludes[0] || script.includeGlobs[0] || script.excludeGlobs[0]) &&
-          options.matches.push('*://*/*', 'file:///*');
+          (options.matches = ['*://*/*', 'file:///*']);
     options.matches = [...new Set(options.matches)];        // remove duplicates
 
     // --- remove empty arrays (causes error)
