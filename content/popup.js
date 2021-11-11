@@ -156,7 +156,7 @@ class Popup {
     script.homepage = homepage;
     script.support = support;
 
-    const infoArray = ['name', 'description', 'author', 'version', 'homepage', 'support', 'size', 'updateURL', 
+    const infoArray = ['name', 'description', 'author', 'version', 'homepage', 'support', 'size', 'updateURL',
                         'matches', 'excludeMatches', 'includes', 'excludes', 'includeGlobs', 'excludeGlobs',
                         'require', 'injectInto', 'runAt', 'error'];
 
