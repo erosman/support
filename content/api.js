@@ -1,4 +1,4 @@
-browser.userScripts.onBeforeScript.addListener(script => {
+﻿browser.userScripts.onBeforeScript.addListener(script => {
   // --- globals
   const {name, resource, info, id = `_${name}`} = script.metadata; // set id as _name
   const cache = {};
@@ -285,7 +285,7 @@ browser.userScripts.onBeforeScript.addListener(script => {
         api: 'fetch',
         data: {url: resource[resourceName], init: {}}
       });
-      return response ? script.export(response) : null;
+      return response ? script.export(response.text) : null;
     },
 
     getResourceUrl(resourceName) {                          // GreaseMonkey | TamperMonkey
@@ -524,7 +524,8 @@ browser.userScripts.onBeforeScript.addListener(script => {
     GM_fetch:                     GM.fetch,
     GM_download:                  GM.download,
     GM_getResourceText:           GM.getResourceText,
-    GM_getResourceURL:            GM.getResourceUrl,
+    GM_getResourceUrl:            GM.getResourceUrl,        // GreaseMonkey | TamperMonkey
+    GM_getResourceURL:            GM.getResourceURL,        // ViolentMonkey
     GM_registerMenuCommand:       GM.registerMenuCommand,
     GM_unregisterMenuCommand:     GM.unregisterMenuCommand,
 

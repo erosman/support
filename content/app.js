@@ -1,4 +1,4 @@
-export {pref, App, Meta, RemoteUpdate, CheckMatches};
+﻿export {pref, App, Meta, RemoteUpdate, CheckMatches};
 
 // ----------------- Default Preference --------------------
 let pref = {
@@ -32,7 +32,6 @@ class App {
   static import(e) {
     const file = e.target.files[0];
     switch (true) {
-
       case !file: App.notify(browser.i18n.getMessage('error')); return;
       case !['text/plain', 'application/json'].includes(file.type): // check file MIME type
         App.notify(browser.i18n.getMessage('fileTypeError'));
@@ -198,7 +197,6 @@ class Meta {                                                // bg options
     metaData[2].split(/[\r\n]+/).forEach(item => {          // lines
       let [,prop, value] = item.trim().match(lineRegex) || [];
       if (!prop) { return; }                                // continue to next
-      let converted;
       switch (prop) {
         // --- disallowed properties
         case 'js':
@@ -461,7 +459,7 @@ class Meta {                                                // bg options
     data.excludeMatches.push(...excludeMatches);
     // ------------- /User Metadata ------------------------
 
-    // --- convert include/exclude rules
+    // --- auto-convert include/exclude rules
     [data.includes, data.matches, data.includeGlobs] = this.convert(data.includes, data.matches, data.includeGlobs);
     [data.excludes, data.excludeMatches, data.excludeGlobs] = this.convert(data.excludes, data.excludeMatches, data.excludeGlobs);
 
@@ -585,8 +583,8 @@ class Meta {                                                // bg options
 
   static validPattern(p) {
     return p === '<all_urls>' ||
-            /^(https?|\*):\/\/(\*|\*\.[^*/]+|[^*/]+)\/.*$/i.test(p) ||
-            /^file:\/\/\/.*$/i.test(p);
+          /^(https?|\*):\/\/(\*|\*\.[^*:/]+|[^*:/]+)\/.*$/i.test(p) ||
+          /^file:\/\/\/(\*|\*\.[^*/]+|[^*/]+)(\/.*)?$/i.test(p);
   }
 
   static checkOverlap(arr) {

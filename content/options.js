@@ -1,4 +1,4 @@
-import {pref, App, Meta, RemoteUpdate} from './app.js';
+﻿import {pref, App, Meta, RemoteUpdate} from './app.js';
 const RU = new RemoteUpdate();
 
 // ----------------- Internationalization ------------------
@@ -319,8 +319,7 @@ class Script {
       const node = e.explicitOriginalTarget;
       if (node.nodeName === '#text') { return; }
       e.stopPropagation();
-      if (node.classList.contains('cm-fm-color')) { this.colorPicker(cm, node); }
-      else if (node.classList.contains('fm-convert')) { this.convertInclude(cm, node); }
+      node.classList.contains('cm-fm-color') && this.colorPicker(cm, node);
     });
   }
 
@@ -543,26 +542,6 @@ class Script {
 
     if (back) { return Object.keys(names).find(item => names[item] === color) || color; }
     return names[color] || color;
-  }
-
-  convertInclude(cm, node) {
-    const line = node.dataset.line*1;
-    const text = cm.getLine(line);
-    const index = node.dataset.index;
-    let p = node.textContent;
-    const start = text.substring(0, index).replace('@include', '@match  ').replace('@exclude', '@exclude-match');
-    const fromTo = [{line, ch: 0}, {line}];
-
-    // --- check if pattern is already a valid match mattern
-    const converted = Meta.convertPattern(p);
-    if (converted) {                                        // valid match pattern;
-      cm.replaceRange(start + p, ...fromTo);
-      return;
-    }
-
-    // --- show error
-    const error = Pattern.check(p);
-    error && App.notify(p + '\n' + error);
   }
 
   makeStats(js, text = this.box.value) {
@@ -804,7 +783,6 @@ class Script {
 
   deleteScript() {
     const {box} = this;
-
     const multi = document.querySelectorAll('aside li.on');
     if (!multi[0]) { return; }
 
@@ -847,13 +825,14 @@ class Script {
 
     // --- check if patterns are valid match mattern
     let matchError = 0;
-    [...data.matches, ...data.excludeMatches].forEach(p => {
-      const error = Pattern.check(p);
+    for (const item of [...data.matches, ...data.excludeMatches]) { // use for loop to break early
+      const error = Pattern.hasError(item);
       if (error) {
         matchError++;
-        matchError < 4 && App.notify(p + '\n' + error);     // max 3 notifications
+        App.notify(item + '\n' + error);
       }
-    });
+      if (matchError > 3) { return; }                       // max 3 notifications
+    }
     if (matchError) { return; }
 
 
@@ -1147,12 +1126,9 @@ class Pattern {
 
     // use for loop to be able to break early
     for (const item of node.value.split(/\s+/)) {
-
-      if (Meta.validPattern(item)) { continue; }
-      const error = this.check(item);
+      const error = this.hasError(item);
       if (error) {
         node.classList.add('invalid');
-
         App.notify(`${browser.i18n.getMessage(node.id)}\n${item}\n${error}`);
         return false;                                       // end execution
       }
@@ -1160,32 +1136,40 @@ class Pattern {
     return true;
   }
 
-  static check(pattern) {
-    pattern = pattern.toLowerCase();
-    const [scheme, host, path] = pattern.split(/:\/{2,3}|\/+/);
+  static hasError(p) {
+    if (Meta.validPattern(p)) { return false; }
 
-    // --- specific patterns
-    switch (pattern) {
-      case '*': return 'Invalid Pattern';
+    if (!p.includes('://')) { return 'Invalid Pattern'; }
+    p = p.toLowerCase();
+    const [scheme, host, path] = p.split(/:\/{2,3}|\/+/);
+    const file = scheme === 'file';
 
-      case '<all_urls>':
-      case '*://*/*':
-      case 'http://*/*':
-      case 'https://*/*':
-        return false;
-    }
-
-    // --- other patterns
+    // --- common pattern errors
     switch (true) {
-      case !['http', 'https', 'file', '*'].includes(scheme.toLowerCase()): return 'Unsupported scheme';
-      case scheme === 'file' && !pattern.startsWith('file:///'): return 'file:/// must have 3 slashes';
-      case scheme !== 'file' && host.includes(':'): return 'Host must not include a port number';
-      case scheme !== 'file' && !path && host === '*': return 'Empty path: this should be "*://*/*"';
-      case scheme !== 'file' && !path && !pattern.endsWith('/'): return 'Pattern must include trailing slash';
-      case scheme !== 'file' && host[0] === '*' && host[1] !== '.': return '"*" in host must be the only character or be followed by "."';
-      case host.substring(1).includes('*'): return '"*" in host must be at the start';
+      case !['http', 'https', 'file', '*'].includes(scheme):
+        return scheme.includes('*') ? '"*" in scheme must be the only character' : 'Unsupported scheme';
+
+      case file && !p.startsWith('file:///'):
+        return 'file:/// must have 3 slashes';
+
+       case !host:
+        return 'Missing host';
+
+      case host.substring(1).includes('*'):
+        return '"*" in host must be at the start';
+
+      case host[0] === '*' && host[1] && host[1] !== '.':
+        return '"*" in host must be the only character or be followed by "."';
+
+      case !file && host.includes(':'):
+        return 'Host must not include a port number';
+
+      case !file && typeof path === 'undefined':
+        return 'Missing path';
+
+      default:
+        return 'Invalid Pattern';
     }
-    return false;
   }
 }
 // ----------------- /Match Pattern Tester -----------------
