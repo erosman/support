@@ -60,6 +60,9 @@ class App {
       return;
     }
 
+    // import scripts
+    Object.keys(data).forEach(item => item.startsWith('_') && (pref[item] = data[item]));
+
     // update pref with the saved version
     Object.keys(pref).forEach(item => data.hasOwnProperty(item) && (pref[item] = data[item]));
 
@@ -584,7 +587,7 @@ class Meta {                                                // bg options
   static validPattern(p) {
     return p === '<all_urls>' ||
           /^(https?|\*):\/\/(\*|\*\.[^*:/]+|[^*:/]+)\/.*$/i.test(p) ||
-          /^file:\/\/\/(\*|\*\.[^*/]+|[^*/]+)(\/.*)?$/i.test(p);
+          /^file:\/\/\/.+$/i.test(p);
   }
 
   static checkOverlap(arr) {

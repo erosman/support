@@ -1153,7 +1153,7 @@ class Pattern {
         return 'file:/// must have 3 slashes';
 
        case !host:
-        return 'Missing host';
+        return 'Missing Host';
 
       case host.substring(1).includes('*'):
         return '"*" in host must be at the start';
@@ -1165,7 +1165,7 @@ class Pattern {
         return 'Host must not include a port number';
 
       case !file && typeof path === 'undefined':
-        return 'Missing path';
+        return 'Missing Path';
 
       default:
         return 'Invalid Pattern';

@@ -217,9 +217,14 @@ class ScriptRegister {
     else { this.register(id, options); }
   }
 
-  // fixing metaBlock since there would be an error with /* ... *://*/* ... */
+  // fixing metadata block since there would be an error with /* ... *://*/* ... */
   prepareMeta(str) {
-    return str.replace(Meta.regEx, (m) => m.replace(/\*\//g, '* /'));
+    return str.replace(Meta.regEx, (m) =>
+      !m.includes('*/') ? m :
+        m.split(/[\r\n]+/).map(item =>
+          item.trim().startsWith('//') || !/@([\w:-]+)(?:\s+(.+))/.test(item) ? item : item.replace(/\*\//g, '* /')
+        ).join('\n')
+    );
   }
 
   register(id, options, originId) {
