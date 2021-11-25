@@ -146,11 +146,13 @@ class ScriptRegister {
         .then(response => response.text())
         .then(code => {
           url.startsWith('/lib/') && (url = url.slice(1, -1));
-          js && (code += sourceURL + encodeURI(url));
-          page && (code = `GM_addScript(${JSON.stringify(code)})`);
+          if (js) {
+            code = url.endsWith('.css') ? `GM_addStyle(${JSON.stringify(code)})` : code + sourceURL + encodeURI(url);
+            page && (code = `GM_addScript(${JSON.stringify(code)})`);
+          }
           options[target].push({code});
         })
-        .catch(() => null)
+        .catch(() => {})
       ));
     }
 
@@ -221,9 +223,7 @@ class ScriptRegister {
   prepareMeta(str) {
     return str.replace(Meta.regEx, (m) =>
       !m.includes('*/') ? m :
-        m.split(/[\r\n]+/).map(item =>
-          item.trim().startsWith('//') || !/@([\w:-]+)(?:\s+(.+))/.test(item) ? item : item.replace(/\*\//g, '* /')
-        ).join('\n')
+        m.split(/[\r\n]+/).map(item => /^\s*@[\w:-]+\s+.+/.test(item) ? item.replace(/\*\//g, '* /') : item).join('\n')
     );
   }
 
@@ -588,7 +588,7 @@ class Installer {
     }
 
     // --- update from previous version
-    pref[id] && ['enabled', 'autoUpdate', 'storage', 'userMeta'].forEach(item => data[item] = pref[id][item]);
+//    pref[id] && ['enabled', 'autoUpdate', 'storage', 'userMeta'].forEach(item => data[item] = pref[id][item]);
 
     // ---  log message to display in Options -> Log
     App.log(data.name, pref[id] ? `Updated version ${pref[id].version} to ${data.version}` : `Installed version ${data.version}`);

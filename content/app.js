@@ -148,7 +148,7 @@ App.android = navigator.userAgent.includes('Android');
 // ----------------- Parse Metadata Block ------------------
 class Meta {                                                // bg options
 
-  static get(str, userMeta = '') {
+  static get(str) {
     // --- get all
     const metaData = str.match(this.regEx);
     if (!metaData) { return null; }
@@ -162,17 +162,16 @@ class Meta {                                                // bg options
       author: '',
       description: '',
       updateURL: '',
-      // this.enable & this.autoUpdate are defined in options.js but not from background.js
-      enabled: this.enable ? this.enable.checked : true,
-      autoUpdate: this.autoUpdate ? this.autoUpdate.checked : false,
       version: '',
+      
+      enabled: true,
+      autoUpdate: false,
+      userMeta: '',
       antifeatures: [],
       injectInto: '',
-
       require: [],
       requireRemote: [],
       resource: {},
-      userMeta,
       i18n: {
         name: {},
         description: {}
@@ -404,6 +403,20 @@ class Meta {                                                // bg options
         obj.matches[0] && data.style.push(obj);
       });
     }
+
+    // ------------- update from previous version ----------
+    const id = `_${data.name}`;
+    if (pref[id]) {
+      ['enabled', 'autoUpdate', 'userMeta', 'storage'].forEach(item => data[item] = pref[id][item]);
+      !data.updateURL && (data.updateURL = pref[id].updateURL);
+    }
+
+    // this.enable etc are defined in options.js but not from background.js
+    if (this.enable) {     
+      data.enabled = this.enable.checked;
+      data.autoUpdate = this.autoUpdate.checked;
+      data.userMeta = this.userMeta.value;
+    }  
 
     // ------------- User Metadata -------------------------
     const matches = [];

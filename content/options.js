@@ -124,6 +124,7 @@ class Script {
 
     this.userMeta = document.querySelector('#userMeta');
     this.userMeta.value = '';
+    Meta.userMeta = this.userMeta;
 
     document.querySelectorAll('.script button, .script li.button, aside button').forEach(item =>
       item.addEventListener('click', e => this.processButtons(e)));
@@ -282,7 +283,7 @@ class Script {
 //      hint: {hintOptions: {}},
       foldGutter: true,
       gutters: ['CodeMirror-lint-markers', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-      highlightSelectionMatches: {annotateScrollbar: true},
+      highlightSelectionMatches: {wordsOnly: true, annotateScrollbar: true},
       extraKeys: {
         // conflict with 'toggleComment'
 //      "Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }
@@ -574,7 +575,7 @@ class Script {
       case 'exportAll': return this.exportScriptAll();
 
       case 'tabToSpaces':
-      case 'trimTrailingSpaces':
+//      case 'trimTrailingSpaces':
       case 'toLowerCase':
       case 'toUpperCase':
       case 'includeToMatch':
@@ -592,13 +593,13 @@ class Script {
         this.cm.setValue(text);
         this.makeStats(text);
         break;
-
+/*
       case 'trimTrailingSpaces':
-        text = this.cm.getValue().trimEnd().replace(/[ ]+((?=\r?\n))/g, '');
+        text = this.cm.getValue().trimEnd().replace(/[ ]+(?=\r?\n)/g, '');
         this.cm.setValue(text);
         this.makeStats(text);
         break;
-
+*/
       case 'toLowerCase':
         this.cm.replaceSelection(this.cm.getSelection().toLowerCase());
         break;
@@ -814,9 +815,13 @@ class Script {
     const {box} = this;
     this.cm && this.cm.save();                              // save CodeMirror to textarea
 
-    // --- chcek meta data
-    this.userMeta.value = this.userMeta.value.trim();
-    const data = Meta.get(box.value.trim(), this.userMeta.value);
+    // Trim Trailing Spaces
+    this.userMeta.value = this.userMeta.value.trim().replace(/[ ]+(?=\r?\n)/g, '');
+    box.value = box.value.trim().replace(/[ ]+(?=\r?\n)/g, '');
+    this.cm.setValue(box.value);
+
+    // --- chcek metadata
+    const data = Meta.get(box.value);
     if (!data) { throw 'Meta Data Error'; }
     else if (data.error) {
       App.notify(browser.i18n.getMessage('metaError'));
@@ -939,10 +944,6 @@ class Script {
       }
     }
 
-    // --- update from previous version
-    ['updateURL', 'enabled', 'autoUpdate', 'storage', 'userMeta'].forEach(item => data[item] = pref[id][item]);
-
-
     App.notify(browser.i18n.getMessage('scriptUpdated', data.version), name);
     pref[id] = data;                                        // save to pref
     browser.storage.local.set({[id]: pref[id]});            // update saved pref
@@ -1000,9 +1001,6 @@ class Script {
         id = `_${data.name}`;
         if (pref[id]) { throw `${data.name}: Update new name already exists`; } // name already exists
       }
-
-      // --- update from previous version
-      ['enabled', 'autoUpdate', 'storage', 'userMeta'].forEach(item => data[item] = pref[id][item]);
     }
 
     pref[id] = data;                                        // save to pref
