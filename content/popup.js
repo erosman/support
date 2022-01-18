@@ -95,8 +95,8 @@ class Popup {
     const tabId = tabs[0].id;                                 // active tab id
     this.url = tabs[0].url;                                   // used in find scripts
 
-    const [Tab, Other, frames] = await CheckMatches.process(tabId, this.url);
-    document.querySelector('h3 span.frame').textContent = frames.length; // display frame count
+    const [Tab, Other, frames] = await CheckMatches.process(tabs[0]);
+    document.querySelector('h3 span.frame').textContent = frames; // display frame count
 
     Tab.forEach(item => this.docfrag.appendChild(this.addScript(pref[item])));
     this.ulTab.appendChild(this.docfrag);
@@ -157,7 +157,7 @@ class Popup {
     script.support = support;
 
     const infoArray = ['name', 'description', 'author', 'version', 'homepage', 'support', 'size', 'updateURL',
-                        'matches', 'excludeMatches', 'includes', 'excludes', 'includeGlobs', 'excludeGlobs',
+                        'matches', 'excludeMatches', 'includes', 'excludes', 'includeGlobs', 'excludeGlobs', 'container',
                         'require', 'injectInto', 'runAt', 'error'];
 
     infoArray.forEach(item => {
@@ -277,7 +277,7 @@ class Popup {
     const dl = this.commandList;
     const dt = this.dtTemp.cloneNode();
     dt.textContent = message.name;
-    dl.appendChild(dt);
+    this.docfrag.appendChild(dt);
 
     message.command.forEach(item => {
       const dd = this.ddTemp.cloneNode();
@@ -286,14 +286,15 @@ class Popup {
         browser.tabs.sendMessage(tabId, {name: message.name, command: item});
         window.close();
       });
-      dl.appendChild(dd);
+      this.docfrag.appendChild(dd);
     });
+    dl.appendChild(this.docfrag);
   }
 
   // ----------------- Info Run/Undo -----------------------
   infoRun(id) {
     const item = pref[id];
-    const code = (item.js || item.css).replace(Meta.regEx, (m) => m.replace(/\*\//g, '* /'));
+    const code = Meta.prepare(item.js || item.css);
     if (!code.trim()) { return; }                           // e.g. in case of userStyle
 
     (item.js ? browser.tabs.executeScript({code}) : browser.tabs.insertCSS({code, cssOrigin: 'user'}))
@@ -304,7 +305,7 @@ class Popup {
     const item = pref[id];
     if (!item.css) { return; }                              // only for userCSS
 
-    const code = item.css.replace(Meta.regEx, (m) => m.replace(/\*\//g, '* /'));
+    const code =  Meta.prepare(item.css);    
     if (!code.trim()) { return; }                           // e.g. in case of userStyle
 
     browser.tabs.removeCSS({code, cssOrigin: 'user'})

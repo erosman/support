@@ -502,13 +502,11 @@
       return script.export(obj);
     },
 
-    log(...text) { console.log(name + ':', ...text); },
+    log(...text) { console.log(`${name}:`, ...text); },
     info
   };
 
-
-  script.defineGlobals({
-
+  const globals = {
     GM,
     GM_getValue:                  api.GM_getValue,
     GM_listValues:                api.GM_listValues,
@@ -539,5 +537,9 @@
     exportFunction,
     cloneInto:                    api.cloneIntoFM,
     matchURL:                     api.matchURL
-  });
+  };
+
+  script.metadata.disableSyncGM && Object.keys(globals).forEach(item => item.startsWith('GM_') && delete globals[item]);
+
+  script.defineGlobals(globals);
 });

@@ -39,8 +39,7 @@ class Options {
       save ? pref[node.id] = node[attr] : node[attr] = pref[node.id];
     });
 
-    save && this.progressBar();                             // progress bar
-    save && browser.storage.local.set(pref);                // update saved pref
+    save && !this.progressBar() && browser.storage.local.set(pref); // update saved pref
   }
 
   progressBar() {
@@ -796,6 +795,7 @@ class Script {
       item.remove();                                        // remove from menu list
       delete pref[id];
       deleted.push(id);
+      App.log(id.substring(1), 'Deleted');
     });
 
     browser.storage.local.remove(deleted);                  // delete script
@@ -815,10 +815,11 @@ class Script {
     const {box} = this;
     this.cm && this.cm.save();                              // save CodeMirror to textarea
 
-    // Trim Trailing Spaces
-    this.userMeta.value = this.userMeta.value.trim().replace(/[ ]+(?=\r?\n)/g, '');
-    box.value = box.value.trim().replace(/[ ]+(?=\r?\n)/g, '');
-    this.cm.setValue(box.value);
+    // --- Trim Trailing Spaces
+    const regex = /[ ]+(?=\r?\n)/g;
+    this.userMeta.value = this.userMeta.value.trim().replace(regex, '');
+    box.value = box.value.trim().replace(regex, '');
+ //   this.cm.setValue(box.value);
 
     // --- chcek metadata
     const data = Meta.get(box.value);
@@ -834,12 +835,11 @@ class Script {
       const error = Pattern.hasError(item);
       if (error) {
         matchError++;
+        if (matchError > 3) { return; }                       // max 3 notifications
         App.notify(item + '\n' + error);
       }
-      if (matchError > 3) { return; }                       // max 3 notifications
     }
     if (matchError) { return; }
-
 
     // --- check name
     if (!data.name) {

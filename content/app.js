@@ -163,7 +163,7 @@ class Meta {                                                // bg options
       description: '',
       updateURL: '',
       version: '',
-      
+
       enabled: true,
       autoUpdate: false,
       userMeta: '',
@@ -178,6 +178,7 @@ class Meta {                                                // bg options
       },
       error: '',                                            // reset error on save
       storage: {},
+      disableSyncGM: false,
 
       // --- API related data
       allFrames: false,
@@ -190,6 +191,7 @@ class Meta {                                                // bg options
       excludeGlobs: [],
       includes: [],
       excludes: [],
+      container: [],
       matchAboutBlank: false,
       runAt: !js ? 'document_start' : 'document_idle'  // "document_start" "document_end" "document_idle" (default)
     };
@@ -197,7 +199,7 @@ class Meta {                                                // bg options
     const lineRegex = /^[\s\/]*@([\w:-]+)(?:\s+(.+))?/;
 
     metaData[2].split(/[\r\n]+/).forEach(item => {          // lines
-      let [,prop, value] = item.trim().match(lineRegex) || [];
+      let [,prop, value = ''] = item.trim().match(lineRegex) || [];
       if (!prop) { return; }                                // continue to next
       switch (prop) {
         // --- disallowed properties
@@ -221,6 +223,10 @@ class Meta {                                                // bg options
         case 'includeGlob': prop = 'includeGlobs'; break;
         case 'excludeGlob': prop = 'excludeGlobs'; break;
         case 'antifeature': prop = 'antifeatures'; break;
+
+        case 'container':
+          /default|private|container-\d+/i.test(value) && (value = value.toLowerCase());
+          break;
 
         case 'updateURL':                                   // disregarding .meta.js
           if (value.endsWith('.meta.js')) { prop = 'updateURLnull'; }
@@ -350,15 +356,8 @@ class Meta {                                                // bg options
     data.matches = data.matches.flatMap(this.checkPattern);        // flatMap() FF62
     data.excludeMatches = data.excludeMatches.flatMap(this.checkPattern);
 
-//    // --- prepare for include/exclude
-//    (data.includes[0] || data.excludes[0] || data.includeGlobs[0] || data.excludeGlobs[0]) &&
-//          data.matches.push('*://*/*', 'file:///*');
-
-
-
     // --- process UserStyle
     if (userStyle) {
-
       // split all sections
       str.split(/@-moz-document\s+/).slice(1).forEach(moz => {
 
@@ -382,7 +381,6 @@ class Meta {                                                // bg options
           const value = r[i+1];
 
           switch (func) {
-
             case 'domain': obj.matches.push(`*://*.${value}/*`); break;
             case 'url': obj.matches.push(value); break;
             case 'url-prefix':
@@ -412,17 +410,17 @@ class Meta {                                                // bg options
     }
 
     // this.enable etc are defined in options.js but not from background.js
-    if (this.enable) {     
+    if (this.enable) {
       data.enabled = this.enable.checked;
       data.autoUpdate = this.autoUpdate.checked;
       data.userMeta = this.userMeta.value;
-    }  
+    }
 
     // ------------- User Metadata -------------------------
     const matches = [];
     const excludeMatches = [];
     data.userMeta && data.userMeta.split(/[\r\n]+/).forEach(item => { // lines
-      let [,prop, value] = item.trim().match(lineRegex) || [];
+      let [,prop, value = ''] = item.trim().match(lineRegex) || [];
       if (!prop) { return; }                                // continue to next
 
       switch (prop) {
@@ -444,12 +442,25 @@ class Meta {                                                // bg options
           data.excludeGlobs = value ? data.excludeGlobs.filter(item => item !== value) : [];
           break
 
+        case 'disable-container':
+          const vlc = value.toLowerCase();
+          data.container = value ? data.container.filter(item => item !== vlc) : [];
+          break;
+
+        case 'disable-synchGM':
+          data.disableSyncGM = true;
+          break;
+
         case 'match':
-          matches.push(value);
+          value && matches.push(value);
           break;
 
         case 'exclude-match':
-          excludeMatches.push(value);
+          value && excludeMatches.push(value);
+          break;
+
+        case 'container':
+          /default|private|container-\d+/i.test(value) && data.container.push(value.toLowerCase());
           break;
 
         case 'matchAboutBlank':
@@ -484,7 +495,7 @@ class Meta {                                                // bg options
     data.excludeMatches = this.checkOverlap(data.excludeMatches);
 
     // --- remove duplicates
-    Object.keys(data).forEach(item => Array.isArray(data[item]) && (data[item] = [...new Set(data[item])]));
+    Object.keys(data).forEach(item => Array.isArray(data[item]) && data[item].length > 1 && (data[item] = [...new Set(data[item])]));
 
     return data;
   }
@@ -635,6 +646,14 @@ class Meta {                                                // bg options
 
     return arr;
   }
+  
+  // fixing metadata block since there would be an error with /* ... *://*/* ... */
+  static prepare(str) {
+    return str.replace(this.regEx, (m) =>
+      !m.includes('*/') ? m :
+        m.split(/[\r\n]+/).map(item => /^\s*@[\w:-]+\s+.+/.test(item) ? item.replace(/\*\//g, '* /') : item).join('\n')
+    );
+  }
 }
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
 // Static (class-side) data properties and prototype data properties must be defined outside of the ClassBody declaration
@@ -704,8 +723,7 @@ class RemoteUpdate {                                        // bg options
   }
 
   needUpdate(text, item) {                                  // here
-    // --- check version
-    const version = text.match(/@version\s+(\S+)/);
+    const version = text.match(/@version\s+(\S+)/);         // check version
     return version && this.higherVersion(version[1], item.version);
   }
 
@@ -731,48 +749,53 @@ class RemoteUpdate {                                        // bg options
 // ----------------- /Remote Update ------------------------
 
 // ----------------- Match Pattern Check -------------------
-class CheckMatches {
-  // bg popup
-  static async process(tabId, tabUrl, bg) {
-    const frames = await browser.webNavigation.getAllFrames({tabId});
-    const urls = [...new Set(frames.map(item => item.url.replace(/#.*/, '').replace(/(:\/\/[^:/]+):\d+/, '$1'))
-                               .filter(item => /^(https?|wss?|file|about:blank)/.test(item)))];
-    const gExclude = pref.globalScriptExcludeMatches ? pref.globalScriptExcludeMatches.split(/\s+/) : []; // cache the array
+class CheckMatches {                                        // used in bg & popup
 
-    tabUrl = /^(https?|wss?|file|about:blank)/.test(tabUrl) ? tabUrl : null; // Unsupported scheme
+  static async process(tab, bg) {
+    const supported = this.supported(tab.url);
+    if (bg && !supported) { return []; }                    // Unsupported scheme
 
-    const ids = App.getIds();
+    const frames = await browser.webNavigation.getAllFrames({tabId: tab.id});
+    if (!supported) {                                       // Unsupported scheme
+      return [[], App.getIds().sort(Intl.Collator().compare), frames.length];
+    }
+
+    const urls = [...new Set(frames.map(item =>
+      item.url.replace(/#.*/, '').replace(/(:\/\/[^:/]+):\d+/, '$1')).filter(this.supported))];
+    const gExclude = pref.globalScriptExcludeMatches ? pref.globalScriptExcludeMatches.split(/\s+/) : [];
+    const containerId = tab.cookieStoreId.substring(8);
 
     // --- background
     if (bg) {
-      return ids.filter(item => pref[item].enabled && this.get(pref[item], tabUrl, urls, gExclude))
+      return App.getIds().filter(item => pref[item].enabled && this.get(pref[item],tab.url, urls, gExclude, containerId))
           .map(item => (pref[item].js ? '\u{1f539} ' :  '\u{1f538} ') + item.substring(1));
     }
 
     // --- popup
     const Tab = [], Other = [];
-    ids.sort(Intl.Collator().compare).forEach(item =>
-        (this.get(pref[item], tabUrl, urls, gExclude) ? Tab : Other).push(item));
-    return [Tab, Other, frames];
+    App.getIds().sort(Intl.Collator().compare).forEach(item =>
+        (this.get(pref[item], tab.url, urls, gExclude, containerId) ? Tab : Other).push(item));
+    return [Tab, Other, frames.length];
   }
 
-  static get(item, tabUrl, urls, gExclude = []) {           // here
-    if (!tabUrl) { return false; }
-    if (!item.allFrames) { urls = [tabUrl]; }               // only check main frame
+  static supported(url) {
+    return /^(https?:|file:|about:blank)/i.test(url);
+  }
 
+  static get(item, tabUrl, urls, gExclude = [], containerId) {
+    if (item.container && item.container[0] && !item.container.includes(containerId)) { return false; } // check container
+
+    !item.allFrames && (urls = [tabUrl]);                   // only check main frame
     const styleMatches = item.style && item.style[0] ? item.style.flatMap(i => i.matches) : [];
 
     switch (true) {
-      // --- Global Script Exclude Matches
-      case gExclude[0] && this.isMatch(urls, gExclude): return false;
+      case urls.includes('about:blank') && item.matchAboutBlank: // about:blank
+        return true;
 
-      // --- scripts/css without matches/includeGlobs/style
-      case !item.matches[0] && !item.includeGlobs[0] && !styleMatches[0]: return false;
+      case gExclude[0] && this.isMatch(urls, gExclude):     // Global Script Exclude Matches
+      case !item.matches[0] && !item.includeGlobs[0] && !styleMatches[0]: // scripts/css without matches/includeGlobs/style
 
-      // --- about:blank
-      case urls.includes('about:blank') && item.matchAboutBlank: return true;
-
-      // --- includes & matches & globs
+      // includes & matches & globs
       case !this.isMatch(urls, [...item.matches, ...styleMatches]):
       case item.includeGlobs[0] && !this.isMatch(urls, item.includeGlobs, true):
       case item.includes[0] && !this.isMatch(urls, item.includes, false, true):
@@ -780,53 +803,52 @@ class CheckMatches {
       case item.excludeMatches[0] && this.isMatch(urls, item.excludeMatches):
       case item.excludeGlobs[0] && this.isMatch(urls, item.excludeGlobs, true):
       case item.excludes[0] && this.isMatch(urls, item.excludes, false, true):
-
         return false;
 
-      default: return true;
+      default:
+        return true;
     }
   }
 
-  static isMatch(urls, arr, glob, regex) {                  // here
-    if (regex) {
-      return urls.some(u => new RegExp(this.prepareRegEx(arr), 'i').test(u));
-    }
-
-    if (glob) {
-      return urls.some(u => new RegExp(this.prepareGlob(arr), 'i').test(u));
-    }
-
-    // catch all checks
+  static isMatch(urls, arr, glob, regex) {
     switch (true) {
+      case regex:
+        return urls.some(u => new RegExp(this.prepareRegEx(arr), 'i').test(u));
+
+      case glob:
+        return urls.some(u => new RegExp(this.prepareGlob(arr), 'i').test(u));
+
+      // catch all checks
       case arr.includes('<all_urls>'):
       case arr.includes('*://*/*') && urls.some(item => item.startsWith('http')):
       case arr.includes('file:///*') && urls.some(item => item.startsWith('file:///')):
         return true;
-    }
 
-    return urls.some(u => new RegExp(this.prepareMatch(arr), 'i').test(u));
+      default:
+        return urls.some(u => new RegExp(this.prepareMatch(arr), 'i').test(u));
+    }
   }
 
-  static prepareMatch(arr) {                                // here
+  static prepareMatch(arr) {
     const regexSpChar = /[-\/\\^$+?.()|[\]{}]/g;            // Regular Expression Special Characters
-    const str = arr.map(item => '(^' +
+    return arr.map(item => '(^' +
         item.replace(regexSpChar, '\\$&')
             .replace(/^\*:/g, 'https?:')
             .replace(/\*/g, '.*')
             .replace('/.*\\.', '/(.*\\.)?')
             + '$)')
             .join('|');
-    return str;
   }
 
   static prepareGlob(arr) {
     const regexSpChar = /[-\/\\^$+.()|[\]{}]/g;             // Regular Expression Special Characters minus * ?
-    const str = arr.map(item => '(^' +
+    return arr.map(item => '(^' +
         item.replace(regexSpChar, '\\$&')
             .replace(/^\*:/g, 'http(|s):')
-            .replace(/\*/g, '.*') + '$)')
-            .join('|');
-    return str.replace(/\?/g, '.');
+            .replace(/\*/g, '.*')
+            + '$)')
+            .join('|')
+            .replace(/\?/g, '.');
   }
 
   static prepareRegEx(arr) {

@@ -61,7 +61,7 @@ class Counter {
   async process(tabId, changeInfo, tab) {
     if (changeInfo.status !== 'complete') { return; }
 
-    const count = await CheckMatches.process(tabId, tab.url, true);
+    const count = await CheckMatches.process(tab, true);
     browser.browserAction.setBadgeText({tabId, text: (count[0] ? count.length.toString() : '')});
     browser.browserAction.setTitle({tabId, title: (count[0] ? count.join('\n') : '')});
   }
@@ -81,6 +81,33 @@ class ScriptRegister {
     this.process = this.process.bind(this);
     this.platformInfo = await browser.runtime.getPlatformInfo();
     this.browserInfo = await browser.runtime.getBrowserInfo();
+    this.containerSupport = {
+      css: false,
+      js: false
+    };
+    this.checkContainerSupport();
+  }
+
+  checkContainerSupport() {
+    const options = {
+      matches: ['*://example.com/*'],
+      js: [{code: ''}],
+      cookieStoreId: 'invalid-cookieStoreId'
+    };
+
+    // firefox97 https://bugzilla.mozilla.org/show_bug.cgi?id=1470651
+    try {
+      browser.contentScripts.register(options)
+      .catch(e => {});
+      this.containerSupport.css = true;
+    } catch {}
+
+    // firefox?? https://bugzilla.mozilla.org/show_bug.cgi?id=1738567
+    try {
+      browser.userScripts.register(options)
+     .catch(e => {});
+      this.containerSupport.js = true;
+    } catch {}
   }
 
   async process(id) {
@@ -109,7 +136,7 @@ class ScriptRegister {
 
     // --- prepare for include/exclude
     (script.includes[0] || script.excludes[0] || script.includeGlobs[0] || script.excludeGlobs[0]) &&
-          (options.matches = ['*://*/*', 'file:///*']);
+        (options.matches = ['*://*/*', 'file:///*']);
     options.matches = [...new Set(options.matches)];        // remove duplicates
 
     // --- remove empty arrays (causes error)
@@ -125,6 +152,10 @@ class ScriptRegister {
     const sourceURL = `\n\n//# sourceURL=user-script:FireMonkey/${encodeId}${pageURL}/`;
     options[target] = [];
 
+    // --- contextual identity container
+    script.container && script.container[0] && this.containerSupport[target] &&
+        (options.cookieStoreId = script.container.map(item => `firefox-${item}`));
+
     // --- add @require
     require.forEach(item => {
       const id = `_${item}`;
@@ -132,8 +163,14 @@ class ScriptRegister {
         requireRemote.push('/' + item);
       }
       else if (pref[id] && pref[id][target]) {              // same type only
-        let code = this.prepareMeta(pref[id][target]);
+        let code = Meta.prepare(pref[id][target]);
         js && (code += sourceURL + encodeURI(item) + '.user.js');
+        page && (code = `GM_addScript(${JSON.stringify(code)})`);
+        options[target].push({code});
+      }
+      else if (js && pref[id] && pref[id].css) {            // useCSS in userScript
+        let code = Meta.prepare(pref[id].css);
+        code = `GM_addStyle(${JSON.stringify(code)})`;
         page && (code = `GM_addScript(${JSON.stringify(code)})`);
         options[target].push({code});
       }
@@ -165,6 +202,7 @@ class ScriptRegister {
         resource: script.resource,
         storage: script.storage,
         injectInto: script.injectInto,
+        disableSyncGM: !!script.disableSyncGM,              // https://bugzilla.mozilla.org/show_bug.cgi?id=1750430
         info: {                                             // GM.info data
           scriptHandler: 'FireMonkey',
           version: this.FMV,
@@ -206,7 +244,7 @@ class ScriptRegister {
     }
 
     // --- add code
-    options[target].push({code: this.prepareMeta(script[target])});
+    options[target].push({code: Meta.prepare(script[target])});
 
     if (script.style[0]) {
       // --- UserStyle Multi-segment Process
@@ -217,14 +255,6 @@ class ScriptRegister {
       });
     }
     else { this.register(id, options); }
-  }
-
-  // fixing metadata block since there would be an error with /* ... *://*/* ... */
-  prepareMeta(str) {
-    return str.replace(Meta.regEx, (m) =>
-      !m.includes('*/') ? m :
-        m.split(/[\r\n]+/).map(item => /^\s*@[\w:-]+\s+.+/.test(item) ? item.replace(/\*\//g, '* /') : item).join('\n')
-    );
   }
 
   register(id, options, originId) {
@@ -305,8 +335,8 @@ class ProcessPref {
     // find changed scripts
     else {
       const relevant = ['name', 'enabled', 'injectInto', 'require', 'requireRemote', 'resource',
-      'allFrames', 'js', 'css', 'style', 'matches',
-      'excludeMatches', 'includeGlobs', 'excludeGlobs', 'includes', 'excludes', 'matchAboutBlank', 'runAt'];
+      'allFrames', 'js', 'css', 'style', 'container',
+      'matches', 'excludeMatches', 'includeGlobs', 'excludeGlobs', 'includes', 'excludes', 'matchAboutBlank', 'runAt'];
 
       Object.keys(changes).forEach(item => {
         if (!item.startsWith('_')) { return; }              // skip
@@ -487,7 +517,7 @@ class Installer {
       return confirm(browser.i18n.getMessage('installConfirm', name[1])) ? [pre.textContent, name[1]] : null;
     })();`;
 
-    browser.tabs.executeScript({code})
+    browser.tabs.executeScript(tabId, {code})
     .then((result = []) => result[0] && this.processResponse(result[0][0], result[0][1], tab.url))
     .catch(error => App.log('directInstall', `${tab.url} ➜ ${error.message}`, 'error'));
   }
@@ -540,8 +570,7 @@ class Installer {
 
     const now = Date.now();
     const days = pref.autoUpdateInterval *1;
-    const doUpdate =  days && now > pref.autoUpdateLast + (days * 86400000); // 86400 * 1000 = 24hr
-    if (!doUpdate) { return; }
+    if (days && now <= pref.autoUpdateLast + (days * 86400000)) { return; } // 86400 * 1000 = 24hr
 
     if (!this.cache[0]) {                                   // rebuild the cache if empty
       this.cache = App.getIds().filter(item => pref[item].autoUpdate && pref[item].updateURL && pref[item].version);
@@ -586,9 +615,6 @@ class Installer {
       data.updateURL = updateURL;
       data.autoUpdate = true;
     }
-
-    // --- update from previous version
-//    pref[id] && ['enabled', 'autoUpdate', 'storage', 'userMeta'].forEach(item => data[item] = pref[id][item]);
 
     // ---  log message to display in Options -> Log
     App.log(data.name, pref[id] ? `Updated version ${pref[id].version} to ${data.version}` : `Installed version ${data.version}`);
@@ -856,13 +882,11 @@ class Migrate {
       };
 
       Object.keys(pref.content).forEach(item => {
-
         // add & set to default if missing
         Object.keys(data).forEach(key => pref.content[item].hasOwnProperty(key) || (pref.content[item][key] = data[key]));
 
         // --- v1.36 migrate 2020-05-25
         pref.content[item].require.forEach((lib, i) => {
-
           switch (lib) {
             case 'lib/jquery-1.12.4.min.jsm':     pref.content[item].require[i] = 'lib/jquery-1.jsm'; break;
             case 'lib/jquery-2.2.4.min.jsm':      pref.content[item].require[i] = 'lib/jquery-2.jsm'; break;
