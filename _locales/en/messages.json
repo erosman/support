@@ -1,1 +1,99 @@
+﻿{
+  "extensionName": { "message": "FireMonkey" },
+  "extensionDescription": { "message": "Super Lightweight User Script and Style Manager" },
 
+
+  "tabScript": { "message": "Tab Scripts & CSS" },
+  "otherScript": { "message": "Other Scripts & CSS" },
+  "scriptCommands": { "message": "Script Commands" },
+  "back": { "message": "back" },
+  "edit": { "message": "Edit" },
+
+  "autoUpdateInterval": { "message": "Auto-Update Interval" },
+  "autoUpdateIntervalDescription": { "message": "Number of days between Updates (0 = no update)" },
+
+  "enableSync": { "message": "Enable Storage Sync" },
+  "syncError": { "message": "Unable to sync\nStorage ($1KB) is larger than 100KB. Sync will be turned off." },
+
+  "counter": { "message": "Counter" },
+
+  "globalScriptExcludeMatches": { "message": "Global Script Exclude Matches" },
+  "globalScriptExcludeMatchesDescription": { "message": "Exclude Match pattens (one per line) to prevent all scripts from running on them" },
+
+  "userMeta": { "message": "User Metadata" },
+
+
+  "sidebar": { "message": "Sidebar" },
+  "script": { "message": "Script & CSS" },
+
+  "saveScript": { "message": "Save" },
+  "enable": { "message": "Enable" },
+  "update": { "message": "Update" },
+  "autoUpdate": { "message": "Auto-Update" },
+  "theme": { "message": "Theme" },
+
+  "light": { "message": "Light" },
+  "dark": { "message": "Dark" },
+
+  "newJS": { "message": "New UserScript" },
+  "newCSS": { "message": "New UserCSS" },
+  "saveTemplate": { "message": "Save as Template" },
+
+  "tabToSpaces": { "message": "Tabs to Spaces" },
+  "trimTrailingSpaces": { "message": "Trim Trailing Spaces" },
+  "toUpperCase": { "message": "Selection to Uppercase" },
+  "toLowerCase": { "message": "Selection to Lowercase" },
+
+  "stylish": { "message": "Install Stylish Style" },
+  "report": { "message": "Report" },
+
+  "discardConfirm": { "message": "Do you want to discard the changes without saving?" },
+
+  "delete": { "message": "Delete" },
+  "deleteConfirm": { "message": "Do you want to delete \n'$1'\n and its stored data?" },
+  "deleteMultiConfirm": { "message": "Do you want to delete the selected $1 Scripts/CSS and their stored data?" },
+
+  "installConfirm": { "message": "Do you want to install '$1'?\nScript/CSS with the same name will be replaced if it has a lower version number." },
+
+  "metaError": { "message": "Meta Data Error" },
+  "noNameError": { "message": "Script/CSS must have a name." },
+  "nameError": { "message": "Script/CSS name already exists.\nDo you want to replace the existing one?" },
+  "updateUrlError": { "message": "Script/CSS does not have updateURL or version." },
+  "noNewUpdate": { "message": "There is no new update." },
+  "scriptUpdated": { "message": "Script/CSS updated to version $1" },
+
+
+  "exportAll": { "message": "Export" },
+
+  "log": { "message": "Log" },
+  "time": { "message": "Time" },
+  "reference": { "message": "Reference" },
+  "message": { "message": "Message" },
+
+  "scratchpad": { "message": "Scratchpad" },
+  "run": { "message": "Run" },
+  "undo": { "message": "Undo" },
+  "insertError": { "message": "Failed to insert" },
+  "findScript": { "message": "Find scripts for this site" },
+
+  "advanced": { "message": "Advanced" },
+  "customOptionsCSS": { "message": "Custom Options CSS" },
+  "customOptionsCSSDescription": { "message": "Customize Options page & CodeMirror style configuration" },
+  "customPopupCSS": { "message": "Custom Popup CSS" },
+  "customPopupCSSDescription": { "message": "Customize toolbar popup style configuration" },
+  "cmOptionsDescription": { "message": "Customize CodeMirror, addons & JavaScript lint configuration" },
+  "cmOptionsError": { "message": "Invalid CodeMirror JSON" },
+
+
+  "about": { "message": "About" },
+  "error": { "message": "There was an error with the operation" },
+  "export": { "message": "Export" },
+  "fileParseError": { "message": "There was an error parsing the file" },
+  "fileReadError": { "message": "There was an error with reading the file" },
+  "fileSizeError": { "message": "File size is larger than the $1kb allowed" },
+  "fileTypeError": { "message": "Unsupported File Format" },
+  "help": { "message": "Help" },
+  "import": { "message": "Import" },
+  "options": { "message": "Options" },
+  "saveOptions": { "message": "Save" }
+}
