@@ -4,7 +4,12 @@
 App.i18n();
 
 // ----------------- User Preference -----------------------
-App.getPref().then(() => popup.process());
+App.getPref().then(() => {
+  popup.process();
+  
+  // --- add custom style
+  pref.customPopupCSS && (document.querySelector('style').textContent = pref.customPopupCSS);
+});
 
 // ----------------- Android -------------------------------
 document.body.classList.toggle('android', App.android);
@@ -187,7 +192,7 @@ class Popup {
           break;
 
         case 'matches':                                     // add UserStyle matches to matches
-          script.style && script.style[0] && arr.push(...script.style.flatMap(i => i.matches));
+          script.style?.[0] && arr.push(...script.style.flatMap(i => i.matches));
           break;
 
         case 'size':

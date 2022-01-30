@@ -1,10 +1,10 @@
 ﻿browser.userScripts.onBeforeScript.addListener(script => {
   // --- globals
-  const {name, resource, info, id = `_${name}`} = script.metadata; // set id as _name
+  const {name, resource, info, id = `_${name}`, injectInto, grant, disableSyncGM} = script.metadata; // set id as _name
   const cache = {};
   const valueChange = {};
   const scriptCommand = {};
-  let storage = script.metadata.storage;                    // storage at the time of registration
+  let {storage} = script.metadata;                          // storage at the time of registration
 
   class API {
 
@@ -331,7 +331,7 @@
       try {
         const node = document.createElement('script');
         node.textContent = js;
-        if (script.metadata.injectInto !== 'page') {
+        if (injectInto !== 'page') {
           node.textContent +=
             `\n\n//# sourceURL=user-script:FireMonkey/${encodeURI(name)}/GM.addScript_${Math.random().toString(36).substring(2)}.js`;
         }
@@ -514,7 +514,6 @@
     GM_setValue:                  GM.setValue,
     GM_addValueChangeListener:    GM.addValueChangeListener,
     GM_removeValueChangeListener: GM.removeValueChangeListener,
-
     GM_openInTab:                 GM.openInTab,
     GM_setClipboard:              GM.setClipboard,
     GM_notification:              GM.notification,
@@ -526,20 +525,21 @@
     GM_getResourceURL:            GM.getResourceURL,        // ViolentMonkey
     GM_registerMenuCommand:       GM.registerMenuCommand,
     GM_unregisterMenuCommand:     GM.unregisterMenuCommand,
-
     GM_addStyle:                  GM.addStyle,
     GM_addScript:                 GM.addScript,
     GM_popup:                     GM.popup,
-
     GM_log:                       GM.log,
     GM_info:                      GM.info,
-
     exportFunction,
     cloneInto:                    api.cloneIntoFM,
     matchURL:                     api.matchURL
   };
 
-  script.metadata.disableSyncGM && Object.keys(globals).forEach(item => item.startsWith('GM_') && delete globals[item]);
+  disableSyncGM && Object.keys(globals).forEach(item => item.startsWith('GM_') && delete globals[item]);
+
+  // disable sync GM API if async GM API are supported
+  ['getValue', 'setValue', 'listValues', 'deleteValue'].forEach(item =>
+      grant.includes(`GM_${item}`) && grant.includes(`GM.${item}`) && delete globals[`GM_${item}`]);
 
   script.defineGlobals(globals);
 });

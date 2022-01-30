@@ -10,7 +10,7 @@ App.getPref().then(() => {
   script.process();
 
   // --- add custom style
-  pref.customCSS && (document.querySelector('style').textContent = pref.customCSS);
+  pref.customOptionsCSS && (document.querySelector('style').textContent = pref.customOptionsCSS);
 });
 // ----------------- /User Preference ----------------------
 
@@ -96,7 +96,8 @@ class Options {
     }
   }
 }
-const options = new Options(['autoUpdateInterval', 'globalScriptExcludeMatches', 'sync', 'counter', 'customCSS', 'cmOptions']);
+const options = new Options(['autoUpdateInterval', 'globalScriptExcludeMatches', 'sync',
+  'counter', 'customOptionsCSS', 'customPopupCSS', 'cmOptions']);
 // ----------------- /Options ------------------------------
 
 // ----------------- Scripts -------------------------------
@@ -221,7 +222,7 @@ class Script {
     const url =  `../lib/codemirror/theme/${this.theme}.css`;
     if (this.theme === 'default' || document.querySelector(`link[href="${url}"]`)) { // already added
       document.body.classList.toggle('dark', dark);
-      this.cm && this.cm.setOption('theme', this.theme);
+      this.cm?.setOption('theme', this.theme);
       return;
     }
 
@@ -231,7 +232,7 @@ class Script {
     link.onload = () => {
       link.onload = null;
       document.body.classList.toggle('dark', dark);
-      this.cm && this.cm.setOption('theme', this.theme);
+      this.cm?.setOption('theme', this.theme);
     };
   }
 
@@ -612,13 +613,11 @@ class Script {
   newScript(type) {
     const {box, legend} = this;
     this.enable.checked = true;
+    document.querySelector('aside li.on')?.classList.remove('on');
 
-    const last = document.querySelector('aside li.on');
-    last && last.classList.remove('on');
-
-    this.cm && this.cm.save();                              // save CodeMirror to textarea
+    this.cm?.save();                                        // save CodeMirror to textarea
     if(this.unsavedChanges()) { return; }
-    this.cm && this.cm.toTextArea();                        // reset CodeMirror
+    this.cm?.toTextArea();                                  // reset CodeMirror
 
     box.id = '';
     legend.textContent = '';
@@ -633,7 +632,7 @@ class Script {
   }
 
   saveTemplate() {
-    this.cm && this.cm.save();                              // save CodeMirror to textarea
+    this.cm?.save();                                        // save CodeMirror to textarea
     const text = this.box.value;
     const metaData = text.match(Meta.regEx);
 
@@ -683,6 +682,8 @@ class Script {
         if (!st && stEnd) { st = true; }
         else if (st && stEnd) { end = true; }
         !stEnd && item.classList.toggle('on', st && !end);
+        // remove hidden items
+        item.classList.contains('on') && window.getComputedStyle(item).display === 'none' && item.classList.toggle('on', false);
       });
       return;
     }
@@ -693,13 +694,13 @@ class Script {
     // --- if showing another page
     document.getElementById('nav4').checked = true;
 
-    this.cm && this.cm.save();                              // save CodeMirror to textarea
+    this.cm?.save();                                        // save CodeMirror to textarea
     if(this.unsavedChanges()) {
       li.classList.remove('on');
       document.getElementById(box.id).classList.add('on');
       return;
     }
-    this.cm && this.cm.toTextArea();                        // reset CodeMirror
+    this.cm?.toTextArea();                        // reset CodeMirror
 
     const id = li.id;
     box.id = id;
@@ -813,7 +814,7 @@ class Script {
 
   async saveScript() {
     const {box} = this;
-    this.cm && this.cm.save();                              // save CodeMirror to textarea
+    this.cm?.save();                                        // save CodeMirror to textarea
 
     // --- Trim Trailing Spaces
     const regex = /[ ]+(?=\r?\n)/g;
@@ -950,8 +951,7 @@ class Script {
 
     this.process();                                         // update page display
     this.box.value = '';                                    // clear box avoid unsavedChanges warning
-    const on = document.getElementById(id);
-    on && on.click();                                       // reload the new script
+    document.getElementById(id)?.click();                   // reload the new script
   }
 
   // ----------------- Import Script -----------------------
@@ -966,9 +966,8 @@ class Script {
     this.obj = {};
 
     [...e.target.files].forEach(file => {
-
       switch (true) {
-        case !file: App.notify(browser.i18n.getMessage('error')); return;
+        //case !file: App.notify(browser.i18n.getMessage('error')); return;
         case !['text/css', 'application/x-javascript'].includes(file.type): // check file MIME type CSS/JS
           App.notify(browser.i18n.getMessage('fileTypeError'));
           return;
@@ -1053,10 +1052,10 @@ class Script {
 
       item.sections.forEach(sec => {
         const r = [];
-        sec.urls && sec.urls.forEach(i => r.push(`url('${i}')`));
-        sec.urlPrefixes && sec.urlPrefixes.forEach(i => r.push(`url-prefix('${i}')`));
-        sec.domains && sec.domains.forEach(i => r.push(`domain('${i}')`));
-        sec.regexps && sec.regexps.forEach(i => r.push(`regexp('${i}')`));
+        sec.urls?.forEach(i => r.push(`url('${i}')`));
+        sec.urlPrefixes?.forEach(i => r.push(`url-prefix('${i}')`));
+        sec.domains?.forEach(i => r.push(`domain('${i}')`));
+        sec.regexps?.forEach(i => r.push(`regexp('${i}')`));
 
         r[0] && (text += '\n\n@-moz-document ' + r.join(', ') +' {\n  ' + sec.code + '\n}');
       });

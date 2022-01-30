@@ -18,7 +18,7 @@ class ContextMenu {
 
     contextMenus.forEach(item => {
       if (item.id) {
-        item.title = item.title || browser.i18n.getMessage(item.id);  // always use the same ID for i18n
+        !item.title && (item.title = browser.i18n.getMessage(item.id));  // always use the same ID for i18n
         item.onclick = this.process;
       }
       browser.menus.create(item);
@@ -111,7 +111,7 @@ class ScriptRegister {
   }
 
   async process(id) {
-    const script = JSON.parse(JSON.stringify(pref[id]));    // deep clone pref object
+    const script = JSON.parse(JSON.stringify(pref[id]));    // deep clone to prevent changes to the original
     script.style || (script.style = []);
 
     // --- reset previous registers  (UserStyle Multi-segment Process)
@@ -153,22 +153,22 @@ class ScriptRegister {
     options[target] = [];
 
     // --- contextual identity container
-    script.container && script.container[0] && this.containerSupport[target] &&
+    script.container?.[0] && this.containerSupport[target] &&
         (options.cookieStoreId = script.container.map(item => `firefox-${item}`));
-
+    
     // --- add @require
     require.forEach(item => {
       const id = `_${item}`;
       if (item.startsWith('lib/')) {
         requireRemote.push('/' + item);
       }
-      else if (pref[id] && pref[id][target]) {              // same type only
+      else if (pref[id]?.[target]) {                        // same type only
         let code = Meta.prepare(pref[id][target]);
         js && (code += sourceURL + encodeURI(item) + '.user.js');
         page && (code = `GM_addScript(${JSON.stringify(code)})`);
         options[target].push({code});
       }
-      else if (js && pref[id] && pref[id].css) {            // useCSS in userScript
+      else if (js && pref[id]?.css) {                       // useCSS in userScript
         let code = Meta.prepare(pref[id].css);
         code = `GM_addStyle(${JSON.stringify(code)})`;
         page && (code = `GM_addScript(${JSON.stringify(code)})`);
@@ -202,6 +202,7 @@ class ScriptRegister {
         resource: script.resource,
         storage: script.storage,
         injectInto: script.injectInto,
+        grant: script.grant || [],
         disableSyncGM: !!script.disableSyncGM,              // https://bugzilla.mozilla.org/show_bug.cgi?id=1750430
         info: {                                             // GM.info data
           scriptHandler: 'FireMonkey',
@@ -821,9 +822,8 @@ new API();
 class Migrate {
 
   static async run() {
-    const m = 2.35;
-    const version = localStorage.getItem('migrate') || 0;
-    if (version*1 >= m) { return; } // double check for v2.25 migrate backward compatibility
+    const m = 2.42;
+    if (localStorage.getItem('migrate')*1 >= m) { return; }
 
     // --- v1.31 migrate 2020-03-13
     if (pref.hasOwnProperty('disableHighlight')) {
@@ -932,6 +932,14 @@ class Migrate {
       delete item.userExcludeMatches;
       delete item.userRunAt;
     });
+
+    // --- v2.42 migrate 2022-01-
+    if (pref.hasOwnProperty('customCSS')) {
+      pref.customOptionsCSS = pref.customCSS;
+      delete pref.customCSS;
+      await browser.storage.local.remove('customCSS');
+    }
+
 
     // --- update database
     await browser.storage.local.set(pref);
