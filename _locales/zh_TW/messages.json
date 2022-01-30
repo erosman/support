@@ -1,0 +1,210 @@
+{
+  "extensionName": {
+    "message": "FireMonkey"
+  },
+  "extensionDescription": {
+    "message": "超輕量的使用者指令稿與樣式管理程式"
+  },
+  "tabScript": {
+    "message": "分頁指令稿與 CSS"
+  },
+  "otherScript": {
+    "message": "其他指令稿與 CSS"
+  },
+  "scriptCommands": {
+    "message": "Script Commands"
+  },
+  "back": {
+    "message": "返回"
+  },
+  "edit": {
+    "message": "編輯"
+  },
+  "autoUpdateInterval": {
+    "message": "自動更新間隔"
+  },
+  "autoUpdateIntervalDescription": {
+    "message": "更新間的天數（0 = 不更新）"
+  },
+  "enableSync": {
+    "message": "Enable Storage Sync"
+  },
+  "syncError": {
+    "message": "Unable to syncStorage ($1KB) is larger than 100KB. Sync will be turned off."
+  },
+  "counter": {
+    "message": "Counter"
+  },
+  "globalScriptExcludeMatches": {
+    "message": "Global Script Exclude Matches"
+  },
+  "globalScriptExcludeMatchesDescription": {
+    "message": "Exclude Match pattens (one per line) to prevent all scripts from running on them."
+  },
+  "userMeta": {
+    "message": "User Metadata"
+  },
+  "sidebar": { "message": "Sidebar" },
+  "script": {
+    "message": "指令稿與 CSS"
+  },
+  "saveScript": {
+    "message": "儲存"
+  },
+  "enable": {
+    "message": "啟用"
+  },
+  "update": {
+    "message": "更新"
+  },
+  "autoUpdate": {
+    "message": "自動更新"
+  },
+  "theme": {
+    "message": "Theme"
+  },
+  "light": {
+    "message": "Light"
+  },
+  "dark": {
+    "message": "Dark"
+  },
+  "newJS": {
+    "message": "新 UserScript"
+  },
+  "newCSS": {
+    "message": "新 UserCSS"
+  },
+  "saveTemplate": {
+    "message": "Save as 範本"
+  },
+  "tabToSpaces": {
+    "message": "Tabs to Spaces"
+  },
+  "trimTrailingSpaces": {
+    "message": "Trim Trailing Spaces"
+  },
+  "toUpperCase": {
+    "message": "Selection to Uppercase"
+  },
+  "toLowerCase": {
+    "message": "Selection to Lowercase"
+  },
+  "stylish": {
+    "message": "Install Stylish Style"
+  },
+  "report": {
+    "message": "Report"
+  },
+  "discardConfirm": {
+    "message": "您想要不儲存並丟棄變更嗎？"
+  },
+  "delete": {
+    "message": "刪除"
+  },
+  "deleteConfirm": {
+    "message": "您想要刪除 '$1' 與其儲存的資料嗎？"
+  },
+  "deleteMultiConfirm": {
+    "message": "您想要刪除選定的 $1 指令稿/CSS 與它們儲存的資料嗎？"
+  },
+  "installConfirm": {
+    "message": "Do you want to install '$1'?Script/CSS with the same name will be replaced if it has a lower version number."
+  },
+  "metaError": {
+    "message": "詮釋資料錯誤"
+  },
+  "noNameError": {
+    "message": "指令稿/CSS 必須有名稱。"
+  },
+  "nameError": {
+    "message": "指令稿/CSS 名稱已存在。您想要取代既有的項目嗎？"
+  },
+  "updateUrlError": {
+    "message": "指令稿/CSS 沒有 updateURL 或版本。"
+  },
+  "noNewUpdate": {
+    "message": "沒有新更新。"
+  },
+  "scriptUpdated": {
+    "message": "指令稿/CSS 已更新至版本 $1"
+  },
+  "exportAll": {
+    "message": "匯出"
+  },
+  "import": {
+    "message": "匯入"
+  },
+  "export": {
+    "message": "匯出"
+  },
+  "fileSizeError": {
+    "message": "檔案大小超過允許的 $1kb"
+  },
+  "fileTypeError": {
+    "message": "不支援的檔案格式"
+  },
+  "fileReadError": {
+    "message": "讀取檔案錯誤"
+  },
+  "fileParseError": {
+    "message": "解析檔案錯誤"
+  },
+  "log": {
+    "message": "Log"
+  },
+  "time": {
+    "message": "Time"
+  },
+  "reference": {
+    "message": "Reference"
+  },
+  "message": {
+    "message": "Message"
+  },
+  "scratchpad": {
+    "message": "Scratchpad"
+  },
+  "run": {
+    "message": "Run"
+  },
+  "undo": {
+    "message": "Undo"
+  },
+  "insertError": {
+    "message": "Failed to insert"
+  },
+  "findScript": {
+    "message": "Find scripts for this site"
+  },
+  "advanced": {
+    "message": "Advanced"
+  },
+  "customOptionsCSS": { "message": "Custom Options CSS" },
+  "customOptionsCSSDescription": {
+    "message": "Customize Options page & CodeMirror style configuration."
+  },
+  "customPopupCSS": { "message": "Custom Popup CSS" },
+  "customPopupCSSDescription": { "message": "Customize toolbar popup style configuration." },
+  "cmOptionsDescription": {
+    "message": "Customize CodeMirror, addons & JavaScript lint configuration."
+  },
+  "cmOptionsError": {
+    "message": "Invalid CodeMirror JSON"
+  },
+  "about": {
+    "message": "關於"
+  },
+  "error": {
+    "message": "操作發生錯誤"
+  },
+  "help": {
+    "message": "說明"
+  },
+  "options": {
+    "message": "選項"
+  },
+  "saveOptions": {
+    "message": "儲存"
+  }
+}

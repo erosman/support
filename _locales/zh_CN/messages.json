@@ -1,0 +1,210 @@
+{
+  "extensionName": {
+    "message": "FireMonkey"
+  },
+  "extensionDescription": {
+    "message": "超级轻量级的用户脚本及用户样式管理器"
+  },
+  "tabScript": {
+    "message": "标签页的脚本和样式"
+  },
+  "otherScript": {
+    "message": "其他脚本和样式"
+  },
+  "scriptCommands": {
+    "message": "脚本命令"
+  },
+  "back": {
+    "message": "返回"
+  },
+  "edit": {
+    "message": "编辑"
+  },
+  "autoUpdateInterval": {
+    "message": "自动更新间隔"
+  },
+  "autoUpdateIntervalDescription": {
+    "message": "更新间隔天数（0 = 不更新）"
+  },
+  "enableSync": {
+    "message": "启用存储同步"
+  },
+  "syncError": {
+    "message": "无法同步存储 ($1KB) 大于 100KB。同步将关闭。"
+  },
+  "counter": {
+    "message": "计数器"
+  },
+  "globalScriptExcludeMatches": {
+    "message": "全局脚本排除匹配"
+  },
+  "globalScriptExcludeMatchesDescription": {
+    "message": "排除匹配模式（每行一个）阻止所有脚本在其上运行。"
+  },
+  "userMeta": {
+    "message": "User Metadata"
+  },
+  "sidebar": { "message": "Sidebar" },
+  "script": {
+    "message": "脚本和样式"
+  },
+  "saveScript": {
+    "message": "保存"
+  },
+  "enable": {
+    "message": "启用"
+  },
+  "update": {
+    "message": "更新"
+  },
+  "autoUpdate": {
+    "message": "自动更新"
+  },
+  "theme": {
+    "message": "主题"
+  },
+  "light": {
+    "message": "明亮"
+  },
+  "dark": {
+    "message": "黑暗"
+  },
+  "newJS": {
+    "message": "新建用户脚本"
+  },
+  "newCSS": {
+    "message": "新建用户样式"
+  },
+  "saveTemplate": {
+    "message": "Save as 模板"
+  },
+  "tabToSpaces": {
+    "message": "制表符转换为空格"
+  },
+  "trimTrailingSpaces": {
+    "message": "去除行尾空格"
+  },
+  "toUpperCase": {
+    "message": "选中部分大写"
+  },
+  "toLowerCase": {
+    "message": "选中部分小写"
+  },
+  "stylish": {
+    "message": "安装 Stylish 样式"
+  },
+  "report": {
+    "message": "报告"
+  },
+  "discardConfirm": {
+    "message": "确定要放弃保存更改？"
+  },
+  "delete": {
+    "message": "删除"
+  },
+  "deleteConfirm": {
+    "message": "确定删除 '$1' 及其下存储的数据吗？"
+  },
+  "deleteMultiConfirm": {
+    "message": "确定删除选中的 $1 个脚本/样式及其下存储的数据吗？"
+  },
+  "installConfirm": {
+    "message": "您想要安装 '$1' 吗？同名脚本/样式如果版本号较低将被替换。"
+  },
+  "metaError": {
+    "message": "元数据错误"
+  },
+  "noNameError": {
+    "message": "脚本/样式必须有名称。"
+  },
+  "nameError": {
+    "message": "脚本/样式名称已经存在。是否替换现有的同名脚本/样式？"
+  },
+  "updateUrlError": {
+    "message": "脚本/样式没有 updateURL 或 version。"
+  },
+  "noNewUpdate": {
+    "message": "没有找到更新。"
+  },
+  "scriptUpdated": {
+    "message": "脚本/样式已更新至 $1 版本"
+  },
+  "exportAll": {
+    "message": "导出"
+  },
+  "import": {
+    "message": "导入"
+  },
+  "export": {
+    "message": "导出"
+  },
+  "fileSizeError": {
+    "message": "文件大小超过允许的 $1kb"
+  },
+  "fileTypeError": {
+    "message": "不支持的文件格式"
+  },
+  "fileReadError": {
+    "message": "读取该文件出错"
+  },
+  "fileParseError": {
+    "message": "解析该文件出错"
+  },
+  "log": {
+    "message": "日志"
+  },
+  "time": {
+    "message": "时间"
+  },
+  "reference": {
+    "message": "参考"
+  },
+  "message": {
+    "message": "消息"
+  },
+  "scratchpad": {
+    "message": "便签"
+  },
+  "run": {
+    "message": "运行"
+  },
+  "undo": {
+    "message": "撤销"
+  },
+  "insertError": {
+    "message": "插入失败"
+  },
+  "findScript": {
+    "message": "查找此站点脚本"
+  },
+  "advanced": {
+    "message": "高级"
+  },
+  "customOptionsCSS": { "message": "Custom Options CSS" },
+  "customOptionsCSSDescription": {
+    "message": "自定义选项页面 & CodeMirror 样式配置。"
+  },
+  "customPopupCSS": { "message": "Custom Popup CSS" },
+  "customPopupCSSDescription": { "message": "Customize toolbar popup style configuration." },
+  "cmOptionsDescription": {
+    "message": "自定义 CodeMirror, 插件 & JavaScript lint 配置。"
+  },
+  "cmOptionsError": {
+    "message": "无效 CodeMirror JSON"
+  },
+  "about": {
+    "message": "关于"
+  },
+  "error": {
+    "message": "运行出错"
+  },
+  "help": {
+    "message": "帮助"
+  },
+  "options": {
+    "message": "选项"
+  },
+  "saveOptions": {
+    "message": "保存"
+  }
+}
