@@ -538,7 +538,6 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #a22;}
 @disable-exclude
 
 @disable-container            (Firefox 97-98)
-@disable-synchGM              (disable GM_* API & force async GM.* API in userscripts that use both)
 
 // Add/Amend Rule changes existing metadata rules
 @match
@@ -1982,8 +1981,8 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
   <span class="gm">GM.popup</span>(options)       <span class="comment"><i>(FireMonkey only)</i></span>
   <span class="gm">GM_popup</span>(options)       <span class="comment"><i>(FireMonkey only)</i></span>
 
-  <span class="gm">GM.getResourceUrl</span>(resourceName)
-  <span class="gm">GM_getResourceUrl</span>(resourceName)
+  <span class="gm">GM.getResource<b style="color: #f30;">Url</b></span>(resourceName)
+  <span class="gm">GM_getResource<b style="color: #f30;">URL</b></span>(resourceName)
 
   <span class="gm">GM.registerMenuCommand</span>(name, onclick)
   <span class="gm">GM_registerMenuCommand</span>(name, onclick)
@@ -2018,31 +2017,30 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
   </tr>
   </thead>
   <tbody class="slim">
-    <tr><th>GM.getValue</th><td class="pass"></td><td class="pass"></td><td class="pass"><span>GM_* alias</span></td><td class="pass"><span>GM_* alias</span> <a href="https://violentmonkey.github.io/api/gm/" title="GM.* Greasemonkey v4-compatible aliases were added in VM2.12.0." target="_blank">&#x24d8;</a></td></tr>
-    <tr><th>GM.setValue</th><td class="pass"></td><td class="pass"></td><td class="pass"><span>GM_* alias</span></td><td class="pass"><span>GM_* alias</span></td></tr>
-    <tr><th>GM.listValues</th><td class="pass"></td><td class="pass"></td><td class="pass"><span>GM_* alias</span></td><td class="pass"><span>GM_* alias</span></td></tr>
-    <tr><th>GM.deleteValue</th><td class="pass"></td><td class="pass"></td><td class="pass"><span>GM_* alias</span></td><td class="pass"><span>GM_* alias</span></td></tr>
-    <tr><th>GM.addValueChangeListener</th><td class="pass"></td><td class="fail"></td><td class="pass"><span>GM_* alias</span></td><td class="fail"></td></tr>
-    <tr><th>GM.removeValueChangeListener</th><td class="pass"></td><td class="fail"></td><td class="pass"><span>GM_* alias</span></td><td class="fail"></td></tr>
-    <tr><th>GM.openInTab</th><td class="pass"></td><td class="pass"></td><td class="pass"><span>GM_* alias</span></td><td class="pass"><span>GM_* alias</span></td></tr>
-    <tr><th>GM.setClipboard</th><td class="pass"></td><td class="pass"></td><td class="pass"><span>GM_* alias</span> <a href="https://github.com/Tampermonkey/tampermonkey/issues/918" title="setClipboard API sets the clipboard to 'undefined'" target="_blank">&#x24d8;</a></td><td class="pass"><span>GM_* alias</span></td></tr>
-    <tr><th>GM.notification</th><td class="pass"></td><td class="pass"></td><td class="pass"><span>GM_* alias</span></td><td class="pass"><span>GM_* alias</span></td></tr>
-    <tr><th>GM.xmlHttpRequest</th><td class="pass"></td><td class="pass"></td><td class="pass"><span>GM_* alias</span></td><td class="pass"><span>GM_* alias</span></td></tr>
+    <tr><th>GM.getValue</th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"> <a href="https://violentmonkey.github.io/api/gm/" title="GM.* Greasemonkey v4-compatible aliases were added in VM2.12.0." target="_blank">&#x24d8;</a></td></tr>
+    <tr><th>GM.setValue</th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr><th>GM.listValues</th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr><th>GM.deleteValue</th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr><th>GM.addValueChangeListener</th><td class="pass"></td><td class="fail"></td><td class="pass"></td><td class="fail"></td></tr>
+    <tr><th>GM.removeValueChangeListener</th><td class="pass"></td><td class="fail"></td><td class="pass"></td><td class="fail"></td></tr>
+    <tr><th>GM.openInTab</th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr><th>GM.setClipboard</th><td class="pass"></td><td class="pass"></td><td class="pass"> <a href="https://github.com/Tampermonkey/tampermonkey/issues/918" title="setClipboard API sets the clipboard to 'undefined'" target="_blank">&#x24d8;</a></td><td class="pass"></td></tr>
+    <tr><th>GM.notification</th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr><th>GM.xmlHttpRequest</th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>GM.fetch &#x1f1f3;</th><td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
-    <tr><th>GM.download</th><td class="pass"></td><td class="fail"></td><td class="pass"><span>GM_* alias</span></td><td class="fail"></td></tr>
-    <tr><th>GM.getResourceText</th><td class="pass"></td><td class="fail"></td><td class="pass"><span>GM_* alias</span></td><td class="fail"></td></tr>
-    <tr><th>GM.getResource<b style="color: #f30;">Url</b></th><td class="pass"></td><td class="pass"><a href="https://wiki.greasespot.net/GM.getResourceUrl" target="_blank">&#x24d8;</a></td><td class="pass"><span>GM_* alias</span></td><td class="fail"></td></tr>
-    <tr><th>GM.getResource<b style="color: #f30;">URL</b></th><td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="pass"><span>GM_* alias</span> <a href="https://github.com/violentmonkey/violentmonkey/blob/f0a35490f61e7c0141244bcf32f48352ab13ddb4/src/injected/web/gm-api.js#L198" target="_blank">&#x24d8;</a></td></tr>
+    <tr><th>GM.download</th><td class="pass"></td><td class="fail"></td><td class="pass"></td><td class="fail"></td></tr>
+    <tr><th>GM.getResourceText</th><td class="pass"></td><td class="fail"></td><td class="pass"></td><td class="fail"></td></tr>
+    <tr><th>GM.getResourceUrl</th><td class="pass"></td><td class="pass"><a href="https://wiki.greasespot.net/GM.getResourceUrl" target="_blank">&#x24d8;</a></td><td class="pass"></td><td class="pass"> <a href="https://github.com/violentmonkey/violentmonkey/blob/925507139d92d09a4c83d32506c90ec691ea8247/src/injected/web/gm-api-wrapper.js#L9" target="_blank">&#x24d8;</a> <a href="https://github.com/violentmonkey/violentmonkey/blob/f0a35490f61e7c0141244bcf32f48352ab13ddb4/src/injected/web/gm-api.js#L198" target="_blank">&#x24d8;</a></td></tr>
 
-    <tr><th>GM.registerMenuCommand</th><td class="pass"></td><td class="pass"><span>v4.11</span> <a href="https://wiki.greasespot.net/Version_history" target="_blank">&#x24d8;</a></td><td class="pass"><span>GM_* alias</span></td><td class="fail"></td></tr>
-    <tr><th>GM.unregisterMenuCommand</th><td class="pass"></td><td class="fail"></td><td class="pass"><span>GM_* alias</span></td><td class="fail"></td></tr>
-    <tr><th>GM.addStyle</th><td class="pass"></td><td class="fail"><a href="https://wiki.greasespot.net/GM_addStyle" title="As of Greasemonkey 4.0, this method has been removed. " target="_blank">&#x24d8;</a></td><td class="pass"><span>GM_* alias</span></td><td class="pass"><span>GM_* alias</span></td></tr>
+    <tr><th>GM.registerMenuCommand</th><td class="pass"></td><td class="pass"><span>v4.11</span> <a href="https://wiki.greasespot.net/Version_history" target="_blank">&#x24d8;</a></td><td class="pass"></td><td class="fail"></td></tr>
+    <tr><th>GM.unregisterMenuCommand</th><td class="pass"></td><td class="fail"></td><td class="pass"></td><td class="fail"></td></tr>
+    <tr><th>GM.addStyle</th><td class="pass"></td><td class="fail"><a href="https://wiki.greasespot.net/GM_addStyle" title="As of Greasemonkey 4.0, this method has been removed. " target="_blank">&#x24d8;</a></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>GM.addScript &#x1f1f3;</th><td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
     <tr><th>GM.popup &#x1f1f3;</th><td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
-    <tr><th>GM.log</th><td class="pass"></td><td class="fail"></td><td class="pass"><span>GM_* alias</span></td><td class="fail"></td></tr>
-    <tr><th>GM.info</th><td class="pass"></td><td class="pass"></td><td class="pass"><span>GM_* alias</span></td><td class="pass"><span>GM_* alias</span></td></tr>
+    <tr><th>GM.log</th><td class="pass"></td><td class="fail"></td><td class="pass"></td><td class="fail"></td></tr>
+    <tr><th>GM.info</th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
 
-    <tr><th>GM.cookie</th><td class="fail"></td><td class="fail"></td><td class="pass"><span>GM_* alias</span></td><td class="fail"></td></tr>
+    <tr><th>GM.cookie</th><td class="fail"></td><td class="fail"></td><td class="pass"></td><td class="fail"></td></tr>
 
 
     <tr><th>&nbsp;</th><td colspan="6"></td></tr>
@@ -2099,10 +2097,7 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
     <tr><th>window.focus <sup>2</sup></th><td class="fail"></td><td class="fail"></td><td class="pass"></td><td class="pass"><span>v2.12.10</span> <a href="https://violentmonkey.github.io/api/metadata-block/#grant" target="_blank">&#x24d8;</a></td></tr>
     <tr><th>window.onurlchange <sup>3</sup></th><td class="fail"></td><td class="fail"></td><td class="pass"><span>v4.11</span> <a href="https://www.tampermonkey.net/changelog.php?ext=dhdg&show=fire" target="_blank">&#x24d8;</a></td><td class="fail"></td></tr>
 
-
     <tr><th>&nbsp;</th><td colspan="6"></td></tr>
-
-
     <tr>
       <th>&#x1f4e5; Injected Scripts
           <br><span>✔ every page</span>
@@ -2112,13 +2107,8 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
       </th>
       <td></td>
       <td></td>
-      <td><code style="font-size: 0.9em;">content.js
-page.js
-rea/common.js</code></td>
-      <td><code style="font-size: 0.9em;">browser.js
-injected-web.js
-injected.js
-sandbox/injected-web.js</code></td>
+      <td class="small">content.js<br>page.js<br>rea/common.js</td>
+      <td class="small">browser.js<br>injected-web.js<br>injected.js<br>sandbox/injected-web.js</td>
     </tr>
 
     <tr><th>&nbsp;</th><td colspan="6"></td></tr>
@@ -2193,14 +2183,9 @@ sandbox/injected-web.js</code></td>
           <br><span>✔ when turned off</span>
       </th>
       <td></td>
-      <td><code style="font-size: 0.9em;">content/apply.js
-content/style-injector.js
-js/msg.js
-js/polyfill.js
-js/prefs.js
-js/promisify.js</code></td>
-      <td><code style="font-size: 0.9em;">src/inject/apply.js</code></td>
-      <td><code style="font-size: 0.9em;">src/inject/apply.js</code></td>
+      <td class="small">content/apply.js<br>content/style-injector.js<br>js/msg.js<br>js/polyfill.js<br>js/prefs.js<br>js/promisify.js/td>
+      <td class="small">src/inject/apply.js</td>
+      <td class="small">src/inject/apply.js</td>
     </tr>
 
     <tr><th>&nbsp;</th><td colspan="6"></td></tr>
@@ -3115,17 +3100,17 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
     <tr>
       <th>fetch<br>Browser Cookie Isolation</th>
       <td class="pass"></td>
-      <td>n/a</td>
-      <td>n/a</td>
-      <td>n/a</td>
+      <td>—</td>
+      <td>—</td>
+      <td>—</td>
     </tr>
 
     <tr>
       <th>fetch<br>credentials<br><span>(only 'omit' effective)</span></th>
       <td class="pass"></td>
-      <td>n/a</td>
-      <td>n/a</td>
-      <td>n/a</td>
+      <td>—</td>
+      <td>—</td>
+      <td>—</td>
     </tr>
 
     <tr>
@@ -3158,7 +3143,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
     <tr>
       <th>download<br>Browser Cookie Isolation</th>
       <td class="pass"></td>
-      <td>n/a</td>
+      <td>—</td>
       <td class="unknown"></td>
       <td class="unknown"></td>
     </tr>
@@ -3166,7 +3151,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
     <tr>
       <th>getResourceText<br>Browser Cookie Isolation</th>
       <td class="pass"></td>
-      <td>n/a</td>
+      <td>—</td>
       <td class="unknown"></td>
       <td class="unknown"></td>
     </tr>

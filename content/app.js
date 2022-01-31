@@ -180,7 +180,6 @@ class Meta {                                                // bg options
       error: '',                                            // reset error on save
       storage: {},
       grant: [],
-      disableSyncGM: false,
 
       // --- API related data
       allFrames: false,
@@ -446,10 +445,6 @@ class Meta {                                                // bg options
         case 'disable-container':
           const vlc = value.toLowerCase();
           data.container = value ? data.container.filter(item => item !== vlc) : [];
-          break;
-
-        case 'disable-synchGM':
-          data.disableSyncGM = true;
           break;
 
         case 'match':

@@ -1,6 +1,6 @@
 ﻿browser.userScripts.onBeforeScript.addListener(script => {
   // --- globals
-  const {name, resource, info, id = `_${name}`, injectInto, grant, disableSyncGM} = script.metadata; // set id as _name
+  const {name, resource, info, id = `_${name}`, injectInto, grant} = script.metadata; // set id as _name
   const cache = {};
   const valueChange = {};
   const scriptCommand = {};
@@ -288,11 +288,7 @@
       return response ? script.export(response.text) : null;
     },
 
-    getResourceUrl(resourceName) {                          // GreaseMonkey | TamperMonkey
-      return resource[resourceName];
-    },
-
-    getResourceURL(resourceName) {                          // ViolentMonkey
+    getResourceUrl(resourceName) {
       return resource[resourceName];
     },
 
@@ -521,8 +517,7 @@
     GM_fetch:                     GM.fetch,
     GM_download:                  GM.download,
     GM_getResourceText:           GM.getResourceText,
-    GM_getResourceUrl:            GM.getResourceUrl,        // GreaseMonkey | TamperMonkey
-    GM_getResourceURL:            GM.getResourceURL,        // ViolentMonkey
+    GM_getResourceURL:            GM.getResourceUrl,
     GM_registerMenuCommand:       GM.registerMenuCommand,
     GM_unregisterMenuCommand:     GM.unregisterMenuCommand,
     GM_addStyle:                  GM.addStyle,
@@ -535,11 +530,12 @@
     matchURL:                     api.matchURL
   };
 
-  disableSyncGM && Object.keys(globals).forEach(item => item.startsWith('GM_') && delete globals[item]);
-
-  // disable sync GM API if async GM API are supported
-  ['getValue', 'setValue', 'listValues', 'deleteValue'].forEach(item =>
-      grant.includes(`GM_${item}`) && grant.includes(`GM.${item}`) && delete globals[`GM_${item}`]);
+  // case-changed GM API
+  grant.includes('GM.xmlHttpRequest') && grant.push('GM.xmlhttpRequest');
+  grant.includes('GM.getResourceUrl') && grant.push('GM.getResourceURL');
+  
+  // auto-disable sync GM API if async GM API are supported
+  grant.forEach(item => item.startsWith('GM_') && grant.includes(`GM.${item.substring(3)}`) && delete globals[item]);  
 
   script.defineGlobals(globals);
 });
