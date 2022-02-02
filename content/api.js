@@ -504,38 +504,39 @@
 
   const globals = {
     GM,
-    GM_getValue:                  api.GM_getValue,
-    GM_listValues:                api.GM_listValues,
-    GM_deleteValue:               GM.deleteValue,
-    GM_setValue:                  GM.setValue,
+    GM_addScript:                 GM.addScript,
+    GM_addStyle:                  GM.addStyle,
     GM_addValueChangeListener:    GM.addValueChangeListener,
-    GM_removeValueChangeListener: GM.removeValueChangeListener,
-    GM_openInTab:                 GM.openInTab,
-    GM_setClipboard:              GM.setClipboard,
-    GM_notification:              GM.notification,
-    GM_xmlhttpRequest:            GM.xmlHttpRequest,
-    GM_fetch:                     GM.fetch,
+    GM_deleteValue:               GM.deleteValue,
     GM_download:                  GM.download,
+    GM_fetch:                     GM.fetch,
     GM_getResourceText:           GM.getResourceText,
     GM_getResourceURL:            GM.getResourceUrl,
-    GM_registerMenuCommand:       GM.registerMenuCommand,
-    GM_unregisterMenuCommand:     GM.unregisterMenuCommand,
-    GM_addStyle:                  GM.addStyle,
-    GM_addScript:                 GM.addScript,
-    GM_popup:                     GM.popup,
-    GM_log:                       GM.log,
+    GM_getValue:                  api.GM_getValue,
     GM_info:                      GM.info,
-    exportFunction,
+    GM_listValues:                api.GM_listValues,
+    GM_log:                       GM.log,
+    GM_notification:              GM.notification,
+    GM_openInTab:                 GM.openInTab,
+    GM_popup:                     GM.popup,
+    GM_registerMenuCommand:       GM.registerMenuCommand,
+    GM_removeValueChangeListener: GM.removeValueChangeListener,
+    GM_setClipboard:              GM.setClipboard,
+    GM_setValue:                  GM.setValue,
+    GM_unregisterMenuCommand:     GM.unregisterMenuCommand,
+    GM_xmlhttpRequest:            GM.xmlHttpRequest,
+
     cloneInto:                    api.cloneIntoFM,
+    exportFunction,
     matchURL:                     api.matchURL
   };
 
-  // case-changed GM API
+  // case-altered GM API
   grant.includes('GM.xmlHttpRequest') && grant.push('GM.xmlhttpRequest');
   grant.includes('GM.getResourceUrl') && grant.push('GM.getResourceURL');
-  
+
   // auto-disable sync GM API if async GM API are supported
-  grant.forEach(item => item.startsWith('GM_') && grant.includes(`GM.${item.substring(3)}`) && delete globals[item]);  
+  grant.forEach(item => item.startsWith('GM_') && grant.includes(`GM.${item.substring(3)}`) && delete globals[item]);
 
   script.defineGlobals(globals);
 });

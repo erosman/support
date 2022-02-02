@@ -155,7 +155,7 @@ class ScriptRegister {
     // --- contextual identity container
     script.container?.[0] && this.containerSupport[target] &&
         (options.cookieStoreId = script.container.map(item => `firefox-${item}`));
-    
+
     // --- add @require
     require.forEach(item => {
       const id = `_${item}`;
@@ -203,7 +203,6 @@ class ScriptRegister {
         storage: script.storage,
         injectInto: script.injectInto,
         grant: script.grant || [],
-        disableSyncGM: !!script.disableSyncGM,              // https://bugzilla.mozilla.org/show_bug.cgi?id=1750430
         info: {                                             // GM.info data
           scriptHandler: 'FireMonkey',
           version: this.FMV,
@@ -850,21 +849,23 @@ class Migrate {
         author: '',
         description: '',
         updateURL: '',
+        version: '',
+
         enabled: true,
         autoUpdate: false,
-        version: '',
+        userMeta: '',
         antifeatures: [],
         injectInto: '',
-
         require: [],
         requireRemote: [],
         resource: {},
-        userMatches: '',
-        userExcludeMatches: '',
-        userRunAt: '',
-        i18n: {name: {}, description: {}},
+        i18n: {
+          name: {},
+          description: {}
+        },
         error: '',
         storage: {},
+        grant: [],
 
         // --- API related data
         allFrames: false,
@@ -877,6 +878,7 @@ class Migrate {
         excludeGlobs: [],
         includes: [],
         excludes: [],
+        container: [],
         matchAboutBlank: false,
         runAt: 'document_idle'
       };
@@ -933,13 +935,12 @@ class Migrate {
       delete item.userRunAt;
     });
 
-    // --- v2.42 migrate 2022-01-
+    // --- v2.42 migrate 2022-02-
     if (pref.hasOwnProperty('customCSS')) {
       pref.customOptionsCSS = pref.customCSS;
       delete pref.customCSS;
       await browser.storage.local.remove('customCSS');
     }
-
 
     // --- update database
     await browser.storage.local.set(pref);

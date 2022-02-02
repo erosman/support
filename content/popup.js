@@ -160,10 +160,11 @@ class Popup {
     const {homepage, support} = this.getMetadata(script);   // show homepage/support
     script.homepage = homepage;
     script.support = support;
+    script.size = new Intl.NumberFormat().format(parseFloat(((script.js || script.css).length/1024).toFixed(1))) + ' KB';
 
-    const infoArray = ['name', 'description', 'author', 'version', 'homepage', 'support', 'size', 'updateURL',
+    const infoArray = ['name', 'description', 'author', 'version', 'size', 'homepage', 'support', 'updateURL',
                         'matches', 'excludeMatches', 'includes', 'excludes', 'includeGlobs', 'excludeGlobs', 'container',
-                        'require', 'injectInto', 'runAt', 'error'];
+                        'require', 'injectInto', 'runAt', 'grant', 'error'];
 
     infoArray.forEach(item => {
       if (!script[item]) { return; }                        // skip to next
@@ -195,13 +196,15 @@ class Popup {
           script.style?.[0] && arr.push(...script.style.flatMap(i => i.matches));
           break;
 
-        case 'size':
-          const text = script.js || script.css;
-          arr.push(new Intl.NumberFormat().format(parseFloat((text.length/1024).toFixed(1))) + ' KB');
-          break;
-
         case 'injectInto':
           item = 'inject-into';
+          break;
+
+        case 'grant':
+          arr.includes('GM.xmlHttpRequest') && arr.push('GM.xmlhttpRequest');
+          arr.includes('GM.getResourceUrl') && arr.push('GM.getResourceURL');
+          arr = arr.filter(item => !item.startsWith('GM_') || !arr.includes(`GM.${item.substring(3)}`) )
+                .filter(item => !['GM.xmlhttpRequest', 'GM.getResourceURL'].includes(item)).sort();
           break;
 
         case 'runAt':
@@ -233,17 +236,14 @@ class Popup {
   }
 
   getMetadata(script) {
-    let homepage, support;
     const url = script.updateURL;
     const meta = (script.js || script.css).match(Meta.regEx)[2];
 
     // look for @homepage @homepageURL @website and @source
-    const hm = meta.match(/@(homepage(URL)?|website|source)\s+(http\S+)/);
-    hm && (homepage = hm[3]);
-
+    let homepage = meta.match(/@(homepage(URL)?|website|source)\s+(http\S+)/)?.[3];
+    
     // look for @support @supportURL
-    const sup = meta.match(/@support(URL)?\s+(http\S+)/);
-    sup && (support = sup[2]);
+    let support = meta.match(/@support(URL)?\s+(http\S+)/)?.[2];
 
     // make homepage from updateURL
     switch (true) {
