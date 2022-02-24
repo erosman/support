@@ -56,12 +56,12 @@
     }
 
     GM_getResourceText(resourceName) {
-      const url = resource[resourceName];console.log(url);
+      const url = resource[resourceName];
       switch (true) {
         case !url:
           break;
 
-        case !/\.css\b/i.test(url):
+        case /\.css\b/i.test(url):
           GM.addElement('link', {href: url, rel: 'stylesheet', 'data-src': `${name}.user.js`});
           break;
 /*
@@ -72,7 +72,7 @@
       }
       return ' ';
     }
-    
+
     getResourceUrl(resourceName) {
       return resource[resourceName];
     }
@@ -336,7 +336,7 @@
     },
 
     addStyle(css) {
-      if (!css) { return; }
+      if (!css.trim()) { return; }
       try {
         const node = document.createElement('style');
         node.textContent = css;
@@ -382,11 +382,12 @@
       }
 
       const elem = document.createElement(tag);
+      elem.dataset.src = `${name}.user.js`;
       Object.entries(attr).forEach(([key, value]) =>
         key === 'textContent' ? elem.append(value) : elem.setAttribute(key, value) );
 
       try {
-        parent.append(elem);
+        return parent.appendChild(elem);
       } catch(error) { api.log(`addElement ➜ ${tag} ${error.message}`, 'error'); }
     },
 

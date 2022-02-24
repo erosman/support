@@ -100,13 +100,13 @@
     <tr>
       <th style="min-width: 8em;">Area</th>
       <th style="min-width: 10em;">Details</th>
-      <th style="min-width: 20em;">Exposure</th>
+      <th style="min-width: 30em;">Exposure</th>
     </tr>
   </thead>
   <tbody>
-    <tr><th>GM_getResourceText</th><td>if loading anything other than CSS (e.g. JavaScript/JSON/HTML) <a href="#getResourceText">&#x24d8;</a></td><td>1.5% use the API<br>41.89% @resource for CSS which is compatible<br><b>0.87%</b> might be incompatible</td></tr>
-    <tr><th>GM.getResourceUrl<br>GM_getResourceUrl</th><td>if userscript processes the result before applying it <a href="#getResourceUrl">&#x24d8;</a></td><td>0.61% use the API<br>25.78% @resource for images which is compatible<br><b>0.45%</b> might be incompatible</td></tr>
-    <tr><th>uncommon @grants</th><td><code>GM_cookie</code>, <code>GM_getTab</code>, <code>GM_getTabs</code>, <code>GM_saveTab</code>, <code>window.close</code>, <code>window.focus</code>, <code>window.onurlchange</code> <a href="#api" title="">&#x24d8;</a></td><td>max <b>1.03%</b> of userscripts use these APIs<br>Probably a lot less as there would be duplicate counts</td></tr>
+    <tr><th>GM_getResourceText</th><td>if loading anything other than CSS (e.g. JavaScript/JSON/HTML) <a href="#getResourceText">&#x24d8;</a></td><td>954 / 63,435 (<b>1.5%</b>) scripts use the API<br>742 / 1,895 (39.16%) @resource for CSS which is compatible<br>1,153 / 1,895 (60.84%) @resource might be incompatible</td></tr>
+    <tr><th>GM.getResourceUrl<br>GM_getResourceUrl</th><td>if userscript processes the result before applying it <a href="#getResourceUrl">&#x24d8;</a></td><td>385 / 63,435 (<b>0.61%</b>) scripts use the API<br>501 / 1,895 (26.44%) @resource for images which is compatible<br>1,394 / 1,895 (73.56%) @resource might be incompatible</td></tr>
+    <tr><th>uncommon @grants</th><td><code>GM_cookie</code>, <code>GM_getTab</code>, <code>GM_getTabs</code>, <code>GM_saveTab</code>, <code>window.close</code>, <code>window.focus</code>, <code>window.onurlchange</code> <a href="#api" title="">&#x24d8;</a></td><td>651 / 63,435 (<b>1.03%</b>) scripts use these APIs<br>Probably a lot less script count as there would be duplicates</td></tr>
     <tr><th>Content Security Policy (CSP)</th><td>UserScripts that only work with <i>Tampermonkey</i> on pages with strict CSP since <i>Tampermonkey</i> alters their CSP <a href="#inject-into">&#x24d8;</a></td><td class="unknown"></td></tr>
     <tr><th>new XMLHttpRequest()<br>fetch()</th><td>due to the differences between <code>content</code> & <code>userScript</code> contexts <a href="#JavaScript-xmlHttpRequest-fetch">&#x24d8;</a></td><td class="unknown"></td></tr>
 
