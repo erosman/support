@@ -1,6 +1,6 @@
 ﻿browser.userScripts.onBeforeScript.addListener(script => {
   // --- globals
-  const {name, resource, info, id = `_${name}`, injectInto, grant} = script.metadata; // set id as _name
+  const {name, resource, info, id = `_${name}`, injectInto, grantRemove} = script.metadata; // set id as _name
   const cache = {};
   const valueChange = {};
   const scriptCommand = {};
@@ -9,9 +9,6 @@
   class API {
 
     constructor() {
-      // ----- Script Storage
-     browser.storage.local.get(id).then((result = {}) => storage = result[id].storage);
-
       // ----- Script Command registerMenuCommand
       browser.runtime.onMessage.addListener(message => {
         switch (true) {
@@ -28,6 +25,10 @@
     }
 
     // ----- Script Storage
+    storageGet() {
+      return browser.storage.local.get(id).then((result = {}) => { storage = result[id].storage; });
+    }
+
     storageChange(changes) {
       if (!changes[id]) { return; }                         // not this userscript
       const oldValue = changes[id].oldValue.storage;
@@ -52,6 +53,28 @@
 
     GM_listValues() {
       return script.export([...new Set([...Object.keys(storage), ...Object.keys(cache)])]);
+    }
+
+    GM_getResourceText(resourceName) {
+      const url = resource[resourceName];console.log(url);
+      switch (true) {
+        case !url:
+          break;
+
+        case !/\.css\b/i.test(url):
+          GM.addElement('link', {href: url, rel: 'stylesheet', 'data-src': `${name}.user.js`});
+          break;
+/*
+        case url.endsWith('.js'):
+          GM.addElement('script', {src: url, 'data-src': `${name}.user.js`});
+          break;
+*/
+      }
+      return ' ';
+    }
+    
+    getResourceUrl(resourceName) {
+      return resource[resourceName];
     }
 
     // ----- prepare return value
@@ -285,10 +308,10 @@
         api: 'fetch',
         data: {url: resource[resourceName], init: {}}
       });
-      return response ? script.export(response.text) : null;
+      return response ? script.export(response.text) : '';
     },
 
-    getResourceUrl(resourceName) {
+    async getResourceUrl(resourceName) {
       return resource[resourceName];
     },
 
@@ -317,7 +340,7 @@
       try {
         const node = document.createElement('style');
         node.textContent = css;
-        node.dataset.src = name + '.user.js';
+        node.dataset.src = `${name}.user.js`;
         (document.head || document.body || document.documentElement || document).appendChild(node);
       } catch(error) { api.log(`addStyle ➜ ${error.message}`, 'error'); }
     },
@@ -334,6 +357,37 @@
         (document.body || document.head || document.documentElement || document).appendChild(node);
         node.remove();
       } catch(error) { api.log(`addScript ➜ ${error.message}`, 'error'); }
+    },
+
+    addElement(parent, tag, attr) {
+      if (!parent || !tag) { return; }
+      // mapping (tagName, attributes) & (parentNode, tagName, attributes)
+      if (typeof parent === 'string') {
+        attr = tag;
+        tag = parent;
+        parent = null;
+      }
+      tag = tag.toLowerCase();
+
+      switch (true) {
+        case !!parent:
+          break;
+
+        case ['script', 'link', 'style', 'meta'].includes(tag):
+          parent = document.head || document.body;
+          break;
+
+        default:
+          parent = document.body || document.documentElement;
+      }
+
+      const elem = document.createElement(tag);
+      Object.entries(attr).forEach(([key, value]) =>
+        key === 'textContent' ? elem.append(value) : elem.setAttribute(key, value) );
+
+      try {
+        parent.append(elem);
+      } catch(error) { api.log(`addElement ➜ ${tag} ${error.message}`, 'error'); }
     },
 
     popup({type = 'center', modal = true} = {}) {
@@ -504,14 +558,15 @@
 
   const globals = {
     GM,
+    GM_addElement:                GM.addElement,
     GM_addScript:                 GM.addScript,
     GM_addStyle:                  GM.addStyle,
     GM_addValueChangeListener:    GM.addValueChangeListener,
     GM_deleteValue:               GM.deleteValue,
     GM_download:                  GM.download,
     GM_fetch:                     GM.fetch,
-    GM_getResourceText:           GM.getResourceText,
-    GM_getResourceURL:            GM.getResourceUrl,
+    GM_getResourceText:           api.GM_getResourceText,
+    GM_getResourceURL:            api.getResourceUrl,
     GM_getValue:                  api.GM_getValue,
     GM_info:                      GM.info,
     GM_listValues:                api.GM_listValues,
@@ -526,17 +581,14 @@
     GM_unregisterMenuCommand:     GM.unregisterMenuCommand,
     GM_xmlhttpRequest:            GM.xmlHttpRequest,
 
+    storageGet:                   api.storageGet,
     cloneInto:                    api.cloneIntoFM,
     exportFunction,
     matchURL:                     api.matchURL
   };
 
-  // case-altered GM API
-  grant.includes('GM.xmlHttpRequest') && grant.push('GM.xmlhttpRequest');
-  grant.includes('GM.getResourceUrl') && grant.push('GM.getResourceURL');
-
   // auto-disable sync GM API if async GM API are supported
-  grant.forEach(item => item.startsWith('GM_') && grant.includes(`GM.${item.substring(3)}`) && delete globals[item]);
+  grantRemove.forEach(item => delete globals[item]);
 
   script.defineGlobals(globals);
 });

@@ -77,7 +77,7 @@ class App {
   }
 
   static saveFile(data, filename, saveAs = true) {
-    if (this.android) {
+    if (!browser.downloads) {                               // Android
       const a = document.createElement('a');
       a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(data);
       a.setAttribute('download', filename);
@@ -85,7 +85,7 @@ class App {
       return;
     }
 
-    const blob = new Blob([data], {type : 'text/plain;charset=utf-8'});
+    const blob = new Blob([data], {type: 'text/plain;charset=utf-8'});
     browser.downloads.download({
       url: URL.createObjectURL(blob),
       filename,
@@ -154,9 +154,11 @@ class Meta {                                                // bg options
     const metaData = str.match(this.regEx);
     if (!metaData) { return null; }
 
-    const js = metaData[1].toLowerCase() === 'userscript';
-    const userStyle = metaData[1].toLowerCase() === 'userstyle';
-    // Metadata Block
+    const type = metaData[1].toLowerCase();
+    const js = type === 'userscript';
+    const userStyle = type === 'userstyle';
+
+    // --- Metadata Block
     const data = {
       // --- extension related data
       name: '',
@@ -483,13 +485,13 @@ class Meta {                                                // bg options
     // ------------- /User Metadata ------------------------
 
     // --- auto-convert include/exclude rules
-    [data.includes, data.matches, data.includeGlobs] = this.convert(data.includes, data.matches, data.includeGlobs);
-    [data.excludes, data.excludeMatches, data.excludeGlobs] = this.convert(data.excludes, data.excludeMatches, data.excludeGlobs);
+    [data.includes, data.matches, data.includeGlobs] = this.convert(data.includes, data.matches, data.includeGlobs, js);
+    [data.excludes, data.excludeMatches, data.excludeGlobs] = this.convert(data.excludes, data.excludeMatches, data.excludeGlobs, js);
 
     // --- check for overlap rules
     data.matches = this.checkOverlap(data.matches);
     data.excludeMatches = this.checkOverlap(data.excludeMatches);
-
+;
     // --- remove duplicates
     Object.keys(data).forEach(item => Array.isArray(data[item]) && data[item].length > 1 && (data[item] = [...new Set(data[item])]));
 
@@ -544,7 +546,7 @@ class Meta {                                                // bg options
     return p;
   }
 
-  static convert(inc, mtch, glob) {
+  static convert(inc, mtch, glob, js) {
     const newInc = [];
     inc.forEach(item => {
       const converted = this.convertPattern(item);
@@ -553,8 +555,8 @@ class Meta {                                                // bg options
           mtch.push(converted);
           break;;
 
-        case item.startsWith('/') &&  item.endsWith('/'): // keep regex in includes/excludes, rest in includeGlobs/excludeGlobs
-          newInc.push(item);
+        case item.startsWith('/') &&  item.endsWith('/'):   // keep regex in includes/excludes, rest in includeGlobs/excludeGlobs
+          js && newInc.push(item);                          // only for userScript
           break;
 
         default:
@@ -756,14 +758,13 @@ class CheckMatches {                                        // used in bg & popu
       return [[], App.getIds().sort(Intl.Collator().compare), frames.length];
     }
 
-    const urls = [...new Set(frames.map(item =>
-      item.url.replace(/#.*/, '').replace(/(:\/\/[^:/]+):\d+/, '$1')).filter(this.supported))];
+    const urls = [...new Set(frames.map(this.cleanUrl).filter(this.supported))];
     const gExclude = pref.globalScriptExcludeMatches ? pref.globalScriptExcludeMatches.split(/\s+/) : [];
     const containerId = tab.cookieStoreId.substring(8);
 
     // --- background
     if (bg) {
-      return App.getIds().filter(item => pref[item].enabled && this.get(pref[item],tab.url, urls, gExclude, containerId))
+      return App.getIds().filter(item => pref[item].enabled && this.get(pref[item], tab.url, urls, gExclude, containerId))
           .map(item => (pref[item].js ? '\u{1f539} ' :  '\u{1f538} ') + item.substring(1));
     }
 
@@ -778,6 +779,10 @@ class CheckMatches {                                        // used in bg & popu
     return /^(https?:|file:|about:blank)/i.test(url);
   }
 
+  static cleanUrl(url) {
+    return (url.url || url).replace(/#.*/, '').replace(/(:\/\/[^:/]+):\d+/, '$1');
+  }
+
   static get(item, tabUrl, urls, gExclude = [], containerId) {
     if (item.container && item.container[0] && !item.container.includes(containerId)) { return false; } // check container
 
@@ -789,10 +794,10 @@ class CheckMatches {                                        // used in bg & popu
         return true;
 
       case gExclude[0] && this.isMatch(urls, gExclude):     // Global Script Exclude Matches
-      case !item.matches[0] && !item.includeGlobs[0] && !styleMatches[0]: // scripts/css without matches/includeGlobs/style
+      case !item.matches[0] && !item.includes[0] && !item.includeGlobs[0] && !styleMatches[0]: // scripts/css without matches/includes/includeGlobs/style
 
       // includes & matches & globs
-      case !this.isMatch(urls, [...item.matches, ...styleMatches]):
+      case !item.includes[0] && !this.isMatch(urls, [...item.matches, ...styleMatches]):
       case item.includeGlobs[0] && !this.isMatch(urls, item.includeGlobs, true):
       case item.includes[0] && !this.isMatch(urls, item.includes, false, true):
 

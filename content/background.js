@@ -118,7 +118,7 @@ class ScriptRegister {
     script.style[0] ? script.style.forEach((item, i) => this.unregister(id + 'style' + i)) : this.unregister(id);
 
     // --- stop if script is not enabled or no mandatory matches
-    if (!script.enabled || (!script.matches[0] && !script.style[0])) { return; }
+    if (!script.enabled || (!script.matches[0] && !script.includes[0] && !script.style[0])) { return; }
 
     // --- preppare script options
     const options = {
@@ -165,13 +165,12 @@ class ScriptRegister {
       else if (pref[id]?.[target]) {                        // same type only
         let code = Meta.prepare(pref[id][target]);
         js && (code += sourceURL + encodeURI(item) + '.user.js');
-        page && (code = `GM_addScript(${JSON.stringify(code)})`);
+        page && (code = `GM.addScript(${JSON.stringify(code)})`);
         options[target].push({code});
       }
       else if (js && pref[id]?.css) {                       // useCSS in userScript
         let code = Meta.prepare(pref[id].css);
-        code = `GM_addStyle(${JSON.stringify(code)})`;
-        page && (code = `GM_addScript(${JSON.stringify(code)})`);
+        code = `GM.addStyle(${JSON.stringify(code)})`;
         options[target].push({code});
       }
     });
@@ -184,8 +183,8 @@ class ScriptRegister {
         .then(code => {
           url.startsWith('/lib/') && (url = url.slice(1, -1));
           if (js) {
-            code = url.endsWith('.css') ? `GM_addStyle(${JSON.stringify(code)})` : code + sourceURL + encodeURI(url);
-            page && (code = `GM_addScript(${JSON.stringify(code)})`);
+            code = url.endsWith('.css') ? `GM.addStyle(${JSON.stringify(code)})` : code + sourceURL + encodeURI(url);
+            page && (code = `GM.addScript(${JSON.stringify(code)})`);
           }
           options[target].push({code});
         })
@@ -194,15 +193,28 @@ class ScriptRegister {
     }
 
 
-    // --- script only
+    // ----- script only
     if (js) {
-      const {includes, excludes} = script;
+      const {includes, excludes, grant = []} = script;
+
+      // --- process grant
+      const grantKeep = [];
+      const grantRemove = [];
+      // case-altered GM API
+      grant.includes('GM.xmlHttpRequest') && grant.push('GM.xmlhttpRequest');
+      grant.includes('GM.getResourceUrl') && grant.push('GM.getResourceURL');
+
+      grant.forEach(item =>
+        item.startsWith('GM_') && grant.includes(`GM.${item.substring(3)}`) ? grantRemove.push(item) :
+        !['GM.xmlhttpRequest', 'GM.getResourceURL'].includes(item) && grantKeep.push(item) );
+
       options.scriptMetadata = {
         name,
         resource: script.resource,
         storage: script.storage,
         injectInto: script.injectInto,
-        grant: script.grant || [],
+//        grant: grantKeep,
+        grantRemove,
         info: {                                             // GM.info data
           scriptHandler: 'FireMonkey',
           version: this.FMV,
@@ -233,7 +245,11 @@ class ScriptRegister {
       if (page) {
         const str = `((unsafeWindow, GM, GM_info = GM.info) => {(() => { ${script.js}
 })();})(window, ${JSON.stringify({info:options.scriptMetadata.info})});`;
-        script.js = `GM_addScript(${JSON.stringify(str)});`;
+        script.js = `GM.addScript(${JSON.stringify(str)});`;
+      }
+      else if (['GM_getValue', 'GM_setValue', 'GM_listValues', 'GM_deleteValue'].some(item => grantKeep.includes(item))) {
+        //script.js = `(async() => {await storageGet(); ${script.js}\n})();`;
+        script.js = `storageGet().then(() => { ${script.js}\n});`;
       }
 
       // --- unsafeWindow implementation & Regex include/exclude workaround
@@ -335,7 +351,7 @@ class ProcessPref {
     // find changed scripts
     else {
       const relevant = ['name', 'enabled', 'injectInto', 'require', 'requireRemote', 'resource',
-      'allFrames', 'js', 'css', 'style', 'container',
+      'allFrames', 'js', 'css', 'style', 'container', 'grant',
       'matches', 'excludeMatches', 'includeGlobs', 'excludeGlobs', 'includes', 'excludes', 'matchAboutBlank', 'runAt'];
 
       Object.keys(changes).forEach(item => {
@@ -353,6 +369,21 @@ class ProcessPref {
         // if added or relevant data changed
         else if (!oldValue || relevant.some(i => !this.equal(oldValue[i], newValue[i]))) {
           scriptReg.process(id);
+
+          // apply userCSS changes to tabs
+          switch (true) {
+            case !newValue.css:                             // not userCSS
+              break;
+
+            case !oldValue.enabled && newValue.enabled:     // enabled
+              this.updateTabs(id);
+              break;
+
+            case newValue.enabled && oldValue.css !== newValue.css: // enabled & CSS change
+            case oldValue.enabled && !newValue.enabled:     // disabled  
+              this.updateTabs(id, oldValue.css);
+              break;
+          }
         }
       });
     }
@@ -360,6 +391,33 @@ class ProcessPref {
 
   equal(a, b) {
     return JSON.stringify(a) === JSON.stringify(b);
+  }
+
+  updateTabs(id, oldCSS) {
+    const {name, css, allFrames, enabled} = pref[id];
+    const gExclude = pref.globalScriptExcludeMatches?.split(/\s+/) || [];
+
+    browser.tabs.query({}).then(tabs => {
+      tabs.forEach(async tab => {
+        if (tab.discarded)  { return; }
+        if (!CheckMatches.supported(tab.url)) { return; }
+
+        let urls;
+        if (allFrames) {
+          const frames = await browser.webNavigation.getAllFrames({tabId: tab.id});
+          urls = [...new Set(frames.map(CheckMatches.cleanUrl).filter(CheckMatches.supported))];
+        }
+        else {
+          urls = [CheckMatches.cleanUrl(tab.url)];
+        }
+
+        const containerId = tab.cookieStoreId.substring(8);
+        if (!CheckMatches.get(pref[id], tab.url, urls, gExclude, containerId)) { return; }
+
+        oldCSS && browser.tabs.removeCSS(tab.id, {code: Meta.prepare(oldCSS), allFrames});
+        enabled && browser.tabs.insertCSS(tab.id, {code: Meta.prepare(css), allFrames});
+      });
+    });
   }
 }
 
@@ -570,7 +628,7 @@ class Installer {
 
     const now = Date.now();
     const days = pref.autoUpdateInterval *1;
-    if (days && now <= pref.autoUpdateLast + (days * 86400000)) { return; } // 86400 * 1000 = 24hr
+    if (!days || now <= pref.autoUpdateLast + (days * 86400000)) { return; } // 86400 * 1000 = 24hr
 
     if (!this.cache[0]) {                                   // rebuild the cache if empty
       this.cache = App.getIds().filter(item => pref[item].autoUpdate && pref[item].updateURL && pref[item].version);
@@ -617,7 +675,7 @@ class Installer {
     }
 
     // ---  log message to display in Options -> Log
-    App.log(data.name, pref[id] ? `Updated version ${pref[id].version} to ${data.version}` : `Installed version ${data.version}`);
+    App.log(data.name, pref[id] ? `Updated version ${pref[id].version} ➜ ${data.version}` : `Installed version ${data.version}`);
 
     pref[id] = data;                                        // save to pref
     browser.storage.local.set({[id]: pref[id]});            // update saved pref
@@ -935,7 +993,7 @@ class Migrate {
       delete item.userRunAt;
     });
 
-    // --- v2.42 migrate 2022-02-
+    // --- v2.42 migrate 2022-02-02
     if (pref.hasOwnProperty('customCSS')) {
       pref.customOptionsCSS = pref.customCSS;
       delete pref.customCSS;

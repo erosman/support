@@ -198,6 +198,10 @@ class Script {
     this.inputColor = document.querySelector('.script input[type="color"]');
     this.inputColor.addEventListener('change', (e) => this.changeColor());
 
+    // --- sidebar
+    this.sidebar = document.querySelector('#sidebar');
+
+
     // --- script storage changes
     browser.storage.onChanged.addListener((changes, area) => { // Change Listener
       area === 'local' && Object.keys(changes).forEach(item => { // local only, not for sync
@@ -292,8 +296,14 @@ class Script {
         'Ctrl-Q': 'toggleComment',
         'Ctrl-Space': 'autocomplete',
         'Alt-F': 'findPersistent',
-        F11: (cm) => cm.setOption('fullScreen', !cm.getOption('fullScreen')),
-        Esc: (cm) => cm.getOption('fullScreen') && cm.setOption('fullScreen', false)
+        F11: (cm) => {
+          cm.setOption('fullScreen', !cm.getOption('fullScreen'));
+          this.sidebar.checked = !cm.getOption('fullScreen');
+        },
+        Esc: (cm) => {
+          cm.getOption('fullScreen') && cm.setOption('fullScreen', false);
+          this.sidebar.checked = true;
+        }
       }
     };
 
@@ -643,6 +653,11 @@ class Script {
   }
 
   process() {
+    // --- CodeMirror Key Maps
+    const cmOptions = App.JSONparse(pref.cmOptions) || {};
+    cmOptions.keyMap &&
+      (document.querySelector('#keyMap').src = `../lib/codemirror/keymap/${cmOptions.keyMap}.js`);
+
     this.navUL.textContent = '';                            // clear data
 
     App.getIds().sort(Intl.Collator().compare).forEach(item => this.addScript(pref[item]));
@@ -849,7 +864,7 @@ class Script {
     }
 
     // --- check matches
-    if (!data.matches[0] && !data.includeGlobs[0] && !data.style[0]) {
+    if (!data.matches[0] && !data.includes[0] && !data.includeGlobs[0] && !data.style[0]) {
       data.enabled = false;                                 // allow no matches but disable
     }
 
@@ -1098,7 +1113,7 @@ class Script {
 
   export(data, ext, name, folder = '', saveAs = true) {
     navigator.userAgent.includes('Windows') && (data = data.replace(/\r?\n/g, '\r\n'));
-    const blob = new Blob([data], {type : 'text/plain;charset=utf-8'});
+    const blob = new Blob([data], {type: 'text/plain;charset=utf-8'});
     const filename = folder + name.replace(/[<>:"/\\|?*]/g, '') + '.user' + ext; // removing disallowed characters
 
     App.saveFile(data, filename, saveAs);

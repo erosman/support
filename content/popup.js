@@ -6,13 +6,10 @@ App.i18n();
 // ----------------- User Preference -----------------------
 App.getPref().then(() => {
   popup.process();
-  
+
   // --- add custom style
   pref.customPopupCSS && (document.querySelector('style').textContent = pref.customPopupCSS);
 });
-
-// ----------------- Android -------------------------------
-document.body.classList.toggle('android', App.android);
 
 // ----------------- Popup ---------------------------------
 class Popup {
@@ -241,7 +238,7 @@ class Popup {
 
     // look for @homepage @homepageURL @website and @source
     let homepage = meta.match(/@(homepage(URL)?|website|source)\s+(http\S+)/)?.[3];
-    
+
     // look for @support @supportURL
     let support = meta.match(/@support(URL)?\s+(http\S+)/)?.[2];
 
@@ -302,7 +299,7 @@ class Popup {
     const code = Meta.prepare(item.js || item.css);
     if (!code.trim()) { return; }                           // e.g. in case of userStyle
 
-    (item.js ? browser.tabs.executeScript({code}) : browser.tabs.insertCSS({code, cssOrigin: 'user'}))
+    (item.js ? browser.tabs.executeScript({code}) : browser.tabs.insertCSS({code}))
     .catch(error => App.notify(id.substring(1) + '\n' + browser.i18n.getMessage('insertError') + '\n\n' + error.message));
   }
 
@@ -310,10 +307,10 @@ class Popup {
     const item = pref[id];
     if (!item.css) { return; }                              // only for userCSS
 
-    const code =  Meta.prepare(item.css);    
+    const code =  Meta.prepare(item.css);
     if (!code.trim()) { return; }                           // e.g. in case of userStyle
 
-    browser.tabs.removeCSS({code, cssOrigin: 'user'})
+    browser.tabs.removeCSS({code})
     .catch(error => App.notify(id.substring(1) + '\n\n' + error.message));
   }
 
@@ -324,14 +321,14 @@ class Popup {
     if (!code) { return; }
     localStorage.setItem(js ? 'scraptchpadJS' : 'scraptchpadCSS', code); // save last entry
 
-    (js ? browser.tabs.executeScript({code}) : browser.tabs.insertCSS({code, cssOrigin: 'user'}))
+    (js ? browser.tabs.executeScript({code}) : browser.tabs.insertCSS({code}))
     .catch(error => App.notify((js ? 'JavaScript' : 'CSS') + '\n' + browser.i18n.getMessage('insertError') + '\n\n' + error.message));
   }
 
   scratchpadUndo() {
     const code = this.css.value.trim();
     if (!code) { return; }
-    browser.tabs.removeCSS({code, cssOrigin: 'user'})
+    browser.tabs.removeCSS({code})
     .catch(error => App.notify('CSS\n' + error.message));
   }
 }
