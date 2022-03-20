@@ -263,12 +263,11 @@ class Meta {                                                // bg options
         case 'require':
           const url = value.toLowerCase().replace(/^(http:)?\/\//, 'https://'); // change starting http:// & Protocol-relative URL //
           const [protocol, host] = url.split(/:?\/+/);
-          const cdnHosts = ['ajax.aspnetcdn.com', 'ajax.googleapis.com', 'apps.bdimg.com', 'cdn.bootcss.com',
+          const cdnHosts = ['ajax.aspnetcdn.com', 'ajax.googleapis.com', 'apps.bdimg.com', 'cdn.bootcdn.net', 'cdn.bootcss.com',
                             'cdn.jsdelivr.net', 'cdn.staticfile.org', 'cdnjs.cloudflare.com', 'code.jquery.com',
                             'lib.baomitu.com', 'libs.baidu.com', 'pagecdn.io', 'unpkg.com'];
-          const cdn = host && cdnHosts.includes(host);
+          const cdn = host && (cdnHosts.includes(host) || host.endsWith('-cdn-tos.bytecdntp.com'));
           switch (true) {
-
             case js && url.includes('/gm4-polyfill.'):      // not applicable
             case url.startsWith('lib/'):                    // disallowed value
               value = '';
@@ -278,7 +277,7 @@ class Meta {                                                // bg options
             case js && cdn && url.includes('/jquery-3.'):
             case js && cdn && url.includes('/jquery/3.'):
             case js && cdn && url.includes('/jquery@3'):
-            case js && cdn && url.includes('/jquery/latest/'):
+            case js && cdn && url.includes('/jquery/latest/'): // dead https://ajax.googleapis.com/ajax/libs/jquery/latest/jquery.min.js
               value = 'lib/jquery-3.jsm';
               break;
 
@@ -293,7 +292,7 @@ class Meta {                                                // bg options
             case js && cdn && url.includes('/jquery-1.'):
             case js && cdn && url.includes('/jquery/1.'):
             case js && cdn && url.includes('/jquery@1'):
-            case js && url.startsWith('https://ajax.googleapis.com/ajax/libs/jquery/1'):
+            case js && url.startsWith('https://ajax.googleapis.com/ajax/libs/jquery/1'): // 1.11.1 https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
             case js && url.startsWith('https://code.jquery.com/jquery-latest.'):
             case js && url.startsWith('https://code.jquery.com/jquery.'):
               value = 'lib/jquery-1.jsm';
@@ -332,7 +331,7 @@ class Meta {                                                // bg options
               value = 'lib/underscore-1.jsm';
               break;
 
-            case url.startsWith('https://'):                // unsupported URL
+            case url.startsWith('https://'):                // unsupported URL for Bundled Libraries
               prop = 'requireRemote';
               break;
           }
@@ -354,10 +353,6 @@ class Meta {                                                // bg options
 
     // --- check auto-update criteria, must have updateURL & version
     if (data.autoUpdate && (!data.updateURL || !data.version)) { data.autoUpdate = false; }
-
-    // --- convert TLD
-    data.matches = data.matches.flatMap(this.checkPattern);        // flatMap() FF62
-    data.excludeMatches = data.excludeMatches.flatMap(this.checkPattern);
 
     // --- process UserStyle
     if (userStyle) {
@@ -488,79 +483,37 @@ class Meta {                                                // bg options
     [data.includes, data.matches, data.includeGlobs] = this.convert(data.includes, data.matches, data.includeGlobs, js);
     [data.excludes, data.excludeMatches, data.excludeGlobs] = this.convert(data.excludes, data.excludeMatches, data.excludeGlobs, js);
 
+    // move matches to includeGlobs due to API matching order
+    if (data.includeGlobs[0]) {
+      // filter catch all globs
+      data.includeGlobs.push(...data.matches.filter(item => !['<all_urls>', '*://*/*', 'file:///*'].includes(item)));
+      data.matches = [];
+    }
+
     // --- check for overlap rules
     data.matches = this.checkOverlap(data.matches);
     data.excludeMatches = this.checkOverlap(data.excludeMatches);
-;
+
     // --- remove duplicates
     Object.keys(data).forEach(item => Array.isArray(data[item]) && data[item].length > 1 && (data[item] = [...new Set(data[item])]));
 
     return data;
   }
 
-  static checkPattern(p) {
-    // --- process TLD
-    const TLD = ['.com', '.au', '.br', '.ca', '.ch', '.cn', '.co.uk', '.de', '.es', '.fr',
-       '.in', '.it', '.jp', '.mx', '.nl', '.no', '.pl', '.ru', '.se', '.uk', '.us'];
-    const amazon = ['.ca', '.cn', '.co.jp', '.co.uk', '.com', '.com.au', '.com.br', '.com.mx',
-      '.com.sg', '.com.tr', '.de', '.es', '.fr', '.in', '.it', '.nl'];
-    const ebay = ['.at', '.be', '.ca', '.ch', '.cn', '.co.th', '.co.uk', '.com.au', '.com.cn',
-      '.com.hk', '.com.my', '.com.sg', '.com.tw', '.com', '.de', '.dk', '.es', '.fi', '.fr',
-      '.gr', '.hu', '.ie', '.in', '.it', '.nl', '.no', '.ph', '.ph', '.pl', '.ru', '.vn'];
-    const google = ['.ae', '.al', '.am', '.as', '.at', '.az', '.ba', '.be', '.bf', '.bg', '.bi',
-      '.bj', '.bs', '.bt', '.by', '.ca', '.cat', '.cd', '.cf', '.cg', '.ch', '.ci', '.cl', '.cm',
-      '.cn', '.co.ao', '.co.bw', '.co.ck', '.co.cr', '.co.id', '.co.il', '.co.in', '.co.jp',
-      '.co.ke', '.co.kr', '.co.ls', '.co.ma', '.co.mz', '.co.nz', '.co.th', '.co.tz', '.co.ug',
-      '.co.uk', '.co.uz', '.co.ve', '.co.vi', '.co.za', '.co.zm', '.co.zw', '.com', '.com.af',
-      '.com.ag', '.com.ai', '.com.ar', '.com.au', '.com.bd', '.com.bh', '.com.bn', '.com.bo',
-      '.com.br', '.com.bz', '.com.co', '.com.cu', '.com.cy', '.com.do', '.com.ec', '.com.eg',
-      '.com.et', '.com.fj', '.com.gh', '.com.gi', '.com.gt', '.com.hk', '.com.jm', '.com.kh',
-      '.com.kw', '.com.lb', '.com.ly', '.com.mm', '.com.mt', '.com.mx', '.com.my', '.com.na',
-      '.com.nf', '.com.ng', '.com.ni', '.com.np', '.com.om', '.com.pa', '.com.pe', '.com.pg',
-      '.com.ph', '.com.pk', '.com.pr', '.com.py', '.com.qa', '.com.sa', '.com.sb', '.com.sg',
-      '.com.sl', '.com.sv', '.com.tj', '.com.tr', '.com.tw', '.com.ua', '.com.uy', '.com.vc',
-      '.com.vn', '.cv', '.cz', '.de', '.dj', '.dk', '.dm', '.dz', '.ee', '.es', '.fi', '.fm',
-      '.fr', '.ga', '.ge', '.gg', '.gl', '.gm', '.gp', '.gr', '.gy', '.hn', '.hr', '.ht', '.hu',
-      '.ie', '.im', '.iq', '.is', '.it', '.je', '.jo', '.kg', '.ki', '.kz', '.la', '.li', '.lk',
-      '.lt', '.lu', '.lv', '.md', '.me', '.mg', '.mk', '.ml', '.mn', '.ms', '.mu', '.mv', '.mw',
-      '.ne', '.ng', '.nl', '.no', '.nr', '.nu', '.pl', '.pn', '.ps', '.pt', '.ro', '.rs', '.ru',
-      '.rw', '.sc', '.se', '.sh', '.si', '.sk', '.sm', '.sn', '.so', '.sr', '.st', '.td', '.tg',
-      '.tk', '.tl', '.tm', '.tn', '.to', '.tt', '.vg', '.vu', '.ws'];
-
-
-    if (/^https?:\/\/[^/]+\.tld\/.*/i.test(p)) {
-      const plc = p.toLowerCase();
-      const index = plc.indexOf('.tld/');
-      const st = p.substring(0, index);
-      const end = p.substring(index + 4);
-
-      switch (true) {
-        case plc.includes('.amazon.tld'): p = amazon.map(tld => st + tld + end); break;
-        case plc.includes('.ebay.tld'):   p =   ebay.map(tld => st + tld + end); break;
-        case plc.includes('.google.tld'): p = google.map(tld => st + tld + end); break;
-
-        default: p = TLD.map(tld => st + tld + end);
-      }
-    }
-
-    return p;
-  }
-
   static convert(inc, mtch, glob, js) {
     const newInc = [];
     inc.forEach(item => {
-      const converted = this.convertPattern(item);
-      switch (true) {
-        case !!converted:
-          mtch.push(converted);
-          break;;
-
-        case item.startsWith('/') &&  item.endsWith('/'):   // keep regex in includes/excludes, rest in includeGlobs/excludeGlobs
-          js && newInc.push(item);                          // only for userScript
-          break;
-
-        default:
-          glob.push(item);
+      // keep regex in includes/excludes, rest in includeGlobs/excludeGlobs, only for userScript
+      if (item.startsWith('/') &&  item.endsWith('/')) {
+        js && newInc.push(item);
+      }
+      else if (item.toLowerCase().includes('.tld/')) {      // revert back .tld
+        item = item.replace(/\.tld\//i, '.*/');
+        glob.push(item);
+      }
+      else {
+        const converted = this.convertPattern(item);
+        converted ? mtch.push(converted) : glob.push(item);
       }
     });
     return [newInc, mtch, glob];
@@ -568,7 +521,8 @@ class Meta {                                                // bg options
 
   // --- attempt to convert to matches API
   static convertPattern(p) {
-    if (this.validPattern(p)) { return p; }                      // valid match pattern
+    // test if valid match pattern
+    if (this.validPattern(p)) { return p; }                      
 
     switch (true) {
       // Regular Expression
@@ -595,8 +549,6 @@ class Meta {                                                // bg options
     // http/https schemes
     if (!['http', 'https', 'file', '*'].includes(scheme.toLowerCase())) { scheme = '*'; } // bad scheme
     if (host.includes(':')) { host = host.replace(/:.+/, ''); } // host with port
-    if (host.endsWith('.co*.*')) { host = host.slice(0, -5) + 'TLD'; } // TLD wildcard google.co*.*
-    if (host.endsWith('.*')) { host = host.slice(0, -1) + 'TLD'; } // TLD wildcard google.*
     if (host.startsWith('*') && host[1] && host[1] !== '.') { host = '*.' + host.substring(1); } // starting wildcard *google.com
     p = scheme +  '://' + [host, ...path].join('/');        // rebuild pattern
 
@@ -733,8 +685,8 @@ class RemoteUpdate {                                        // bg options
   }
 
   higherVersion(a, b) {                                     // here bg 1 opt 1
-    a = a.split('.');
-    b = b.split('.');
+    a = a.split('.').map(n => parseInt(n));
+    b = b.split('.').map(n => parseInt(n));
 
     for (let i = 0, len = Math.max(a.length, b.length); i < len; i++) {
       if (!a[i]) { return false; }
@@ -784,7 +736,7 @@ class CheckMatches {                                        // used in bg & popu
   }
 
   static get(item, tabUrl, urls, gExclude = [], containerId) {
-    if (item.container && item.container[0] && !item.container.includes(containerId)) { return false; } // check container
+    if (item.container?.[0] && !item.container.includes(containerId)) { return false; } // check container
 
     !item.allFrames && (urls = [tabUrl]);                   // only check main frame
     const styleMatches = item.style && item.style[0] ? item.style.flatMap(i => i.matches) : [];

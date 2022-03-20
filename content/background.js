@@ -118,7 +118,7 @@ class ScriptRegister {
     script.style[0] ? script.style.forEach((item, i) => this.unregister(id + 'style' + i)) : this.unregister(id);
 
     // --- stop if script is not enabled or no mandatory matches
-    if (!script.enabled || (!script.matches[0] && !script.includes[0] && !script.style[0])) { return; }
+    if (!script.enabled || (!script.matches[0] && !script.includes[0] && !script.includeGlobs[0] && !script.style[0])) { return; }
 
     // --- preppare script options
     const options = {
@@ -147,7 +147,7 @@ class ScriptRegister {
     const target = script.js ? 'js' : 'css';
     const js = target === 'js';
     const page = js && script.injectInto === 'page';
-    const pageURL = page ? '%20(page-context)'  : '';
+    const pageURL = page ? '%20(page-context)' : '';
     const encodeId = encodeURI(name);
     const sourceURL = `\n\n//# sourceURL=user-script:FireMonkey/${encodeId}${pageURL}/`;
     options[target] = [];
@@ -156,45 +156,54 @@ class ScriptRegister {
     script.container?.[0] && this.containerSupport[target] &&
         (options.cookieStoreId = script.container.map(item => `firefox-${item}`));
 
-    // --- add @require
-    require.forEach(item => {
-      const id = `_${item}`;
-      if (item.startsWith('lib/')) {
-        requireRemote.push('/' + item);
-      }
-      else if (pref[id]?.[target]) {                        // same type only
-        let code = Meta.prepare(pref[id][target]);
-        js && (code += sourceURL + encodeURI(item) + '.user.js');
-        page && (code = `GM.addScript(${JSON.stringify(code)})`);
-        options[target].push({code});
-      }
-      else if (js && pref[id]?.css) {                       // useCSS in userScript
-        let code = Meta.prepare(pref[id].css);
-        code = `GM.addStyle(${JSON.stringify(code)})`;
-        options[target].push({code});
-      }
-    });
+    // ----- CSS only
+    if (!js) {
+      // --- add @require
+      require.forEach(item =>
+        pref[`_${item}`]?.css && options.css.push({code: Meta.prepare(pref[`_${item}`].css)})
+      );
 
-    // --- add @requireRemote
-    if (requireRemote[0]) {
-      await Promise.all(requireRemote.map(url =>
-        fetch(url)
-        .then(response => response.text())
-        .then(code => {
-          url.startsWith('/lib/') && (url = url.slice(1, -1));
-          if (js) {
-            code = url.endsWith('.css') ? `GM.addStyle(${JSON.stringify(code)})` : code + sourceURL + encodeURI(url);
-            page && (code = `GM.addScript(${JSON.stringify(code)})`);
-          }
-          options[target].push({code});
-        })
-        .catch(() => {})
-      ));
+      // --- add @requireRemote
+      requireRemote[0] && options.css.push({code: requireRemote.map(item => `@import '${item}';`).join('\n')});
     }
 
-
     // ----- script only
-    if (js) {
+    else if (js) {
+      // --- add @require
+      require.forEach(item => {
+        const id = `_${item}`;
+        if (item.startsWith('lib/')) {
+          requireRemote.push('/' + item);
+        }
+        else if (pref[id]?.js) {                            // same type only
+          let code = Meta.prepare(pref[id].js);
+          code += sourceURL + encodeURI(item) + '.user.js';
+          page && (code = `GM.addScript(${JSON.stringify(code)})`);
+          options.js.push({code});
+        }
+        else if (pref[id]?.css) {                           // useCSS in userScript
+          let code = Meta.prepare(pref[id].css);
+          code = `GM.addStyle(${JSON.stringify(code)})`;
+          options.js.push({code});
+        }
+      });
+
+      // --- add @requireRemote
+      if (requireRemote[0]) {
+        // css @require injects via api
+        await Promise.all(requireRemote.map(url => !/^(http|\/\/).+(\.css\b|\/css\d*\?)/i.test(url) &&
+          fetch(url)
+          .then(response => response.text())
+          .then(code => {
+            url.startsWith('/lib/') && (url = url.slice(1, -1));
+            code += sourceURL + encodeURI(url);
+            page && (code = `GM.addScript(${JSON.stringify(code)})`);
+            options[target].push({code});
+          })
+          .catch(() => {})
+        ));
+      }
+
       const {includes, excludes, grant = []} = script;
 
       // --- process grant
@@ -203,10 +212,11 @@ class ScriptRegister {
       // case-altered GM API
       grant.includes('GM.xmlHttpRequest') && grant.push('GM.xmlhttpRequest');
       grant.includes('GM.getResourceUrl') && grant.push('GM.getResourceURL');
-
       grant.forEach(item =>
         item.startsWith('GM_') && grant.includes(`GM.${item.substring(3)}`) ? grantRemove.push(item) :
         !['GM.xmlhttpRequest', 'GM.getResourceURL'].includes(item) && grantKeep.push(item) );
+
+      const registerMenuCommand = ['GM_registerMenuCommand', 'GM.registerMenuCommand'].some(item => grant.includes(item));
 
       options.scriptMetadata = {
         name,
@@ -215,6 +225,8 @@ class ScriptRegister {
         injectInto: script.injectInto,
 //        grant: grantKeep,
         grantRemove,
+        registerMenuCommand,
+        requireRemote: script.requireRemote,
         info: {                                             // GM.info data
           scriptHandler: 'FireMonkey',
           version: this.FMV,
@@ -380,7 +392,7 @@ class ProcessPref {
               break;
 
             case newValue.enabled && oldValue.css !== newValue.css: // enabled & CSS change
-            case oldValue.enabled && !newValue.enabled:     // disabled  
+            case oldValue.enabled && !newValue.enabled:     // disabled
               this.updateTabs(id, oldValue.css);
               break;
           }
@@ -760,10 +772,19 @@ class API {
         return browser.storage.local.set({[id]: pref[id]}); // Promise with no arguments OR reject with error message
 
       case 'openInTab':
-        return browser.tabs.create({url: e.url, active: e.active}) // Promise with tabs.Tab OR reject with error message
+        // Promise with tabs.Tab OR reject with error message
+        return browser.tabs.create({url: e.url, active: e.active, openerTabId: sender.tab.id}) 
           .catch(error => App.log(name, `${message.api} ➜ ${error.message}`, 'error'));
 
       case 'setClipboard':
+        if (e.type) {
+          const type = typeof e.type === 'string' ? e.type : e.type.mimetype;
+          const blob = new Blob([e.data], {type});
+          const data = [new ClipboardItem({[type]: blob})];
+          return navigator.clipboard.write(data)            // Promise with ? OR reject with error message
+            .catch(error => App.log(name, `${message.api} ➜ ${error.message}`, 'error'));
+        }
+
         return navigator.clipboard.writeText(e.text)        // Promise with ? OR reject with error message
           .catch(error => App.log(name, `${message.api} ➜ ${error.message}`, 'error'));
 
@@ -796,6 +817,9 @@ class API {
 
   async addCookie(url, headers, storeId) {
     // add contexual cookies, only in container/incognito
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1670278
+    // if privacy.firstparty.isolate = true
+    // Error: First-Party Isolation is enabled, but the required 'firstPartyDomain' attribute was not set.
     const cookies = await browser.cookies.getAll({url, storeId});
     const str = cookies && cookies.map(item => `${item.name}=${item.value}`).join('; ');
     str && (headers['FM-Contextual-Cookie'] = str);
@@ -860,10 +884,13 @@ class API {
       readyState:       xhr.readyState,
       response:         xhr.response,
       responseHeaders:  xhr.getAllResponseHeaders(),
-      responseText:     ['', 'text'].includes(xhr.responseType) ? xhr.responseText : '', // responseText is only available if responseType is '' or 'text'.
+      // responseText is only available if responseType is '' or 'text'.
+      responseText:     xhr.responseText || '',
       responseType:     xhr.responseType,
       responseURL:      xhr.responseURL,
-      responseXML:      ['', 'document'].includes(xhr.responseType) ? xhr.responseXML : '', // responseXML is only available if responseType is '' or 'document'.
+      // responseXML is only available if responseType is '' or 'document'.
+      // cant pass XMLDocument ➜ Error: An unexpected apiScript error occurred
+      responseXML:      xhr.responseXML ? xhr.responseText : '',
       status:           xhr.status,
       statusText:       xhr.statusText,
       timeout:          xhr.timeout,

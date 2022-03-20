@@ -8,6 +8,7 @@ App.i18n();
 App.getPref().then(() => {
   options.process();
   script.process();
+  showLog.process();
 
   // --- add custom style
   pref.customOptionsCSS && (document.querySelector('style').textContent = pref.customOptionsCSS);
@@ -122,9 +123,21 @@ class Script {
     this.autoUpdate.addEventListener('change', () => this.toggleAutoUpdate());
     Meta.autoUpdate = this.autoUpdate;
 
+    // --- User Metadata
     this.userMeta = document.querySelector('#userMeta');
     this.userMeta.value = '';
     Meta.userMeta = this.userMeta;
+
+    const userMetaSelect = document.querySelector('#userMetaSelect');
+    userMetaSelect.selectedIndex = 0;
+    userMetaSelect.addEventListener('change', (e) => {
+      this.userMeta.value = (this.userMeta.value + '\n' + e.target.value).trim();
+      e.target.selectedIndex = 0;
+    });
+
+    // --- Storage
+    this.storage = document.querySelector('#storage');
+    this.storage.value = '';
 
     document.querySelectorAll('.script button, .script li.button, aside button').forEach(item =>
       item.addEventListener('click', e => this.processButtons(e)));
@@ -181,7 +194,7 @@ class Script {
       themeSelect.value = this.theme;
     }
 
-    this.defaultLink = document.querySelector('link[href="../lib/codemirror/codemirror.css"]');
+    this.defaultLink = document.querySelector('link[rel="stylesheet"]');
     this.addTheme(localStorage.getItem('dark') === 'true');
 
     themeSelect.addEventListener('change', (e) => {
@@ -223,6 +236,7 @@ class Script {
   }
 
   addTheme(dark) {
+    [0, 1].forEach(i => window.frames[i].document.body.classList.toggle('dark', dark));
     const url =  `../lib/codemirror/theme/${this.theme}.css`;
     if (this.theme === 'default' || document.querySelector(`link[href="${url}"]`)) { // already added
       document.body.classList.toggle('dark', dark);
@@ -232,7 +246,7 @@ class Script {
 
     const link = this.defaultLink.cloneNode();
     link.href = url;
-    this.defaultLink.after(link);
+    document.head.appendChild(link);
     link.onload = () => {
       link.onload = null;
       document.body.classList.toggle('dark', dark);
@@ -258,7 +272,7 @@ class Script {
           GM_registerMenuCommand: false, GM_removeValueChangeListener: false, GM_setClipboard: false,
           GM_setValue: false, GM_unregisterMenuCommand: false, GM_xmlhttpRequest: false, unsafeWindow: false
         },
-        jquery: js && !!this.box.id && (pref[this.box.id].require || []).some(item => /lib\/jquery-\d/.test(item)),
+        jquery: js && !!this.box.id && (pref[this.box.id].require || []).some(item => /lib\/jquery-/.test(item)),
         latedef: 'nofunc',
         leanswitch: true,
         maxerr: 100,
@@ -559,9 +573,12 @@ class Script {
     const nf = new Intl.NumberFormat();
     const stats = [];
 
-    stats.push('Size  ' + nf.format(parseFloat((text.length/1024).toFixed(1))) + ' KB');
+    stats.push('Size  ' + nf.format((text.length/1024).toFixed(1)) + ' KB');
     stats.push('Lines ' + nf.format(this.cm.lineCount()));
 //    stats.push(/\r\n/.test(text) ? 'DOS' : 'UNIX');
+
+    const storage = this.storage.value.trim().length;
+    storage && stats.push('Storage  ' + nf.format((storage/1024).toFixed(1)) + ' KB');
 
     const tab = text.match(/\t/g);
     tab && stats.push('Tabs ' + nf.format(tab.length));
@@ -739,6 +756,9 @@ class Script {
     pref[id].antifeatures[0] && this.legend.classList.add('antifeature');
     this.userMeta.value = pref[id].userMeta || '';
 
+    this.storage.parentNode.style.display = pref[id].js ? 'list-item' : 'none';
+    this.storage.value = Object.keys(pref[id].storage).length ?  JSON.stringify(pref[id].storage, null, 2) : '';
+
     // --- CodeMirror
     this.setCodeMirror();
   }
@@ -908,6 +928,16 @@ class Script {
       li.id = id;
     }
 
+    // --- check storage JS only
+    if (data.js && this.storage.value.trim()) {
+      const storage = App.JSONparse(this.storage.value);
+      if (!storage) {
+        App.notify(browser.i18n.getMessage('storageError')) ;
+        return;
+      }
+      data.storage = storage;
+    }
+
     // --- update box & legend
     box.id = id;
     this.legend.textContent = data.name;
@@ -948,7 +978,7 @@ class Script {
     }
 
     // ---  log message to display in Options -> Log
-    App.log(data.name, `Updated version ${pref[id].version} to ${data.version}`);
+    App.log(data.name, `Updated version ${pref[id].version} ➜ ${data.version}`);
 
     // --- check name change
     if (data.name !== name) {                               // name has changed
@@ -1194,16 +1224,19 @@ class ShowLog {
     this.template = logTemplate.content.firstElementChild;
     this.tbody = logTemplate.parentNode;
 
+    this.aTemp = document.createElement('a');
+    this.aTemp.target = '_blank';
+    this.aTemp.textContent = '\u{1f5d3} History';
+
     this.log = App.JSONparse(localStorage.getItem('log')) || [];
-    this.log[0] && this.process(this.log);
+//    this.log[0] && this.process(this.log);
     const logSize = document.querySelector('#logSize');
     logSize.value = localStorage.getItem('logSize') || 100;
     logSize.addEventListener('change', function(){ localStorage.setItem('logSize', this.value); });
   }
 
-  process(list) {
+  process(list = this.log) {
     list.forEach(([time, ref, message, type]) => {
-
       const tr = this.template.cloneNode(true);
       type && tr.classList.add(type);
       const td = tr.children;
@@ -1211,6 +1244,21 @@ class ShowLog {
       td[1].title = ref;
       td[1].textContent = ref;
       td[2].textContent = message;
+
+      // --- History diff link
+      if (message.startsWith('Updated version') && pref[`_${ref}`]?.updateURL) {
+        const updateURL = pref[`_${ref}`].updateURL;
+        switch (true) {
+          // --- get meta.js
+          case updateURL.startsWith('https://greasyfork.org/scripts/'):
+          case updateURL.startsWith('https://sleazyfork.org/scripts/'):
+            const a = this.aTemp.cloneNode(true);
+            a.href = updateURL.replace(/(\/\d+)-.+/, '$1/versions');
+            td[2].appendChild(a);
+            break;
+        }
+      }
+
       this.tbody.insertBefore(tr, this.tbody.firstElementChild); // in reverse order, new on top
     });
   }

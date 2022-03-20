@@ -1,16 +1,21 @@
 ﻿browser.userScripts.onBeforeScript.addListener(script => {
   // --- globals
-  const {name, resource, info, id = `_${name}`, injectInto, grantRemove} = script.metadata; // set id as _name
+  const {name, resource, info, id = `_${name}`, injectInto, grantRemove,
+    registerMenuCommand, requireRemote} = script.metadata; // set id as _name
   const cache = {};
   const valueChange = {};
   const scriptCommand = {};
   let {storage} = script.metadata;                          // storage at the time of registration
 
+  // ----- check @require CSS
+  const cssRegex = /^(http|\/\/).+(\.css\b|\/css\d*\?)/i;
+  requireRemote.forEach(item => cssRegex.test(item) && GM.addElement('link', {href: item, rel: 'stylesheet'}));
+
   class API {
 
     constructor() {
       // ----- Script Command registerMenuCommand
-      browser.runtime.onMessage.addListener(message => {
+      registerMenuCommand && browser.runtime.onMessage.addListener(message => {
         switch (true) {
           case message.hasOwnProperty('listCommand'):       // to popup.js
             const command = Object.keys(scriptCommand);
@@ -61,14 +66,16 @@
         case !url:
           break;
 
-        case /\.css\b/i.test(url):
-          GM.addElement('link', {href: url, rel: 'stylesheet', 'data-src': `${name}.user.js`});
+        case /\.json/i.test(url):
+          return '{}';
+
+        case cssRegex.test(url):
+          GM.addElement('link', {href: url, rel: 'stylesheet'});
           break;
-/*
+
         case url.endsWith('.js'):
-          GM.addElement('script', {src: url, 'data-src': `${name}.user.js`});
+      //    GM.addElement('script', {src: url, 'data-src': `${name}.user.js`});
           break;
-*/
       }
       return ' ';
     }
@@ -217,11 +224,11 @@
       });
     },
 
-    setClipboard(text) {
+    setClipboard(data, type) {
       return browser.runtime.sendMessage({
         name,
         api: 'setClipboard',
-        data: {text}
+        data: {data, type}
       });
     },
 
@@ -298,6 +305,9 @@
       // cloneInto() work around for https://bugzilla.mozilla.org/show_bug.cgi?id=1583159
       const type = response.type;
       delete response.type;
+      // convert text responseXML to XML DocumentFragment
+      response.responseXML &&
+        (response.responseXML = document.createRange().createContextualFragment(response.responseXML.trim()));
       api.callUserScriptCallback(init, type,
          typeof response.response === 'string' ? script.export(response) : cloneInto(response, window));
     },
@@ -346,7 +356,7 @@
     },
 
     addScript(js) {
-      if (!js) { return; }
+      if (!js.trim()) { return; }
       try {
         const node = document.createElement('script');
         node.textContent = js;
@@ -585,7 +595,7 @@
     storageGet:                   api.storageGet,
     cloneInto:                    api.cloneIntoFM,
     exportFunction,
-    matchURL:                     api.matchURL
+    matchURL:                     api.matchURL,
   };
 
   // auto-disable sync GM API if async GM API are supported

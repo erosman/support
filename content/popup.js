@@ -105,8 +105,9 @@ class Popup {
     Other.forEach(item => this.docfrag.appendChild(this.addScript(pref[item])));
     this.ulOther.appendChild(this.docfrag);
 
-    // --- check commands if there are active scripts in tab
-    if(this.ulTab.querySelector('li.js:not(.disabled)')) {
+    // --- check commands if there are active scripts in tab & has registerMenuCommand v2.45
+    if(Tab.some(item => pref[item].enabled &&
+      ['GM_registerMenuCommand', 'GM.registerMenuCommand'].some(i => pref[item].grant.includes(i)))) {
       browser.runtime.onMessage.addListener((message, sender) => sender.tab.id === tabId && this.addCommand(tabId, message));
       browser.tabs.sendMessage(tabId, {listCommand: []});
     }
@@ -157,7 +158,8 @@ class Popup {
     const {homepage, support} = this.getMetadata(script);   // show homepage/support
     script.homepage = homepage;
     script.support = support;
-    script.size = new Intl.NumberFormat().format(parseFloat(((script.js || script.css).length/1024).toFixed(1))) + ' KB';
+    script.size = new Intl.NumberFormat().format(((script.js || script.css).length/1024).toFixed(1)) + ' KB';
+//    script.size = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format((script.js || script.css).length/1024) + ' KB';
 
     const infoArray = ['name', 'description', 'author', 'version', 'size', 'homepage', 'support', 'updateURL',
                         'matches', 'excludeMatches', 'includes', 'excludes', 'includeGlobs', 'excludeGlobs', 'container',
