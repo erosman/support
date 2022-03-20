@@ -44,6 +44,12 @@
   "userMeta": {
     "message": "Metadados do Usuário"
   },
+  "storage": {
+    "message": "Storage"
+  },
+  "storageError": {
+    "message": "Storage value must be a valid JSON"
+  },
   "sidebar": {
     "message": "Barra Lateral"
   },
@@ -164,12 +170,18 @@
   "advanced": {
     "message": "Avançado"
   },
-  "customOptionsCSS": { "message": "Custom Options CSS" },
+  "customOptionsCSS": {
+    "message": "Custom Options CSS"
+  },
   "customOptionsCSSDescription": {
     "message": "Customize Options page & CodeMirror style configuration."
   },
-  "customPopupCSS": { "message": "Custom Popup CSS" },
-  "customPopupCSSDescription": { "message": "Customize toolbar popup style configuration." },
+  "customPopupCSS": {
+    "message": "Custom Popup CSS"
+  },
+  "customPopupCSSDescription": {
+    "message": "Customize toolbar popup style configuration."
+  },
   "cmOptionsDescription": {
     "message": "Personalizar configuração do CodeMirror, addons & JavaScript lint"
   },

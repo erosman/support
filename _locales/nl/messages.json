@@ -1,97 +1,224 @@
 {
-  "extensionName": { "message": "FireMonkey" },
-  "extensionDescription": { "message": "Zeer lichte gebruikersscript- en stijlbeheerder" },
-
-
-  "tabScript": { "message": "Tabbladscripts en -css" },
-  "otherScript": { "message": "Overige scripts en css" },
-  "scriptCommands": { "message": "Scriptopdrachten" },
-  "back": { "message": "Terug" },
-  "edit": { "message": "Bewerken" },
-
-  "autoUpdateInterval": { "message": "Automatisch bijwerken, elke" },
-  "autoUpdateIntervalDescription": { "message": "Het aantal dagen tussen bijwerkpogingen (0 = niet bijwerken)" },
-
-  "enableSync": { "message": "Opslagsynchronisatie inschakelen" },
-  "syncError": { "message": "Synchronisatie mislukt\nDe opslag, $1KB, is groter dan 100KB. Synchronisatie wordt uitgeschakeld." },
-
-  "counter": { "message": "Teller" },
-
-  "globalScriptExcludeMatches": { "message": "Globale script-uitsluitingen" },
-  "globalScriptExcludeMatchesDescription": { "message": "Uitsluitpatronen (één per regel). Scripts worden niet uitgevoerd als ze hiermee overeenkomen." },
-  "userMeta": { "message": "User Metadata" },
-
-  "sidebar": { "message": "Zijbalk" },
-  "script": { "message": "Scripts en css" },
-
-  "saveScript": { "message": "Opslaan" },
-  "enable": { "message": "Inschakelen" },
-  "update": { "message": "Bijwerken" },
-  "autoUpdate": { "message": "Automatisch bijwerken" },
-  "theme": { "message": "Thema" },
-
-  "light": { "message": "Licht" },
-  "dark": { "message": "Donker" },
-
-  "newJS": { "message": "Nieuw gebruikersscript" },
-  "newCSS": { "message": "Nieuwe gebruikersstijl" },
-  "saveTemplate": { "message": "Save as Sjabloon" },
-
-  "tabToSpaces": { "message": "Tabs omzetten in spaties" },
-  "trimTrailingSpaces": { "message": "Witruimtes aan einde inkorten" },
-  "toUpperCase": { "message": "Selectie omzetten naar hoofdletters" },
-  "toLowerCase": { "message": "Selectie omzetten naar kleine letters" },
-
-  "stylish": { "message": "Stylish-stijl installeren" },
-  "report": { "message": "Melden" },
-
-  "discardConfirm": { "message": "Weet u zeker dat u de wijzigingen niet wilt opslaan?" },
-
-  "delete": { "message": "Verwijderen" },
-  "deleteConfirm": { "message": "Weet u zeker dat u \n'$1'\n en alle bijbehorende opgeslagen gegevens wilt verwijderen?" },
-  "deleteMultiConfirm": { "message": "Weet u zeker dat u $1 Scripts/CSS en alle bijbehorende opgeslagen gegevens wilt verwijderen?" },
-
-  "installConfirm": { "message": "Weet u zeker dat u '$1' wilt installeren?\nHet script/De css met dezelfde naam wordt verwijderd als het versienummer lager is." },
-
-  "metaError": { "message": "Metagegevensfout" },
-  "noNameError": { "message": "Geef het script/de css een naam." },
-  "nameError": { "message": "Deze naam is al in gebruik.\nWilt u het bestaande bestand vervangen?" },
-  "updateUrlError": { "message": "Dit script/Deze css bevat geen bijwerkurl of versie." },
-  "noNewUpdate": { "message": "Er hoeft niks te worden bijgewerkt." },
-  "scriptUpdated": { "message": "Het script/de css is bijgewerkt naar versie $1" },
-
-  "import": { "message": "Importeren" },
-  "export": { "message": "Exporteren" },
-  "exportAll": { "message": "Exporteren" },
-
-  "fileSizeError": { "message": "De bestandsgrootte overschrijdt de toegestane $1kb" },
-  "fileTypeError": { "message": "Niet-ondersteund bestandsformaat" },
-  "fileReadError": { "message": "Er is een fout opgetreden tijdens het uitlezen van het bestand" },
-  "fileParseError": { "message": "Er is een fout opgetreden tijdens het verwerken van het bestand" },
-
-  "log": { "message": "Logboek" },
-  "time": { "message": "Tijdstip" },
-  "reference": { "message": "Verwijzing" },
-  "message": { "message": "Bericht" },
-
-  "scratchpad": { "message": "Kladblok" },
-  "run": { "message": "Uitvoeren" },
-  "undo": { "message": "Ongedaan maken" },
-  "insertError": { "message": "Het invoegen is mislukt" },
-  "findScript": { "message": "Scripts zoeken voor deze site" },
-
-  "advanced": { "message": "Geavanceerd" },
-  "customOptionsCSS": { "message": "Custom Options CSS" },
-  "customOptionsCSSDescription": { "message": "Pas de optiepagina en het CodeMirror-stijlblad aan." },
-  "customPopupCSS": { "message": "Custom Popup CSS" },
-  "customPopupCSSDescription": { "message": "Customize toolbar popup style configuration." },
-  "cmOptionsDescription": { "message": "Pas de CodeMirror-, add-ons- en JavaScript-lintconfiguratie aan." },
-  "cmOptionsError": { "message": "Ongeldige CodeMirror-json" },
-
-
-  "about": { "message": "Over" },
-  "error": { "message": "Er is een fout opgetreden tijdens de handeling" },
-  "help": { "message": "Hulp" },
-  "options": { "message": "Opties" },
-  "saveOptions": { "message": "Opslaan" }
+  "extensionName": {
+    "message": "FireMonkey"
+  },
+  "extensionDescription": {
+    "message": "Zeer lichte gebruikersscript- en stijlbeheerder"
+  },
+  "tabScript": {
+    "message": "Tabbladscripts en -css"
+  },
+  "otherScript": {
+    "message": "Overige scripts en css"
+  },
+  "scriptCommands": {
+    "message": "Scriptopdrachten"
+  },
+  "back": {
+    "message": "Terug"
+  },
+  "edit": {
+    "message": "Bewerken"
+  },
+  "autoUpdateInterval": {
+    "message": "Automatisch bijwerken, elke"
+  },
+  "autoUpdateIntervalDescription": {
+    "message": "Het aantal dagen tussen bijwerkpogingen (0 = niet bijwerken)"
+  },
+  "enableSync": {
+    "message": "Opslagsynchronisatie inschakelen"
+  },
+  "syncError": {
+    "message": "Synchronisatie mislukt\nDe opslag, $1KB, is groter dan 100KB. Synchronisatie wordt uitgeschakeld."
+  },
+  "counter": {
+    "message": "Teller"
+  },
+  "globalScriptExcludeMatches": {
+    "message": "Globale script-uitsluitingen"
+  },
+  "globalScriptExcludeMatchesDescription": {
+    "message": "Uitsluitpatronen (één per regel). Scripts worden niet uitgevoerd als ze hiermee overeenkomen."
+  },
+  "userMeta": {
+    "message": "User Metadata"
+  },
+  "storage": {
+    "message": "Storage"
+  },
+  "storageError": {
+    "message": "Storage value must be a valid JSON"
+  },
+  "sidebar": {
+    "message": "Zijbalk"
+  },
+  "script": {
+    "message": "Scripts en css"
+  },
+  "saveScript": {
+    "message": "Opslaan"
+  },
+  "enable": {
+    "message": "Inschakelen"
+  },
+  "update": {
+    "message": "Bijwerken"
+  },
+  "autoUpdate": {
+    "message": "Automatisch bijwerken"
+  },
+  "theme": {
+    "message": "Thema"
+  },
+  "light": {
+    "message": "Licht"
+  },
+  "dark": {
+    "message": "Donker"
+  },
+  "newJS": {
+    "message": "Nieuw gebruikersscript"
+  },
+  "newCSS": {
+    "message": "Nieuwe gebruikersstijl"
+  },
+  "saveTemplate": {
+    "message": "Save as Sjabloon"
+  },
+  "tabToSpaces": {
+    "message": "Tabs omzetten in spaties"
+  },
+  "trimTrailingSpaces": {
+    "message": "Witruimtes aan einde inkorten"
+  },
+  "toUpperCase": {
+    "message": "Selectie omzetten naar hoofdletters"
+  },
+  "toLowerCase": {
+    "message": "Selectie omzetten naar kleine letters"
+  },
+  "stylish": {
+    "message": "Stylish-stijl installeren"
+  },
+  "report": {
+    "message": "Melden"
+  },
+  "discardConfirm": {
+    "message": "Weet u zeker dat u de wijzigingen niet wilt opslaan?"
+  },
+  "delete": {
+    "message": "Verwijderen"
+  },
+  "deleteConfirm": {
+    "message": "Weet u zeker dat u \n'$1'\n en alle bijbehorende opgeslagen gegevens wilt verwijderen?"
+  },
+  "deleteMultiConfirm": {
+    "message": "Weet u zeker dat u $1 Scripts/CSS en alle bijbehorende opgeslagen gegevens wilt verwijderen?"
+  },
+  "installConfirm": {
+    "message": "Weet u zeker dat u '$1' wilt installeren?\nHet script/De css met dezelfde naam wordt verwijderd als het versienummer lager is."
+  },
+  "metaError": {
+    "message": "Metagegevensfout"
+  },
+  "noNameError": {
+    "message": "Geef het script/de css een naam."
+  },
+  "nameError": {
+    "message": "Deze naam is al in gebruik.\nWilt u het bestaande bestand vervangen?"
+  },
+  "updateUrlError": {
+    "message": "Dit script/Deze css bevat geen bijwerkurl of versie."
+  },
+  "noNewUpdate": {
+    "message": "Er hoeft niks te worden bijgewerkt."
+  },
+  "scriptUpdated": {
+    "message": "Het script/de css is bijgewerkt naar versie $1"
+  },
+  "exportAll": {
+    "message": "Exporteren"
+  },
+  "log": {
+    "message": "Logboek"
+  },
+  "time": {
+    "message": "Tijdstip"
+  },
+  "reference": {
+    "message": "Verwijzing"
+  },
+  "message": {
+    "message": "Bericht"
+  },
+  "scratchpad": {
+    "message": "Kladblok"
+  },
+  "run": {
+    "message": "Uitvoeren"
+  },
+  "undo": {
+    "message": "Ongedaan maken"
+  },
+  "insertError": {
+    "message": "Het invoegen is mislukt"
+  },
+  "findScript": {
+    "message": "Scripts zoeken voor deze site"
+  },
+  "advanced": {
+    "message": "Geavanceerd"
+  },
+  "customOptionsCSS": {
+    "message": "Custom Options CSS"
+  },
+  "customOptionsCSSDescription": {
+    "message": "Pas de optiepagina en het CodeMirror-stijlblad aan."
+  },
+  "customPopupCSS": {
+    "message": "Custom Popup CSS"
+  },
+  "customPopupCSSDescription": {
+    "message": "Customize toolbar popup style configuration."
+  },
+  "cmOptionsDescription": {
+    "message": "Pas de CodeMirror-, add-ons- en JavaScript-lintconfiguratie aan."
+  },
+  "cmOptionsError": {
+    "message": "Ongeldige CodeMirror-json"
+  },
+  "about": {
+    "message": "Over"
+  },
+  "error": {
+    "message": "Er is een fout opgetreden tijdens de handeling"
+  },
+  "export": {
+    "message": "Exporteren"
+  },
+  "fileParseError": {
+    "message": "Er is een fout opgetreden tijdens het verwerken van het bestand"
+  },
+  "fileReadError": {
+    "message": "Er is een fout opgetreden tijdens het uitlezen van het bestand"
+  },
+  "fileSizeError": {
+    "message": "De bestandsgrootte overschrijdt de toegestane $1kb"
+  },
+  "fileTypeError": {
+    "message": "Niet-ondersteund bestandsformaat"
+  },
+  "help": {
+    "message": "Hulp"
+  },
+  "import": {
+    "message": "Importeren"
+  },
+  "options": {
+    "message": "Opties"
+  },
+  "saveOptions": {
+    "message": "Opslaan"
+  }
 }

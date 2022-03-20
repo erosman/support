@@ -44,6 +44,12 @@
   "userMeta": {
     "message": "User Metadata"
   },
+  "storage": {
+    "message": "Storage"
+  },
+  "storageError": {
+    "message": "Storage value must be a valid JSON"
+  },
   "sidebar": {
     "message": "Странична лента"
   },
@@ -131,26 +137,8 @@
   "scriptUpdated": {
     "message": "Скрипт или стилов лист е обновен до издание $1"
   },
-  "import": {
-    "message": "Внасяне"
-  },
-  "export": {
-    "message": "Изнасяне"
-  },
   "exportAll": {
     "message": "Изнасяне"
-  },
-  "fileSizeError": {
-    "message": "Дължината на файла е по голяма от разрешените $1 КБ"
-  },
-  "fileTypeError": {
-    "message": "Неподдържан формат на файла"
-  },
-  "fileReadError": {
-    "message": "Грешка при отваряне на файла"
-  },
-  "fileParseError": {
-    "message": "Грешка при разбор на файла"
   },
   "log": {
     "message": "Журнал"
@@ -182,12 +170,18 @@
   "advanced": {
     "message": "Разширени"
   },
-  "customOptionsCSS": { "message": "Custom Options CSS" },
+  "customOptionsCSS": {
+    "message": "Custom Options CSS"
+  },
   "customOptionsCSSDescription": {
     "message": "Настройка на изгледа на страницата с настройки и CodeMirror."
   },
-  "customPopupCSS": { "message": "Custom Popup CSS" },
-  "customPopupCSSDescription": { "message": "Customize toolbar popup style configuration." },
+  "customPopupCSS": {
+    "message": "Custom Popup CSS"
+  },
+  "customPopupCSSDescription": {
+    "message": "Customize toolbar popup style configuration."
+  },
   "cmOptionsDescription": {
     "message": "Настройка на CodeMirror, добавките и проверките на кода на JavaScript."
   },
@@ -200,8 +194,26 @@
   "error": {
     "message": "Грешка при действието"
   },
+  "export": {
+    "message": "Изнасяне"
+  },
+  "fileParseError": {
+    "message": "Грешка при разбор на файла"
+  },
+  "fileReadError": {
+    "message": "Грешка при отваряне на файла"
+  },
+  "fileSizeError": {
+    "message": "Дължината на файла е по голяма от разрешените $1 КБ"
+  },
+  "fileTypeError": {
+    "message": "Неподдържан формат на файла"
+  },
   "help": {
     "message": "Помощ"
+  },
+  "import": {
+    "message": "Внасяне"
   },
   "options": {
     "message": "Настройки"

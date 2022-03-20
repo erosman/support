@@ -44,7 +44,15 @@
   "userMeta": {
     "message": "User Metadata"
   },
-  "sidebar": { "message": "Sidebar" },
+  "storage": {
+    "message": "Storage"
+  },
+  "storageError": {
+    "message": "Storage value must be a valid JSON"
+  },
+  "sidebar": {
+    "message": "Sidebar"
+  },
   "script": {
     "message": "脚本和样式"
   },
@@ -132,24 +140,6 @@
   "exportAll": {
     "message": "导出"
   },
-  "import": {
-    "message": "导入"
-  },
-  "export": {
-    "message": "导出"
-  },
-  "fileSizeError": {
-    "message": "文件大小超过允许的 $1kb"
-  },
-  "fileTypeError": {
-    "message": "不支持的文件格式"
-  },
-  "fileReadError": {
-    "message": "读取该文件出错"
-  },
-  "fileParseError": {
-    "message": "解析该文件出错"
-  },
   "log": {
     "message": "日志"
   },
@@ -180,12 +170,18 @@
   "advanced": {
     "message": "高级"
   },
-  "customOptionsCSS": { "message": "Custom Options CSS" },
+  "customOptionsCSS": {
+    "message": "Custom Options CSS"
+  },
   "customOptionsCSSDescription": {
     "message": "自定义选项页面 & CodeMirror 样式配置。"
   },
-  "customPopupCSS": { "message": "Custom Popup CSS" },
-  "customPopupCSSDescription": { "message": "Customize toolbar popup style configuration." },
+  "customPopupCSS": {
+    "message": "Custom Popup CSS"
+  },
+  "customPopupCSSDescription": {
+    "message": "Customize toolbar popup style configuration."
+  },
   "cmOptionsDescription": {
     "message": "自定义 CodeMirror, 插件 & JavaScript lint 配置。"
   },
@@ -198,8 +194,26 @@
   "error": {
     "message": "运行出错"
   },
+  "export": {
+    "message": "导出"
+  },
+  "fileParseError": {
+    "message": "解析该文件出错"
+  },
+  "fileReadError": {
+    "message": "读取该文件出错"
+  },
+  "fileSizeError": {
+    "message": "文件大小超过允许的 $1kb"
+  },
+  "fileTypeError": {
+    "message": "不支持的文件格式"
+  },
   "help": {
     "message": "帮助"
+  },
+  "import": {
+    "message": "导入"
   },
   "options": {
     "message": "选项"

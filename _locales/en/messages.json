@@ -21,7 +21,8 @@
   "globalScriptExcludeMatchesDescription": { "message": "Exclude Match pattens (one per line) to prevent all scripts from running on them" },
 
   "userMeta": { "message": "User Metadata" },
-
+  "storage": { "message": "Storage" },
+  "storageError": { "message": "Storage value must be a valid JSON" },
 
   "sidebar": { "message": "Sidebar" },
   "script": { "message": "Script & CSS" },

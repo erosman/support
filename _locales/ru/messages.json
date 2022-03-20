@@ -44,7 +44,15 @@
   "userMeta": {
     "message": "User Metadata"
   },
-  "sidebar": { "message": "Sidebar" },
+  "storage": {
+    "message": "Storage"
+  },
+  "storageError": {
+    "message": "Storage value must be a valid JSON"
+  },
+  "sidebar": {
+    "message": "Sidebar"
+  },
   "script": {
     "message": "Скрипт и стиль CSS"
   },
@@ -132,24 +140,6 @@
   "exportAll": {
     "message": "Экспорт всех"
   },
-  "import": {
-    "message": "Импорт"
-  },
-  "export": {
-    "message": "Экспорт"
-  },
-  "fileSizeError": {
-    "message": "Размер файла больше допустимого ($1kb)"
-  },
-  "fileTypeError": {
-    "message": "Неподдерживаемый формат файла"
-  },
-  "fileReadError": {
-    "message": "Произошла ошибка при чтении файла"
-  },
-  "fileParseError": {
-    "message": "Произошла ошибка при разборе файла"
-  },
   "log": {
     "message": "Log"
   },
@@ -180,12 +170,18 @@
   "advanced": {
     "message": "Advanced"
   },
-  "customOptionsCSS": { "message": "Custom Options CSS" },
+  "customOptionsCSS": {
+    "message": "Custom Options CSS"
+  },
   "customOptionsCSSDescription": {
     "message": "Customize Options page & CodeMirror style configuration."
   },
-  "customPopupCSS": { "message": "Custom Popup CSS" },
-  "customPopupCSSDescription": { "message": "Customize toolbar popup style configuration." },
+  "customPopupCSS": {
+    "message": "Custom Popup CSS"
+  },
+  "customPopupCSSDescription": {
+    "message": "Customize toolbar popup style configuration."
+  },
   "cmOptionsDescription": {
     "message": "Customize CodeMirror, addons & JavaScript lint configuration."
   },
@@ -198,8 +194,26 @@
   "error": {
     "message": "Произошла ошибка с операцией"
   },
+  "export": {
+    "message": "Экспорт"
+  },
+  "fileParseError": {
+    "message": "Произошла ошибка при разборе файла"
+  },
+  "fileReadError": {
+    "message": "Произошла ошибка при чтении файла"
+  },
+  "fileSizeError": {
+    "message": "Размер файла больше допустимого ($1kb)"
+  },
+  "fileTypeError": {
+    "message": "Неподдерживаемый формат файла"
+  },
   "help": {
     "message": "Помощь"
+  },
+  "import": {
+    "message": "Импорт"
   },
   "options": {
     "message": "Параметры"
