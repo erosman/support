@@ -1,224 +1,100 @@
 {
-  "extensionName": {
-    "message": "FireMonkey"
-  },
-  "extensionDescription": {
-    "message": "Сверхлёгкий менеджер пользовательских скриптов и стилей"
-  },
-  "tabScript": {
-    "message": "Скрипты и стили CSS"
-  },
-  "otherScript": {
-    "message": "Другие скрипты и стили CSS"
-  },
-  "scriptCommands": {
-    "message": "Команды скрипта"
-  },
-  "back": {
-    "message": "Назад"
-  },
-  "edit": {
-    "message": "Изменить"
-  },
-  "autoUpdateInterval": {
-    "message": "Интервал автообновления"
-  },
-  "autoUpdateIntervalDescription": {
-    "message": "Количество дней между обновлениями скриптов и стилей (0 = не обновлять)"
-  },
-  "enableSync": {
-    "message": "Включить синхронизацию хранилища"
-  },
-  "syncError": {
-    "message": "Невозможно синхронизироватьхранилище ($1KB) больше, чем 100 КБ. Синхронизация будет отключена."
-  },
-  "counter": {
-    "message": "Counter"
-  },
-  "globalScriptExcludeMatches": {
-    "message": "Exclude Matches глобального скрипта"
-  },
-  "globalScriptExcludeMatchesDescription": {
-    "message": "Исключите совпадение pattens (по одному на строку), чтобы все скрипты не работали на них."
-  },
-  "userMeta": {
-    "message": "User Metadata"
-  },
-  "storage": {
-    "message": "Storage"
-  },
-  "storageError": {
-    "message": "Storage value must be a valid JSON"
-  },
-  "sidebar": {
-    "message": "Sidebar"
-  },
-  "script": {
-    "message": "Скрипт и стиль CSS"
-  },
-  "saveScript": {
-    "message": "Сохранить"
-  },
-  "enable": {
-    "message": "Включить"
-  },
-  "update": {
-    "message": "Обновить"
-  },
-  "autoUpdate": {
-    "message": "Автообновление"
-  },
-  "theme": {
-    "message": "Theme"
-  },
-  "light": {
-    "message": "Light"
-  },
-  "dark": {
-    "message": "Тёмная тема"
-  },
-  "newJS": {
-    "message": "Новый польз. скрипт (UserScript)"
-  },
-  "newCSS": {
-    "message": "Новый польз. стиль (UserCSS)"
-  },
-  "saveTemplate": {
-    "message": "Save as Шаблон"
-  },
-  "tabToSpaces": {
-    "message": "Tabs to Spaces"
-  },
-  "trimTrailingSpaces": {
-    "message": "Trim Trailing Spaces"
-  },
-  "toUpperCase": {
-    "message": "Selection to Uppercase"
-  },
-  "toLowerCase": {
-    "message": "Selection to Lowercase"
-  },
-  "stylish": {
-    "message": "Install Stylish Style"
-  },
-  "report": {
-    "message": "Report"
-  },
-  "discardConfirm": {
-    "message": "Отменить изменения без сохранения?"
-  },
-  "delete": {
-    "message": "Удалить"
-  },
-  "deleteConfirm": {
-    "message": "Удалить '$1' и его сохранённые данные?"
-  },
-  "deleteMultiConfirm": {
-    "message": "Удалить выбранные ($1) Scripts/CSS и их сохранённые данные?"
-  },
-  "installConfirm": {
-    "message": "Установить '$1'?Script/CSS с таким же именем будет заменён, если он имеет более низкий номер версии."
-  },
-  "metaError": {
-    "message": "Ошибка метаданных"
-  },
-  "noNameError": {
-    "message": "Необходимо ввести название."
-  },
-  "nameError": {
-    "message": "Такое название уже существует.Хотите заменить существующее?"
-  },
-  "updateUrlError": {
-    "message": "Нет updateURL или version."
-  },
-  "noNewUpdate": {
-    "message": "Новых обновлений нет."
-  },
-  "scriptUpdated": {
-    "message": "Обновлён до версии $1"
-  },
-  "exportAll": {
-    "message": "Экспорт всех"
-  },
-  "log": {
-    "message": "Log"
-  },
-  "time": {
-    "message": "Time"
-  },
-  "reference": {
-    "message": "Reference"
-  },
-  "message": {
-    "message": "Message"
-  },
-  "scratchpad": {
-    "message": "Scratchpad"
-  },
-  "run": {
-    "message": "Run"
-  },
-  "undo": {
-    "message": "Undo"
-  },
-  "insertError": {
-    "message": "Failed to insert"
-  },
-  "findScript": {
-    "message": "Find scripts for this site"
-  },
-  "advanced": {
-    "message": "Advanced"
-  },
-  "customOptionsCSS": {
-    "message": "Custom Options CSS"
-  },
-  "customOptionsCSSDescription": {
-    "message": "Customize Options page & CodeMirror style configuration."
-  },
-  "customPopupCSS": {
-    "message": "Custom Popup CSS"
-  },
-  "customPopupCSSDescription": {
-    "message": "Customize toolbar popup style configuration."
-  },
-  "cmOptionsDescription": {
-    "message": "Customize CodeMirror, addons & JavaScript lint configuration."
-  },
-  "cmOptionsError": {
-    "message": "Invalid CodeMirror JSON"
-  },
-  "about": {
-    "message": "О FireMonkey"
-  },
-  "error": {
-    "message": "Произошла ошибка с операцией"
-  },
-  "export": {
-    "message": "Экспорт"
-  },
-  "fileParseError": {
-    "message": "Произошла ошибка при разборе файла"
-  },
-  "fileReadError": {
-    "message": "Произошла ошибка при чтении файла"
-  },
-  "fileSizeError": {
-    "message": "Размер файла больше допустимого ($1kb)"
-  },
-  "fileTypeError": {
-    "message": "Неподдерживаемый формат файла"
-  },
-  "help": {
-    "message": "Помощь"
-  },
-  "import": {
-    "message": "Импорт"
-  },
-  "options": {
-    "message": "Параметры"
-  },
-  "saveOptions": {
-    "message": "Сохранить"
-  }
+  "extensionName": { "message": "FireMonkey" },
+  "extensionDescription": { "message": "Суперлёгкий менеджер пользовательских скриптов и стилей" },
+
+
+  "tabScript": { "message": "Вкладка скриптов и стилей" },
+  "otherScript": { "message": "Другие скрипты и стили" },
+  "scriptCommands": { "message": "Команды скрипта" },
+  "back": { "message": "Назад" },
+  "edit": { "message": "Изменить" },
+
+  "autoUpdateInterval": { "message": "Интервал автообновления" },
+  "autoUpdateIntervalDescription": { "message": "Количество дней между обновлениями (0 = не обновлять)" },
+
+  "enableSync": { "message": "Включить синхронизацию хранилища" },
+  "syncError": { "message": "Не удалось синхронизировать\nХранилище ($1КБ) больше 100КБ. Синхронизация будет отключена." },
+
+  "counter": { "message": "Счётчик" },
+
+  "globalScriptExcludeMatches": { "message": "Совпадения исключений глобального скрипта" },
+  "globalScriptExcludeMatchesDescription": { "message": "Исключить совпадающие паттерны (по одному в строке), чтобы предотвратить выполнение всех скриптов на них" },
+
+  "userMeta": { "message": "Метаданные пользователя" },
+  "storage": { "message": "Хранилище" },
+  "storageError": { "message": "Значение хранилища должно быть допустимым JSON." },
+
+  "sidebar": { "message": "Боковая панель" },
+  "script": { "message": "Скрипты и стили" },
+
+  "saveScript": { "message": "Сохранить" },
+  "enable": { "message": "Включить" },
+  "update": { "message": "Обновить" },
+  "autoUpdate": { "message": "Автообновление" },
+  "theme": { "message": "Тема" },
+
+  "light": { "message": "Светлая" },
+  "dark": { "message": "Тёмная" },
+
+  "newJS": { "message": "Новый UserScript" },
+  "newCSS": { "message": "Новый UserCSS" },
+  "saveTemplate": { "message": "Сохранить как шаблон" },
+
+  "tabToSpaces": { "message": "Табуляция в пробелы" },
+  "trimTrailingSpaces": { "message": "Обрезать конечные пробелы" },
+  "toUpperCase": { "message": "Выбранное в верхний регистр" },
+  "toLowerCase": { "message": "Выбранное в нижний регистр" },
+
+  "stylish": { "message": "Установить стиль Stylish" },
+  "report": { "message": "Сообщить" },
+
+  "discardConfirm": { "message": "Отменить изменения без сохранения?" },
+
+  "delete": { "message": "Удалить" },
+  "deleteConfirm": { "message": "Удалить \n'$1'\n и сохранённые в нём данные?" },
+  "deleteMultiConfirm": { "message": "Удалить выбранные $1 сценарии/стили и их сохранённые данные?" },
+
+  "installConfirm": { "message": "Установить '$1'?\nСценарий/Стиль с таким же именем будет заменён, если имеет меньший номер версии." },
+
+  "metaError": { "message": "Ошибка метаданных" },
+  "noNameError": { "message": "Скрипт/стиль должен иметь название." },
+  "nameError": { "message": "Название скрипта/стиля уже существует.\nЗаменить существующий?" },
+  "updateUrlError": { "message": "Скрипт/стиль не имеет updateURL или версии." },
+  "noNewUpdate": { "message": "Новых обновлений нет." },
+  "scriptUpdated": { "message": "Скрипт/стиль обновлён до версии $1" },
+
+
+  "exportAll": { "message": "Экспорт" },
+
+  "log": { "message": "Лог" },
+  "time": { "message": "Время" },
+  "reference": { "message": "Ссылка" },
+  "message": { "message": "Сообщение" },
+
+  "scratchpad": { "message": "Скретчпад" },
+  "run": { "message": "Запустить" },
+  "undo": { "message": "Откат" },
+  "insertError": { "message": "Невозможно вставить" },
+  "findScript": { "message": "Найти скрипты для этого сайта" },
+
+  "advanced": { "message": "Дополнительно" },
+  "customOptionsCSS": { "message": "Пользовательский стиль параметров" },
+  "customOptionsCSSDescription": { "message": "Настройте стиль страницы параметров и конфигурацию CodeMirror" },
+  "customPopupCSS": { "message": "Пользовательские стили всплывающих окон" },
+  "customPopupCSSDescription": { "message": "Настройте стиль всплывающего окна панели инструментов" },
+  "cmOptionsDescription": { "message": "Настройте конфигурацию CodeMirror, дополнения и JavaScript lint" },
+  "cmOptionsError": { "message": "Недопустимый JSON CodeMirror" },
+
+
+  "about": { "message": "О расширении" },
+  "error": { "message": "Произошла ошибка при выполнении операции" },
+  "export": { "message": "Экспорт" },
+  "fileParseError": { "message": "Произошла ошибка при синтаксическом анализе файла" },
+  "fileReadError": { "message": "Произошла ошибка при чтении файла" },
+  "fileSizeError": { "message": "Размер файла превышает допустимые $1kb" },
+  "fileTypeError": { "message": "Неподдерживаемый формат файла" },
+  "help": { "message": "Справка" },
+  "import": { "message": "Импорт" },
+  "options": { "message": "Параметры" },
+  "saveOptions": { "message": "Сохранить" }
 }
