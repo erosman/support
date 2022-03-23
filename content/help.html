@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="iframe.css">
     <title>Help</title>
+    <link rel="stylesheet" href="iframe.css">
   </head>
   <body>
 
@@ -88,7 +88,7 @@
   <h2 id="Preamble">Preamble</h2>
   <p><i>FireMonkey</i> is a totally new combined user-script and user-style manager. While it has similar functions to other user-Script managers like <i>Greasemonkey/Tampermonkey/Violentmonkey</i>, and user-style managers like <i>Stylish/Stylus/xStyle</i>, there are also differences. Similar to other userscript managers, scripts (or CSS) are injected in tabs when tab is reloading. <del>The behaviour differs from <i>Stylus</i> which can inject CSS into a tab and remove it without having to reload the tab.</del> <a href="#Live-update">&#x24d8;</a> To make permanent changes without reloading the tab is not possible with the current API but changes are planned as part of <a href="https://blog.mozilla.org/addons/2021/05/27/manifest-v3-update/" target="_blank">Manifest v3 update</a>.</p>
 
-  <p class="note">Injection into <code>page</code> context are prevented by Firefox on sites with restrictive Content Security Policy (CSP) e.g. github.com, twitter.com, mail.google.com (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1411641" title="CSP 'sandbox' directive prevents content scripts from matching, due to unique origin, breaking also browser features" target="_blank">Bug 1411641</a>), as well as certain <a href="#blocked">domains</a>.</p>
+  <p class="note">Injection into <code>page</code> context are prevented by Firefox on sites with restrictive Content Security Policy (CSP) e.g. github.com, gitee.com, twitter.com, mail.google.com (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1411641" title="CSP 'sandbox' directive prevents content scripts from matching, due to unique origin, breaking also browser features" target="_blank">Bug 1411641</a>), as well as certain <a href="#blocked">domains</a>.</p>
 
   <p><i>FireMonkey</i> v2.44 is expected to be compatible with 98% of userscripts. (You can post issues to <a href="https://github.com/erosman/support/issues/429" target="_blank">FireMonkey Userscript Compatibility</a>.)</p>
 
@@ -1140,7 +1140,11 @@ element.<span class="property">innerHTML</span> = dom;
     <li><a href="https://github.com/violentmonkey/violentmonkey/issues/1102" target="_blank">[Firefox] Scripts share the same window wrapper if `@inject-into content` is used</a></li>
   </ul>
 
-  <p><sup>2</sup> <q>It is also worth noting that the hack with removing the CSP can cause a conflict with other addons that use CSP to block content (like uBlock Origin)</q>. <a href="https://github.com/violentmonkey/violentmonkey/issues/1001#issuecomment-643576816" title="[Firefox] Can't modify page properties on sites which use CSP" target="_blank">&#x24d8;</a></p>
+  <p><sup>2</sup> Content Security Policy</p>
+    <ul>
+      <li><q>Add-ons must not relax web page security headers, such as the Content Security Policy.</q> (<a href="https://extensionworkshop.com/documentation/publish/add-on-policies/#development-practices" target="_blank">Development Practices</a>)</li>
+      <li><q>It is also worth noting that the hack with removing the CSP can cause a conflict with other addons that use CSP to block content (like uBlock Origin)</q>. (<a href="https://github.com/violentmonkey/violentmonkey/issues/1001#issuecomment-643576816" title="[Firefox] Can't modify page properties on sites which use CSP" target="_blank">&#x24d8;</a>)</li>
+    </ul>
 
   <h4>@antifeature</h4>
   <p>Under-development feature on <i>GreasyFork</i> (<a href="https://github.com/JasonBarnabe/greasyfork/issues/604" title="Monetization disclosure" target="_blank">#604</a>) to mark possibly undesirable behaviour e.g. miners, ads etc.</p>
@@ -1808,9 +1812,9 @@ element.<span class="property">innerHTML</span> = dom;
     <tr>
       <th>&#x1f465; Firefox Users</th>
       <td>~710</td>
-      <td>260k</td>
-      <td>457k</td>
-      <td>46k</td>
+      <td>247k</td>
+      <td>524k</td>
+      <td>54k</td>
       <td></td>
     </tr>
 
@@ -1818,7 +1822,7 @@ element.<span class="property">innerHTML</span> = dom;
 </table>
 
   <p><sup>1</sup> GreasyFork 2022-02-22 from 63,465 userscripts <a href="https://github.com/JasonBarnabe/greasyfork/issues/1043" target="_blank">&#x24d8;</a></p>
-  <p><sup>2</sup> <code>window.close</code> grant results is overwriting the global <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/close" target="_blank">window.close()</a> and bypassing the specific safeguard to close a window that it has not opened. Such grant would allow malware userscripts to run code and hide the result by closing the window before user has a change to notice. Furthermore, the choice to close a window/tab opened by the user, should remain with the user. Tabs openned with GM <a href="#openInTab">openInTab</a> can be closed with JavaScript <code>window.close()</code> <span class="small">(v2.45)</span>.  </p>
+  <p><sup>2</sup> <code>window.close</code> grant results is overwriting the global <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/close" target="_blank">window.close()</a> and bypassing the safeguard to close a window that it has not opened. Such grant would allow malware userscripts to run code and hide the result by closing the window before user has a change to notice. Furthermore, the choice to close a window/tab opened by the user, should remain with the user. Tabs openned with GM <a href="#openInTab">openInTab</a> can be closed with JavaScript <code>window.close()</code> <span class="small">(v2.45)</span>.  </p>
   <p><sup>3</sup> <code>window.focus</code> grant results is overwriting the global <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/focus" target="_blank">window.focus()</a>. Such grant could be disruptive in cases where user is playing a game or in the middle of something in another window/tab and the userscript in the background causes its window/tab to become active and come to the foreground. Furthermore, the choice to focus a window/tab, should remain with the user.</p>
   <p><sup>4</sup> <code>window.onurlchange</code> is an experimental implementation in Tampermonkey 4.11.6120 (2020-09-17).</p>
   <p class="note">Alternative: <a href="#Detecting_JavaScript_Navigation">Detecting JavaScript Navigation</a></p>
@@ -2780,7 +2784,7 @@ popup.addStyle(css);
 
 
   <h3 id="setClipboard">setClipboard</h3>
-  <p>Copy text or data (must include <i>type</i>) to the clipboard</p>
+  <p>Copy text (<i>default</i>) or data (must include <i>type</i>) to the clipboard</p>
 <pre>
 <span class="comment">// usually there is no need to wait for the following, but if needed, use await</span>
 <span class="gm">GM.setClipboard</span>(text);
@@ -2805,7 +2809,7 @@ popup.addStyle(css);
     <tr>
       <th>type</th>
       <td class="pass">v2.45<br>
-        <span class="small">object e.g. {mimetype: 'text/plain'}<br>
+        <span class="small">object e.g. mimetype: 'text/plain'}<br>
         string MIME type e.g. 'text/plain'
         </span>
       </td>

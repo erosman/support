@@ -510,11 +510,13 @@ class Installer {
     this.directInstall = this.directInstall.bind(this);
 
     browser.webRequest.onBeforeRequest.addListener(this.webInstall, {
-        urls: [ 'https://greasyfork.org/scripts/*.user.js',
-                'https://greasyfork.org/scripts/*.user.css',
-                'https://sleazyfork.org/scripts/*.user.js',
-                'https://sleazyfork.org/scripts/*.user.css',
-                'https://openuserjs.org/install/*.user.js'],
+        urls: [
+        'https://greasyfork.org/scripts/*.user.js',
+        'https://greasyfork.org/scripts/*.user.css',
+        'https://sleazyfork.org/scripts/*.user.js',
+        'https://sleazyfork.org/scripts/*.user.css',
+        'https://openuserjs.org/install/*.user.js',
+        ],
         types: ['main_frame']
       },
       ['blocking']
@@ -525,7 +527,12 @@ class Installer {
       browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
         /\.user\.(js|css)$/i.test(tab.url) && this.directInstall(tabId, changeInfo, tab)) :
       browser.tabs.onUpdated.addListener(this.directInstall, {
-        urls: ['*://*/*.user.js', '*://*/*.user.css', 'file:///*.user.js', 'file:///*.user.css']
+        urls: [
+          '*://*/*.user.js',
+          '*://*/*.user.css',
+          'file:///*.user.js',
+          'file:///*.user.css',
+       ]
       });
 
     // --- Remote Update
@@ -535,65 +542,92 @@ class Installer {
 
   // --------------- Web/Direct Installer ------------------
   webInstall(e) {
+    if (!e.originUrl) { return; }
+
     let q;
     switch (true) {
-      case !e.originUrl: return;                            // end execution if not Web Install
-
       // --- GreasyFork & sleazyfork
-      case e.originUrl.startsWith('https://greasyfork.org/') && e.url.startsWith('https://greasyfork.org/'):
-      case e.originUrl.startsWith('https://sleazyfork.org/') && e.url.startsWith('https://sleazyfork.org/'):
+      case [e.originUrl, e.url].every(item => item.startsWith('https://greasyfork.org/')):
+      case [e.originUrl, e.url].every(item => item.startsWith('https://sleazyfork.org/')):
         q = 'header h2';
         break;
 
       // --- OpenUserJS
-      case e.originUrl.startsWith('https://openuserjs.org/') && e.url.startsWith('https://openuserjs.org/'):
+      case [e.originUrl, e.url].every(item => item.startsWith('https://openuserjs.org/')):
         q = 'a[class="script-name"]';
         break;
     }
 
-    if (q) {
-      const code = `(() => {
-        let title = document.querySelector('${q}');
-        title = title ? title.textContent : document.title;
-        return confirm(browser.i18n.getMessage('installConfirm', title)) ? title : null;
-      })();`;
+    const code = `(() => {
+      let title = document.querySelector('${q}');
+      title = title ? title.textContent : document.title;
+      return confirm(browser.i18n.getMessage('installConfirm', title)) ? title : null;
+    })();`;
 
-      browser.tabs.executeScript({code})
-      .then((result = []) => result[0] && RU.getScript({updateURL: e.url, name: result[0]}))
-      .catch(error => App.log('webInstall', `${e.url} ➜ ${error.message}`, 'error'));
+    browser.tabs.executeScript({code})
+    .then((result = []) => result[0] && RU.getScript({updateURL: e.url, name: result[0]}))
+    .catch(error => App.log('webInstall', `${e.url} ➜ ${error.message}`, 'error'));
 
-      return {cancel: true};
-    }
+    return {cancel: true};
   }
 
   directInstall(tabId, changeInfo, tab) {
-    if (changeInfo.status !== 'complete') { return; }       // end execution if not found
-    if (tab.url.startsWith('https://github.com/')) { return; } // not on https://github.com/*/*.user.js
-
-    // work-around for https://bugzilla.mozilla.org/show_bug.cgi?id=1411641
-    // using https://cdn.jsdelivr.net mirror
-    if (tab.url.startsWith('https://raw.githubusercontent.com/')) {
-      // https://raw.githubusercontent.com/<username>/<repo>/<branch>/path/to/file.js
-      const p = tab.url.split(/:?\/+/);
-      browser.tabs.update({url: `https://cdn.jsdelivr.net/gh/${p[2]}/${p[3]}@${p[4]}/${p.slice(5).join('/')}` });
-      return;
-    }
+    if (changeInfo.status !== 'complete') { return; }
+    // not on these URLs
+    if (tab.url.startsWith('https://github.com/')) { return; }
+    if (tab.url.startsWith('https://gitee.com/') && !tab.url.includes('/raw/')) { return; }
+    if (tab.url.startsWith('https://codeberg.org/') && !tab.url.includes('/raw/')) { return; }
 
     const code = String.raw`(() => {
       const pre = document.body;
-      if (!pre || !pre.textContent.trim()) { alert(browser.i18n.getMessage('metaError')); return; }
-      const name = pre.textContent.match(/(?:\/\/)?\s*@name\s+([^\r\n]+)/);
+      if (!pre || !pre.textContent.trim()) {
+        alert(browser.i18n.getMessage('metaError'));
+        return;
+      }
+      const name = pre.textContent.match(/(?:\/\/)?\s*@name\s+([^\r\n]+)/)?.[1];
       if (!name) { alert(browser.i18n.getMessage('metaError')); return; }
-      return confirm(browser.i18n.getMessage('installConfirm', name[1])) ? [pre.textContent, name[1]] : null;
+      return confirm(browser.i18n.getMessage('installConfirm', name)) ? [pre.textContent, name] : null;
     })();`;
 
     browser.tabs.executeScript(tabId, {code})
-    .then((result = []) => result[0] && this.processResponse(result[0][0], result[0][1], tab.url))
-    .catch(error => App.log('directInstall', `${tab.url} ➜ ${error.message}`, 'error'));
+    .then((result = []) => result[0] && this.processResponse(...result[0], tab.url))
+    .catch(error => {
+      App.log('directInstall', `${tab.url} ➜ ${error.message}`, 'error');
+      this.installConfirm(tab);
+    });
+  }
+
+  async installConfirm(tab) {
+    // workaround for
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1411641
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1267027
+    const inst = await browser.tabs.create({url: '/content/install.html'});
+    const tabId = inst.id;
+
+    const text = await fetch(tab.url)
+    .then(response => response.text())
+    .catch(console.error);
+
+    const name = text.match(/(?:\/\/)?\s*@name\s+([^\r\n]+)/)?.[1];
+    if (!name) {
+      App.log('directInstall', `${tab.url} ➜ ${browser.i18n.getMessage('metaError')}`, 'error');
+      return;
+    }
+
+    const code = `(() => {
+      document.querySelector('pre').textContent = ${JSON.stringify(text)};
+      return confirm(browser.i18n.getMessage('installConfirm', ${JSON.stringify(name)})) ? 'ok' : null;
+    })();`;
+
+    browser.tabs.executeScript(tabId, {code})
+    .then((result = []) => {
+      result[0] === 'ok' && this.processResponse(text, name, tab.url);
+      browser.tabs.remove(tabId);
+    })
+    .catch(error => App.log('installConfirm', `${tab.url} ➜ ${error.message}`, 'error'));
   }
 
   async stylish(url) {                                      // userstyles.org
-
     if (!/^https:\/\/userstyles\.org\/styles\/\d+/.test(url)) { return; }
 
     const code = `(() => {
@@ -669,11 +703,6 @@ class Installer {
       pref[id] = pref[oldId];                               // copy to new id
       delete pref[oldId];                                   // delete old id
       browser.storage.local.remove(oldId);                  // remove old data
-    }
-
-    // --- revert https://cdn.jsdelivr.net/gh/ URL to https://raw.githubusercontent.com/
-    if (updateURL.startsWith('https://cdn.jsdelivr.net/gh/')) {
-      updateURL = 'https://raw.githubusercontent.com/' + updateURL.substring(28).replace('@', '/');
     }
 
     // --- check version, if update existing, not for local files
@@ -773,19 +802,28 @@ class API {
 
       case 'openInTab':
         // Promise with tabs.Tab OR reject with error message
-        return browser.tabs.create({url: e.url, active: e.active, openerTabId: sender.tab.id}) 
+        return browser.tabs.create({url: e.url, active: e.active, openerTabId: sender.tab.id})
           .catch(error => App.log(name, `${message.api} ➜ ${error.message}`, 'error'));
 
       case 'setClipboard':
-        if (e.type) {
-          const type = typeof e.type === 'string' ? e.type : e.type.mimetype;
-          const blob = new Blob([e.data], {type});
-          const data = [new ClipboardItem({[type]: blob})];
-          return navigator.clipboard.write(data)            // Promise with ? OR reject with error message
+        // TM|VM compatibility
+        let type = e.type && (typeof e.type === 'string' ? e.type : e.type?.mimetype || e.type?.type);
+        if (type === 'text') {
+          type = 'text/plain';
+        }
+        else if (type === 'html') {
+          type = 'text/html';
+        }
+
+        // text
+        if (!type || type === 'text/plain') {
+          return navigator.clipboard.writeText(e.data)      // Promise with ? OR reject with error message
             .catch(error => App.log(name, `${message.api} ➜ ${error.message}`, 'error'));
         }
 
-        return navigator.clipboard.writeText(e.text)        // Promise with ? OR reject with error message
+        const blob = new Blob([e.data], {type});
+        const data = [new ClipboardItem({[type]: blob})];
+        return navigator.clipboard.write(data)              // Promise with ? OR reject with error message
           .catch(error => App.log(name, `${message.api} ➜ ${error.message}`, 'error'));
 
       case 'notification':                                  // Promise with notification's ID
