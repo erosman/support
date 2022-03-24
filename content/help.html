@@ -107,7 +107,7 @@
     <tr><th>GM.getResourceUrl</th><td>If userscript processes the result before applying it <a href="#getResourceUrl">&#x24d8;</a></td><td>30 / 63,435 (0.05%) scripts use the API<br>all are compatible</td></tr>
     <tr><th>GM_getResourceURL</th><td>if userscript processes the result before applying it <a href="#getResourceUrl">&#x24d8;</a></td><td>355 / 63,435 (0.56%) scripts use the API<br>24 / 63,435 (<b>0.03%</b>) scripts incompatible</td></tr>
     <tr><th>uncommon @grant</th><td><code>GM_cookie</code>, <code>GM_getTab</code>, <code>GM_getTabs</code>, <code>GM_saveTab</code> <a href="#api" title="">&#x24d8;</a></td><td>55 / 63,435 (<b>0.08%</b>) scripts use these APIs</td></tr>
-    <tr><th>uncommon @grant</th><td><code>window.close</code>, <code>window.focus</code>, <code>window.onurlchange</code> <a href="#api" title="">&#x24d8;</a></td><td>483 / 63,435 (<b>0.76%</b>) scripts use these APIs<br>Probably a lot less script count as there would be duplicates</td></tr>
+    <tr><th>uncommon @grant</th><td><code>window.close</code>, <code>window.focus</code>, <code>window.onurlchange</code> <a href="#api" title="">&#x24d8;</a></td><td>483 / 63,435 (<b>0.76%</b>) scripts use these APIs<br>Probably a lot less as there would be duplicates</td></tr>
     <tr><th>Content Security Policy (CSP)</th><td><code>unsafeWindow</code> or <code>page</code> context injection on pages with strict CSP that only work with <i>Tampermonkey</i> since <i>Tampermonkey</i> alters CSP <a href="#inject-into">&#x24d8;</a></td><td class="unknown"></td></tr>
     <tr><th>new XMLHttpRequest()<br>fetch()</th><td>Due to a bug in Firefox <code>userScript</code> context <a href="#JavaScript-xmlHttpRequest-fetch">&#x24d8;</a></td><td class="unknown"></td></tr>
 
@@ -255,9 +255,8 @@
   <p>Web Install is available from <i>greasyfork.org</i> & <i>openuserjs.org</i>. Script install URL will be set for script update.</p>
 
   <h4>Direct Install</h4>
-  <p>Scripts can be directly installed from any script ending in <code>.user.js </code> (remote or local file system) if loaded into a tab (open or drag & drop)</p>
-  <p>In case of <i>greasyfork.org</i> & <i>openuserjs.org</i> links, the same link will be set for script update.</p>
-  <p>Due to sandbox CSP header on <code>https://raw.githubusercontent.com/........uers.js</code> tab is forwarded to <code>cdn.jsdelivr.net</code> mirror. (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1411641" title="CSP 'sandbox' directive prevents content scripts from matching, due to unique origin, breaking also browser features" target="_blank">Bug 1411641</a>).</p>
+  <p>Scripts can be directly installed from any script ending in <code>.user.js/.user.css</code> (remote or local file system) if loaded into a tab (open or drag & drop). In case of <i>greasyfork.org, sleazyfork.org, openuserjs.org, raw.githubusercontent.com, userstyles.org</i> links, the same link will be set for script update.</p>
+  <p><del>Due to sandbox CSP header on <code>https://raw.githubusercontent.com/........uers.js</code> tab is forwarded to <code>cdn.jsdelivr.net</code> mirror.</del> (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1411641" title="CSP 'sandbox' directive prevents content scripts from matching, due to unique origin, breaking also browser features" target="_blank">Bug 1411641</a>).</p>
 
   <h3 id="android" class="experimental">Firefox on Android</h3>
   <p>Support is experimental and based on user feedback.</p>
@@ -268,9 +267,8 @@
 
   <h3 id="auto-update-interval">Auto-Update Interval</h3>
 
-  <p>You can set the number of days between updates. Setting 0 (default) means there will be no auto-update.</p>
-  <p>In order to minimise the impact on your browsing, auto-update is set to run when Firefox is idle and then 10 updates at a time (until the next idle time).</p>
-  <p>Please note that updating each script can take around 4-5 seconds. If there are many scripts, that can add up to consider amount of time. I would suggest manually updating Scripts/CSS or enabling auto-update only on the ones that require regular update.</p>
+  <p>You can set the number of days between updates. Setting 0 (<i>default</i>) means there will be no auto-update. In order to minimise the impact on your browsing, auto-update is set to run when Firefox is idle and then 10 updates at a time (until the next idle time).</p>
+  <p class="note">Updating each script can take around 4-5 seconds. If there are many scripts, that can add up to consider amount of time. I would suggest manually updating Scripts/CSS or enabling auto-update only on the ones that require regular update.</p>
 
   <h3 id="enable-storage">Enable Storage Sync</h3>
   <p>Enable to sync storage if it is under 100KB. If the storage is over 100KB, there will be a notification and the Sync will be turned off automatically to avoid repeated errors.</p>
@@ -394,30 +392,30 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 <pre>
 {
   <span class="comment">// CodeMirror Options</span>
-  <span class="property">"indentWithTabs"</span>: <span class="keyword">true</span>:
-  <span class="property">"indentUnit"</span>: <span class="value">4</span>:
-  <span class="property">"tabSize"</span>: <span class="value">4</span>:
+  <span class="string">"indentWithTabs"</span>: <span class="keyword">true</span>,
+  <span class="string">"indentUnit"</span>: <span class="value">4</span>,
+  <span class="string">"tabSize"</span>: <span class="value">4</span>,
 
   <span class="comment">// JSHint Options</span>
-  <span class="property">"jshint"</span>: {
-    <span class="property">"curly"</span>: <span class="keyword">false</span>:
-    <span class="property">"varstmt"</span>: <span class="keyword">false</span>
+  <span class="string">"jshint"</span>: {
+    <span class="string">"curly"</span>: <span class="keyword">false</span>,
+    <span class="string">"varstmt"</span>: <span class="keyword">false</span>
   },
 
   <span class="comment">// match-highlighter examples</span>
-  <span class="property">"highlightSelectionMatches"</span>: <span class="keyword">true</span>:
-  <span class="property">"highlightSelectionMatches"</span>: {<span class="property">showToken</span>: <span class="value">/\w/</span>, <span class="property">annotateScrollbar</span>: <span class="keyword">true</span>},
+  <span class="string">"highlightSelectionMatches"</span>: <span class="keyword">true</span>,
+  <span class="string">"highlightSelectionMatches"</span>: {<span class="string">"showToken"</span>: <span class="value">/\w/</span>, <span class="string">"annotateScrollbar"</span>: <span class="keyword">true</span>},
 
   <span class="comment">// Tab to indent with spaces</span>
-  <span class="property">"extraKeys"</span>: {
-    <span class="property">"Tab"</span>: <span class="string">"indentMore"</span>:
-    <span class="property">"Shift-Tab"</span>: <span class="string">"indentLess"</span>
+  <span class="string">"extraKeys"</span>: {
+    <span class="string">"Tab"</span>: <span class="string">"indentMore"</span>,
+    <span class="string">"Shift-Tab"</span>: <span class="string">"indentLess"</span>
   },
 
   <span class="comment">// Key Maps</span>
-  <span class="property">"keyMap"</span>: <span class="string">"emacs"</span>:
-  <span class="property">"keyMap"</span>: <span class="string">"sublime"</span>:
-  <span class="property">"keyMap"</span>: <span class="string">"vim"</span>:
+  <span class="string">"keyMap"</span>: <span class="string">"emacs"</span>,
+  <span class="string">"keyMap"</span>: <span class="string">"sublime"</span>,
+  <span class="string">"keyMap"</span>: <span class="string">"vim"</span>,
 
 }
 </pre>
@@ -426,10 +424,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-
   <h3 id="import-export">Preferences: Import/Export</h3>
   <p>You can import/export Preferences (for backup or share) from/to a local file on your computer.</p>
-  <p class="note">Import is non-destructive. Click <b>save</b> to apply the new settings.</p>
+  <p class="note">Import is non-destructive. Click <b>Save</b> to apply the new settings.</p>
 
   <p>Since v2.25, import will over-write options and scripts with the same name but keeps other scripts.</p>
 
@@ -1142,7 +1139,7 @@ element.<span class="property">innerHTML</span> = dom;
 
   <p><sup>2</sup> Content Security Policy</p>
     <ul>
-      <li><q>Add-ons must not relax web page security headers, such as the Content Security Policy.</q> (<a href="https://extensionworkshop.com/documentation/publish/add-on-policies/#development-practices" target="_blank">Development Practices</a>)</li>
+      <li><q>Add-ons must not relax web page security headers, such as the Content Security Policy.</q> (<a href="https://extensionworkshop.com/documentation/publish/add-on-policies/#development-practices" target="_blank">Add-on Policies</a>)</li>
       <li><q>It is also worth noting that the hack with removing the CSP can cause a conflict with other addons that use CSP to block content (like uBlock Origin)</q>. (<a href="https://github.com/violentmonkey/violentmonkey/issues/1001#issuecomment-643576816" title="[Firefox] Can't modify page properties on sites which use CSP" target="_blank">&#x24d8;</a>)</li>
     </ul>
 
@@ -1563,7 +1560,7 @@ element.<span class="property">innerHTML</span> = dom;
 
   <h4>@require <span style="font-size: inherit; margin-left: 4em;">specific-library</span></h4>
   <p>Few libraries have been packed with <i>FireMonkey</i> which will be injected for user-scripts using <code>@require</code>. A shorthand (case-insensitive) can also be used.</p>
-  <p>Based on data provided by <i>GreasyFork</i>, 8,011/31,170 (26%) use <code>@require</code> and from those 7,082/11,236 (63%) entries relate to these libraries (& <i>gm4-polyfill</i>).</p>
+  <p>Based on data provided by <i>GreasyFork</i> (2020-02-09), 8,011/31,170 (26%) use <code>@require</code> and from those 7,082/11,236 (63%) entries relate to these libraries (& <i>gm4-polyfill</i>).</p>
 
   <p>Following CDN sources are processed:</p>
 

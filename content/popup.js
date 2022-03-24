@@ -3,16 +3,9 @@
 // ----------------- Internationalization ------------------
 App.i18n();
 
-// ----------------- User Preference -----------------------
-App.getPref().then(() => {
-  popup.process();
-
-  // --- add custom style
-  pref.customPopupCSS && (document.querySelector('style').textContent = pref.customPopupCSS);
-});
-
 // ----------------- Popup ---------------------------------
 class Popup {
+
   constructor() {
     document.querySelectorAll('button').forEach(item => item.addEventListener('click', this.processButtons));
     this.docfrag = document.createDocumentFragment();
@@ -335,3 +328,13 @@ class Popup {
   }
 }
 const popup = new Popup();
+// ----------------- /Popup --------------------------------
+
+// ----------------- User Preference -----------------------
+App.getPref().then(() => {
+  popup.process();
+
+  // --- add custom style
+  pref.customPopupCSS && (document.querySelector('style').textContent = pref.customPopupCSS);
+});
+// ----------------- /User Preference ----------------------

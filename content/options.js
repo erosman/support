@@ -4,17 +4,6 @@ const RU = new RemoteUpdate();
 // ----------------- Internationalization ------------------
 App.i18n();
 
-// ----------------- User Preference -----------------------
-App.getPref().then(() => {
-  options.process();
-  script.process();
-  showLog.process();
-
-  // --- add custom style
-  pref.customOptionsCSS && (document.querySelector('style').textContent = pref.customOptionsCSS);
-});
-// ----------------- /User Preference ----------------------
-
 // ----------------- Options -------------------------------
 class Options {
 
@@ -370,7 +359,7 @@ class Script {
   }
 
   changeColor() {
-    if (this.oldColor === this.inputColor.value) { return; }     // no change
+    if (this.oldColor === this.inputColor.value) { return; } // no change
 
     let color = this.inputColor.value;
     switch (true) {
@@ -1151,71 +1140,6 @@ class Script {
 }
 const script = new Script();
 
-// ----------------- Import/Export Preferences -------------
-App.importExport(() => {
-  options.process();                                        // set options after the pref update
-  script.process();                                         // update page display
-});
-// ----------------- /Import/Export Preferences ------------
-
-// ----------------- Match Pattern Tester ------------------
-class Pattern {
-
-  static validate(node) {
-    node.classList.remove('invalid');
-    node.value = node.value.trim();
-    if (!node.value) { return true; }                       // emtpy
-
-    // use for loop to be able to break early
-    for (const item of node.value.split(/\s+/)) {
-      const error = this.hasError(item);
-      if (error) {
-        node.classList.add('invalid');
-        App.notify(`${browser.i18n.getMessage(node.id)}\n${item}\n${error}`);
-        return false;                                       // end execution
-      }
-    }
-    return true;
-  }
-
-  static hasError(p) {
-    if (Meta.validPattern(p)) { return false; }
-
-    if (!p.includes('://')) { return 'Invalid Pattern'; }
-    p = p.toLowerCase();
-    const [scheme, host, path] = p.split(/:\/{2,3}|\/+/);
-    const file = scheme === 'file';
-
-    // --- common pattern errors
-    switch (true) {
-      case !['http', 'https', 'file', '*'].includes(scheme):
-        return scheme.includes('*') ? '"*" in scheme must be the only character' : 'Unsupported scheme';
-
-      case file && !p.startsWith('file:///'):
-        return 'file:/// must have 3 slashes';
-
-       case !host:
-        return 'Missing Host';
-
-      case host.substring(1).includes('*'):
-        return '"*" in host must be at the start';
-
-      case host[0] === '*' && host[1] && host[1] !== '.':
-        return '"*" in host must be the only character or be followed by "."';
-
-      case !file && host.includes(':'):
-        return 'Host must not include a port number';
-
-      case !file && typeof path === 'undefined':
-        return 'Missing Path';
-
-      default:
-        return 'Invalid Pattern';
-    }
-  }
-}
-// ----------------- /Match Pattern Tester -----------------
-
 // ----------------- Log -----------------------------------
 class ShowLog {
 
@@ -1277,4 +1201,80 @@ class ShowLog {
   }
 }
 const showLog = new ShowLog();
-// ---------------- /Log ----------------------------------
+// ---------------- /Log -----------------------------------
+
+// ----------------- Match Pattern Tester ------------------
+class Pattern {
+
+  static validate(node) {
+    node.classList.remove('invalid');
+    node.value = node.value.trim();
+    if (!node.value) { return true; }                       // emtpy
+
+    // use for loop to be able to break early
+    for (const item of node.value.split(/\s+/)) {
+      const error = this.hasError(item);
+      if (error) {
+        node.classList.add('invalid');
+        App.notify(`${browser.i18n.getMessage(node.id)}\n${item}\n${error}`);
+        return false;                                       // end execution
+      }
+    }
+    return true;
+  }
+
+  static hasError(p) {
+    if (Meta.validPattern(p)) { return false; }
+
+    if (!p.includes('://')) { return 'Invalid Pattern'; }
+    p = p.toLowerCase();
+    const [scheme, host, path] = p.split(/:\/{2,3}|\/+/);
+    const file = scheme === 'file';
+
+    // --- common pattern errors
+    switch (true) {
+      case !['http', 'https', 'file', '*'].includes(scheme):
+        return scheme.includes('*') ? '"*" in scheme must be the only character' : 'Unsupported scheme';
+
+      case file && !p.startsWith('file:///'):
+        return 'file:/// must have 3 slashes';
+
+       case !host:
+        return 'Missing Host';
+
+      case host.substring(1).includes('*'):
+        return '"*" in host must be at the start';
+
+      case host[0] === '*' && host[1] && host[1] !== '.':
+        return '"*" in host must be the only character or be followed by "."';
+
+      case !file && host.includes(':'):
+        return 'Host must not include a port number';
+
+      case !file && typeof path === 'undefined':
+        return 'Missing Path';
+
+      default:
+        return 'Invalid Pattern';
+    }
+  }
+}
+// ----------------- /Match Pattern Tester -----------------
+
+// ----------------- User Preference -----------------------
+App.getPref().then(() => {
+  options.process();
+  script.process();
+  showLog.process();
+
+  // --- add custom style
+  pref.customOptionsCSS && (document.querySelector('style').textContent = pref.customOptionsCSS);
+});
+// ----------------- /User Preference ----------------------
+
+// ----------------- Import/Export Preferences -------------
+App.importExport(() => {
+  options.process();                                        // set options after the pref update
+  script.process();                                         // update page display
+});
+// ----------------- /Import/Export Preferences ------------
