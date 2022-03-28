@@ -225,7 +225,7 @@ class Script {
   }
 
   addTheme(dark) {
-    [0, 1].forEach(i => window.frames[i]?.document.body.classList.toggle('dark', dark));
+    [0, 1].forEach(i => window.frames[i]?.document?.body?.classList.toggle('dark', dark));
     const url =  `../lib/codemirror/theme/${this.theme}.css`;
     if (this.theme === 'default' || document.querySelector(`link[href="${url}"]`)) { // already added
       document.body.classList.toggle('dark', dark);
