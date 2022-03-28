@@ -1161,7 +1161,7 @@ class ShowLog {
 
   process(list = this.log) {
     list.forEach(([time, ref, message, type]) => {
-      const tr = this.template.cloneNode(true);console.log(ref, message, type);
+      const tr = this.template.cloneNode(true);
       type && tr.classList.add(type);
       const td = tr.children;
       td[0].textContent = time;
