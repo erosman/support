@@ -6,14 +6,14 @@ class ContextMenu {
 
   constructor() {
     const contextMenus = [
-      { id: 'options', contexts: ['browser_action'], icons: {16: '/image/gear.svg'} },
-      { id: 'newJS', contexts: ['browser_action'], icons: {16: '/image/js.svg'} },
-      { id: 'newCSS', contexts: ['browser_action'], icons: {16: '/image/css.svg'} },
-      { id: 'help', contexts: ['browser_action'], icons: {16: '/image/help.svg'} },
-      { id: 'log', contexts: ['browser_action'], icons: {16: '/image/document.svg'} },
-      { id: 'localeMaker', title: 'Locale Maker', contexts: ['browser_action'], icons: {16: '/locale-maker/locale-maker.svg'} },
+      {id: 'options', contexts: ['browser_action'], icons: {16: '/image/gear.svg'}},
+      {id: 'newJS', contexts: ['browser_action'], icons: {16: '/image/js.svg'}},
+      {id: 'newCSS', contexts: ['browser_action'], icons: {16: '/image/css.svg'}},
+      {id: 'help', contexts: ['browser_action'], icons: {16: '/image/help.svg'}},
+      {id: 'log',  contexts: ['browser_action'], icons: {16: '/image/document.svg'}},
+      {id: 'localeMaker', contexts: ['browser_action'], icons: {16: '/locale-maker/locale-maker.svg'}, title: 'Locale Maker'},
 
-      { id: 'stylish', contexts: ['all'], documentUrlPatterns: ['https://userstyles.org/styles/*/*'] }
+      {id: 'stylish', contexts: ['all'], documentUrlPatterns: ['https://userstyles.org/styles/*/*']}
     ];
 
     contextMenus.forEach(item => {
@@ -38,7 +38,7 @@ class ContextMenu {
     browser.runtime.openOptionsPage();
   }
 }
-!App.android && new ContextMenu();                              // prepare for Android
+!App.android && new ContextMenu();                          // prepare for Android
 // ----------------- /Context Menu -------------------------
 
 // ----------------- Script Counter ------------------------
@@ -46,12 +46,19 @@ class Counter {
 
   constructor() {
     browser.browserAction.setBadgeBackgroundColor({color: '#cd853f'});
-    browser.browserAction.setBadgeTextColor({color: '#fff'}); // FF63+
+    browser.browserAction.setBadgeTextColor({color: '#fff'});
     this.process = this.process.bind(this);
   }
 
   init() {
-    browser.tabs.onUpdated.addListener(this.process, {urls: ['*://*/*', 'file:///*']});
+    // extraParameters not supported on Android
+    App.android ?
+      browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
+          /^(http|file:)/i.test(tab.url) && this.process(tabId, changeInfo, tab)) :
+      browser.tabs.onUpdated.addListener(this.process, {
+        urls: ['*://*/*', 'file:///*'],
+        properties: ['status']
+      });
   }
 
   terminate() {
@@ -102,7 +109,7 @@ class ScriptRegister {
       this.containerSupport.css = true;
     } catch {}
 
-    // firefox?? https://bugzilla.mozilla.org/show_bug.cgi?id=1738567
+    // firefox98 https://bugzilla.mozilla.org/show_bug.cgi?id=1738567
     try {
       browser.userScripts.register(options)
      .catch(e => {});
@@ -485,12 +492,12 @@ class Sync {
     });
   }
 
-
   static sortChanges(changes) {
     const keep = {};
     const deleted = [];
     Object.keys(changes).forEach(item => {
-      item.startsWith('_') && !changes[item].newValue ? deleted.push(item) : keep[item] = changes[item].newValue; // or pref[item]
+      item.startsWith('_') && !changes[item].newValue ?  deleted.push(item) :
+          keep[item] = changes[item].newValue;              // or pref[item]
     });
     return [keep, deleted];
   }
@@ -525,14 +532,15 @@ class Installer {
     // extraParameters not supported on Android
     App.android ?
       browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
-        /\.user\.(js|css)$/i.test(tab.url) && this.directInstall(tabId, changeInfo, tab)) :
+           /\.user\.(js|css)$/i.test(tab.url) && this.directInstall(tabId, changeInfo, tab)) :
       browser.tabs.onUpdated.addListener(this.directInstall, {
         urls: [
           '*://*/*.user.js',
           '*://*/*.user.css',
           'file:///*.user.js',
-          'file:///*.user.css',
-       ]
+          'file:///*.user.css'
+       ],
+       properties: ['status']
       });
 
     // --- Remote Update
@@ -557,11 +565,11 @@ class Installer {
         q = 'a[class="script-name"]';
         break;
     }
+    if (!q) { return; }
 
     const code = `(() => {
-      let title = document.querySelector('${q}');
-      title = title ? title.textContent : document.title;
-      return confirm(browser.i18n.getMessage('installConfirm', title)) ? title : null;
+      const name = document.querySelector('${q}')?.textContent || document.title;
+      return confirm(browser.i18n.getMessage('installConfirm', name)) && name;
     })();`;
 
     browser.tabs.executeScript({code})
@@ -579,14 +587,17 @@ class Installer {
     if (tab.url.startsWith('https://codeberg.org/') && !tab.url.includes('/raw/')) { return; }
 
     const code = String.raw`(() => {
-      const pre = document.body;
-      if (!pre || !pre.textContent.trim()) {
+      const text = document.body?.textContent;
+      if (!text?.trim()) {
         alert(browser.i18n.getMessage('metaError'));
         return;
       }
-      const name = pre.textContent.match(/(?:\/\/)?\s*@name\s+([^\r\n]+)/)?.[1];
-      if (!name) { alert(browser.i18n.getMessage('metaError')); return; }
-      return confirm(browser.i18n.getMessage('installConfirm', name)) ? [pre.textContent, name] : null;
+      const name = text.match(/(?:\/\/)?\s*@name\s+([^\r\n]+)/)?.[1];
+      if (!name) {
+        alert(browser.i18n.getMessage('metaError'));
+        return;
+      }
+      return confirm(browser.i18n.getMessage('installConfirm', name)) && [text, name];
     })();`;
 
     browser.tabs.executeScript(tabId, {code})
@@ -598,41 +609,43 @@ class Installer {
   }
 
   async installConfirm(tab) {
-    // workaround for
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=1411641
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=1267027
-    const inst = await browser.tabs.create({url: '/content/install.html'});
-    const tabId = inst.id;
-
     const text = await fetch(tab.url)
     .then(response => response.text())
-    .catch(console.error);
+    .catch(error => App.log('installConfirm', `${tab.url} ➜ ${error.message}`, 'error'));
 
-    const name = text.match(/(?:\/\/)?\s*@name\s+([^\r\n]+)/)?.[1];
+    const name = text?.match(/(?:\/\/)?\s*@name\s+([^\r\n]+)/)?.[1];
     if (!name) {
-      App.log('directInstall', `${tab.url} ➜ ${browser.i18n.getMessage('metaError')}`, 'error');
+      App.log('installConfirm', `${tab.url} ➜ ${browser.i18n.getMessage('metaError')}`, 'error');
+      App.notify(`installConfirm fetch error\n${tab.url}`);
       return;
     }
 
+    // workaround for
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1411641
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1267027
+    const {id} = await browser.tabs.create({url: '/content/install.html'});
+
     const code = `(() => {
       document.querySelector('pre').textContent = ${JSON.stringify(text)};
-      return confirm(browser.i18n.getMessage('installConfirm', ${JSON.stringify(name)})) ? 'ok' : null;
+      return confirm(browser.i18n.getMessage('installConfirm', ${JSON.stringify(name)}));
     })();`;
 
-    browser.tabs.executeScript(tabId, {code})
+    browser.tabs.executeScript(id, {code})
     .then((result = []) => {
-      result[0] === 'ok' && this.processResponse(text, name, tab.url);
-      browser.tabs.remove(tabId);
+      result[0] && this.processResponse(text, name, tab.url);
+      browser.tabs.remove(id);
     })
     .catch(error => App.log('installConfirm', `${tab.url} ➜ ${error.message}`, 'error'));
   }
 
-  async stylish(url) {                                      // userstyles.org
+  async stylish(url) {
+    // userstyles.org
     if (!/^https:\/\/userstyles\.org\/styles\/\d+/.test(url)) { return; }
 
     const code = `(() => {
       const name = document.querySelector('meta[property="og:title"]').content.trim();
-      const description = document.querySelector('meta[name="twitter:description"]').content.trim().replace(/\s*<br>\s*/g, '').replace(/\s\s+/g, ' ');
+      const description = document.querySelector('meta[name="twitter:description"]').content.trim()
+          .replace(/\s*<br>\s*/g, '').replace(/\s\s+/g, ' ');
       const author = document.querySelector('#style_author a').textContent.trim();
       const lastUpdate = document.querySelector('#left_information > div:last-of-type > div:last-of-type').textContent.trim();
       const updateURL = (document.querySelector('link[rel="stylish-update-url"]') || {href: ''}).href;
@@ -640,7 +653,10 @@ class Installer {
     })();`;
 
     const [{name, description, author, lastUpdate, updateURL}] = await browser.tabs.executeScript({code});
-    if (!name || !updateURL) { App.notify(browser.i18n.getMessage('error')); return; }
+    if (!name || !updateURL) {
+      App.notify(browser.i18n.getMessage('error'));
+      return;
+    }
 
     const version = lastUpdate ? new Date(lastUpdate).toLocaleDateString("en-GB").split('/').reverse().join('') : '';
 
@@ -662,7 +678,9 @@ class Installer {
         this.processResponse(metaData + '\n\n' + text, name, updateURL);
         App.notify(`${name}\nInstalled version ${version}`);
       }
-      else { App.notify(browser.i18n.getMessage('error')); } // <head><title>504 Gateway Time-out</title></head>
+      else {
+        App.notify(browser.i18n.getMessage('error'));       // <head><title>504 Gateway Time-out</title></head>
+      }
     })
     .catch(error => App.log(item.name, `stylish ${updateURL} ➜ ${error.message}`, 'error'));
   }
@@ -690,14 +708,18 @@ class Installer {
   processResponse(text, name, updateURL) {                  // from class RU.callback in app.js
 
     const data = Meta.get(text);
-    if (!data) { throw `${name}: Meta Data error`; }
+    if (!data) {
+      throw `${name}: Meta Data error`;
+    }
 
     const id = `_${data.name}`;                             // set id as _name
     const oldId = `_${name}`;
 
     // --- check name, if update existing
     if (pref[oldId] && data.name !== name) {                // name has changed
-      if (pref[id]) { throw `${name}: Update new name already exists`; } // name already exists
+      if (pref[id]) {                                       // name already exists
+        throw `${name}: Update new name already exists`;
+      }
 
       scriptReg.unregister(oldId);                          // unregister old id
       pref[id] = pref[oldId];                               // copy to new id

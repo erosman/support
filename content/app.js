@@ -263,9 +263,9 @@ class Meta {                                                // bg options
         case 'require':
           const url = value.toLowerCase().replace(/^(http:)?\/\//, 'https://'); // change starting http:// & Protocol-relative URL //
           const [protocol, host] = url.split(/:?\/+/);
-          const cdnHosts = ['ajax.aspnetcdn.com', 'ajax.googleapis.com', 'apps.bdimg.com', 'cdn.bootcdn.net', 'cdn.bootcss.com',
-                            'cdn.jsdelivr.net', 'cdn.staticfile.org', 'cdnjs.cloudflare.com', 'code.jquery.com',
-                            'lib.baomitu.com', 'libs.baidu.com', 'pagecdn.io', 'unpkg.com'];
+          const cdnHosts = ['ajax.aspnetcdn.com', 'ajax.googleapis.com', 'apps.bdimg.com', 'cdn.bootcdn.net',
+                            'cdn.bootcss.com', 'cdn.jsdelivr.net', 'cdn.staticfile.org', 'cdnjs.cloudflare.com',
+                            'code.jquery.com', 'lib.baomitu.com', 'libs.baidu.com', 'pagecdn.io', 'unpkg.com'];
           const cdn = host && (cdnHosts.includes(host) || host.endsWith('-cdn-tos.bytecdntp.com'));
           switch (true) {
             case js && url.includes('/gm4-polyfill.'):      // not applicable
@@ -358,7 +358,6 @@ class Meta {                                                // bg options
     if (userStyle) {
       // split all sections
       str.split(/@-moz-document\s+/).slice(1).forEach(moz => {
-
         const st = moz.indexOf('{');
         const end = moz.lastIndexOf('}');
         if (st === -1 || end === -1) { return; }
@@ -522,7 +521,7 @@ class Meta {                                                // bg options
   // --- attempt to convert to matches API
   static convertPattern(p) {
     // test if valid match pattern
-    if (this.validPattern(p)) { return p; }                      
+    if (this.validPattern(p)) { return p; }
 
     switch (true) {
       // Regular Expression

@@ -101,7 +101,8 @@ class Popup {
     // --- check commands if there are active scripts in tab & has registerMenuCommand v2.45
     if(Tab.some(item => pref[item].enabled &&
       ['GM_registerMenuCommand', 'GM.registerMenuCommand'].some(i => pref[item].grant.includes(i)))) {
-      browser.runtime.onMessage.addListener((message, sender) => sender.tab.id === tabId && this.addCommand(tabId, message));
+      browser.runtime.onMessage.addListener((message, sender) =>
+          sender.tab.id === tabId && this.addCommand(tabId, message));
       browser.tabs.sendMessage(tabId, {listCommand: []});
     }
   }
@@ -131,7 +132,6 @@ class Popup {
     li.classList.toggle('disabled');
     pref[id].enabled = !li.classList.contains('disabled');
     browser.storage.local.set({[id]: pref[id]});            // update saved pref
-    localStorage.setItem('enable-' + id, pref[id].enabled);
   }
 
   toggleOn(node) {
@@ -154,9 +154,10 @@ class Popup {
     script.size = new Intl.NumberFormat().format(((script.js || script.css).length/1024).toFixed(1)) + ' KB';
 //    script.size = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format((script.js || script.css).length/1024) + ' KB';
 
-    const infoArray = ['name', 'description', 'author', 'version', 'size', 'homepage', 'support', 'updateURL',
-                        'matches', 'excludeMatches', 'includes', 'excludes', 'includeGlobs', 'excludeGlobs', 'container',
-                        'require', 'injectInto', 'runAt', 'grant', 'error'];
+    const infoArray = ['name', 'description', 'author', 'version', 'size', 'homepage',
+                        'support', 'updateURL', 'matches', 'excludeMatches',
+                        'includes', 'excludes', 'includeGlobs', 'excludeGlobs',
+                        'container', 'require', 'injectInto', 'runAt', 'grant', 'error'];
 
     infoArray.forEach(item => {
       if (!script[item]) { return; }                        // skip to next

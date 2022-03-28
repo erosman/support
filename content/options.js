@@ -225,7 +225,7 @@ class Script {
   }
 
   addTheme(dark) {
-    [0, 1].forEach(i => window.frames[i].document.body.classList.toggle('dark', dark));
+    [0, 1].forEach(i => window.frames[i]?.document.body.classList.toggle('dark', dark));
     const url =  `../lib/codemirror/theme/${this.theme}.css`;
     if (this.theme === 'default' || document.querySelector(`link[href="${url}"]`)) { // already added
       document.body.classList.toggle('dark', dark);
@@ -1161,7 +1161,7 @@ class ShowLog {
 
   process(list = this.log) {
     list.forEach(([time, ref, message, type]) => {
-      const tr = this.template.cloneNode(true);
+      const tr = this.template.cloneNode(true);console.log(ref, message, type);
       type && tr.classList.add(type);
       const td = tr.children;
       td[0].textContent = time;

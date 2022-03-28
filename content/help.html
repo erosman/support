@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Help</title>
     <link rel="stylesheet" href="iframe.css">
+    <script type="module" src="iframe.js"></script>
   </head>
   <body>
 
@@ -258,7 +259,7 @@
   <p>Scripts can be directly installed from any script ending in <code>.user.js/.user.css</code> (remote or local file system) if loaded into a tab (open or drag & drop). In case of <i>greasyfork.org, sleazyfork.org, openuserjs.org, raw.githubusercontent.com, userstyles.org</i> links, the same link will be set for script update.</p>
   <p><del>Due to sandbox CSP header on <code>https://raw.githubusercontent.com/........uers.js</code> tab is forwarded to <code>cdn.jsdelivr.net</code> mirror.</del> (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1411641" title="CSP 'sandbox' directive prevents content scripts from matching, due to unique origin, breaking also browser features" target="_blank">Bug 1411641</a>).</p>
 
-  <h3 id="android" class="experimental">Firefox on Android</h3>
+  <h3 id="android" class="experimental">&#x1f4f1; Firefox on Android</h3>
   <p>Support is experimental and based on user feedback.</p>
 
 
@@ -284,14 +285,14 @@
   <h4>Storage quotas for sync data</h4>
 
     <ul>
-      <li>Maximum total size 102400 (100kb)</li>
-      <li>Maximum item size 8192 (8kb)</li>
+      <li>Maximum total size 102,400 bytes (100KB)</li>
+      <li>Maximum item size 8,192 bytes (8KB)</li>
       <li>Maximum number of items 512</li>
     </ul>
 
-  <p>Each script will have a single entry in FireMonkey which is the script itself plus all its associated data (around 1-2kb more).</p>
+  <p>Each script will have a single entry in FireMonkey which is the script itself plus all its associated data (around 1-2KB more).</p>
 
-  <p>The maximum allowed by Firefox Sync is 8kb for each item. Therefore, each script should be smaller than 6-7kb in order to Sync.</p>
+  <p>The maximum allowed by Firefox Sync is 8KB for each item. Therefore, each script should be smaller than 6-7KB in order to Sync.</p>
 
   <p>Firefox Sync is impractical for user script/style managers unless user has a few small scripts/styles.</p>
 
@@ -313,7 +314,7 @@
   <p>You can create your own custom theme by overriding a theme like the <i>default</i> theme.</p>
 
 
-
+<precaption>Theme Example</precaption>
 <pre class="scroll">
 <span class="comment">/* DEFAULT THEME */</span>
 
@@ -489,7 +490,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
     <dt>&#x1f4e4; Export</dt>
       <dd>Export all Script/CSS to <i>FireMonkey</i> folder in the download location set in <i>Firefox Options -> Downloads</i></dd>
-      <dd><i>Note: Disabled on Android</i></dd>
+      <dd>&#x1f4f1; <i>Disabled on Android</i></dd>
 
     <dt>&#x1f4e5; Import from Stylus</dt>
       <dd>Export styles from <i>Stylus</i> and Import the JSON (on pop-up change the file type selection to <i>All Files</i>), same name Script/CSS will be overwritten without warning <i>(note: <a href="#UserStyle">UserStyle</a>)</i></dd>
@@ -877,7 +878,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
       <dd>The state indicates that the <a href="https://developer.mozilla.org/docs/Web/API/Window/load_event" target="_blank">load</a> event is about to fire.</dd>
   </dl>
 
-  <h4>@run-at (non-standard)</h4>
+  <h4>@run-at <span>(non-standard)</span></h4>
   <p><i>Tampermonkey</i> supports additional non-standard <code>run-at</code>.</p>
 
   <blockquote>
@@ -1564,7 +1565,7 @@ element.<span class="property">innerHTML</span> = dom;
 
   <p>Following CDN sources are processed:</p>
 
-  <ul style="columns: 2;">
+  <ul style="columns: 3;">
     <li>ajax.aspnetcdn.com</li>
     <li>ajax.googleapis.com</li>
     <li>apps.bdimg.com</li>
@@ -1651,7 +1652,7 @@ element.<span class="property">innerHTML</span> = dom;
 
 <span class="html">body</span> {
   <span class="property">font-family</span>: <span class="string">'Tangerine'</span>, <span class="font">serif</span>;
-  <span class="property">font-size</span>: 48px;
+  <span class="property">font-size</span>: <span class="value">48px</span>;
 }</pre>
 
   <h4 id="Storing-require">&#x2139;&#xfe0f; Storing require & resource Targets</h4>
@@ -1699,7 +1700,7 @@ element.<span class="property">innerHTML</span> = dom;
     <tr><th>GM.listValues</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>77</td></tr>
     <tr><th>GM.log</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>7</td></tr>
     <tr><th>GM.notification</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>42</td></tr>
-    <tr><th>GM.openInTab</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>178</td></tr>
+    <tr><th>GM.openInTab</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass sync"></td><td>178</td></tr>
     <tr><th>GM.popup</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
     <tr><th>GM.registerMenuCommand</th><td class="pass callback"></td><td class="pass callback">v4.11 <a href="https://wiki.greasespot.net/Version_history" target="_blank">&#x24d8;</a></td><td class="pass callback"></td><td class="pass callback">v2.12.10</td><td>131</td></tr>
     <tr><th>GM.removeValueChangeListener</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>1</td></tr>
@@ -1707,7 +1708,6 @@ element.<span class="property">innerHTML</span> = dom;
     <tr><th>GM.setValue</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>727</td></tr>
     <tr><th>GM.unregisterMenuCommand</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>6</td></tr>
     <tr><th>GM.xmlHttpRequest</th><td class="pass callback"></td><td class="pass callback"></td><td class="pass callback"></td><td class="pass callback"></td><td>699</td></tr>
-
 
     <tr><th>&nbsp;</th><td colspan="5"></td></tr>
 
@@ -1728,7 +1728,7 @@ element.<span class="property">innerHTML</span> = dom;
     <tr><th>GM_listValues</th><td class="pass sync"><a href="#getValue">&#x24d8;</a></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>711</td></tr>
     <tr><th>GM_log</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>865</td></tr>
     <tr><th>GM_notification</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>617</td></tr>
-    <tr><th>GM_openInTab</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>1,326</td></tr>
+    <tr><th>GM_openInTab</th><td class="pass async"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>1,326</td></tr>
     <tr><th>GM_popup</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
     <tr><th>GM_registerMenuCommand</th><td class="pass callback"></td><td class="fail"></td><td class="pass callback"></td><td class="pass callback"></td><td>1,923</td></tr>
     <tr><th>GM_removeValueChangeListener</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>77</td></tr>
@@ -1777,6 +1777,15 @@ element.<span class="property">innerHTML</span> = dom;
       <td></td>
     </tr>
 
+    <tr><th>&nbsp;</th><td colspan="5"></td></tr>
+    <tr>
+      <th>log match userscript line</th>
+      <td class="pass"></td>
+      <td class="pass"></td>
+      <td class="fail"></td>
+      <td class="pass"></td>
+      <td></td>
+    </tr>
     <tr><th>&nbsp;</th><td colspan="5"></td></tr>
 
     <tr>
@@ -1903,6 +1912,7 @@ element.<span class="property">innerHTML</span> = dom;
 
   <h3 id="addElement" class="experimental">addElement</h3>
   <p>Compatibilty API with <i>Tampermonkey</i> <a href="https://www.tampermonkey.net/documentation.php#GM_addElement" title="this feature is experimental and the API may change" target="_blank">&#x24d8;</a> & <i>Violentmonkey</i> <a href="https://violentmonkey.github.io/api/gm/#gm_addelement" title="This API is experimental in Tampermonkey, and hence subject to change" target="_blank">&#x24d8;</a> (experimental and subject to change).</p>
+  <p><b>Return value:</b> created element || <code>undefined</code></p>
 
 <pre>
 <span class="keyword">const</span> elem = <span class="gm">GM.addElement</span>(tagName, attributes);
@@ -1945,6 +1955,7 @@ elem.<span class="property">onload</span> = () => <span class="property">console
 
   <h3 id="addScript">addScript</h3>
     <p><i>FireMonkey</i> only utility function to inject script element (code runs in page context).</p>
+    <p><b>Return value:</b> <code>undefined</code></p>
 
     <precaption>Example</precaption>
 <pre>
@@ -1973,6 +1984,7 @@ script.<span class="method">remove</span>();
 
   <h3 id="addStyle">addStyle</h3>
   <p>Utility function to inject style element</p>
+  <p><b>Return value:</b> <code>undefined</code></p>
 
     <precaption>Example</precaption>
 <pre>
@@ -2000,6 +2012,15 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
   <p class="note">Experimental sync storage feature was added in v2.43 which can improve compatibility for most userscripts. It delays userscript execution until sync storage is available (<i>~5-10ms</i>), for userscripts that use sync <code>GM_getValue/GM_setValue/GM_listValues/GM_deleteValue</code> AND NOT their async <code>GM.*</code> counterparts.</p>
 
   <p>The async <code>GM.getValue</code> & <code>GM.listValues</code> will get the most up-to-date values at that moment.</p>
+  
+  <p><b>Return value:</b> GM.* Promise | GM_* synch return</p>
+    <ul>
+      <li>getValue: value || default</li>
+      <li>listValues: <code>array</code></li>
+      <li>setValue: <code>undefiend</code></li>
+      <li>deleteValue: <code>undefied</code></li>
+    </ul>
+  
 
 <pre>
 <span class="comment">// stored value for key OR default</span>
@@ -2018,12 +2039,13 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 <span class="gm">GM_deleteValue</span>(key)
 </pre>
 
+<!-- 
   <p class="dim" style="text-decoration: line-through;">Partial compatibility has been implemented. Please note:</p>
   <ul class="dim" style="text-decoration: line-through;">
     <li>Scripts that run <code>GM_getValue</code> & <code>GM_listValues</code> immediately will get the values at the start of the session which is the browser start-up time or script enabled time, whichever later</li>
     <li>Scripts that run <code>GM_getValue</code> & <code>GM_listValues</code> on an <code>event</code> will get the values at page load time</li>
   </ul>
-
+ -->
 
 
 
@@ -2039,6 +2061,10 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
   <p><i>FireMonkey</i> <code>fetch</code> API is based on the JavaScript <a href="https://developer.mozilla.org/docs/Web/API/WindowOrWorkerGlobalScope/fetch" target="_blank">Fetch API</a> which provides the new Promise based interface for fetching resources (including across the network). It will seem familiar to anyone who has used <code>XMLHttpRequest</code>, but it provides a more powerful and flexible feature set.</p>
   <p>For simplicity and compatibility, the same GM style naming is kept for <code>fetch</code> API although it is not available in <i>Greasemonkey</i>.</p>
   <p><i>FireMonkey</i> <code>fetch</code> returns response object/string or <code>null</code> (check console & the log for errors e.g.: <i>TypeError: "NetworkError when attempting to fetch resource.</i>").</p>
+  
+  <p><b>Return value:</b> response <code>object</code></p>
+  
+  <p class="warning">Since v2.33. GM.fetch returns an object in all cases.</p>
 
   <p class="note"><i>FireMonkey</i> GM <code>fetch</code> fixes <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1405971" title="Webextension UUID leak via Fetch requests" target="_blank">Bug 1405971</a>.</p>
 
@@ -2081,7 +2107,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
  </dl>
 
 
-  <p class="warning">Since v2.33. GM.fetch returns an object in all cases.</p>
+
 
 <precaption>Response <span>returns response object</span></precaption>
 <pre>
@@ -2148,6 +2174,8 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
   <h3 id="xmlHttpRequest">xmlHttpRequest</h3>
   <p>The xmlHttpRequest interface and mostly compatible with <i>Greasemonkey</i> API.</p>
+  
+  <p><b>Return value:</b> response <code>object</code></p>
 
 <pre>
 <span class="comment">// Response Object</span>
@@ -2337,6 +2365,7 @@ xhr.send(<span class="keyword">null</span>);
 
   <h3 id="notification">notification</h3>
   <p>Currently, only plain text is processed for notification. For compatibility, options object <code>{text, title, image, onclick}</code> is processed and the text is passed for notification.</p>
+  <p><b>Return value:</b> notification's ID</p>
 
 <pre>
 <span class="gm">GM_notification</span>(<span class="string">'some text'</span>);
@@ -2370,6 +2399,9 @@ xhr.send(<span class="keyword">null</span>);
 <span class="gm">GM_openInTab</span>(url, open_in_background);
 </pre>
   <p>The default value for <code>open_in_background</code> honors Firefox configuration. Tabs openned with GM openInTab can be closed with JavaScript <code>window.close()</code> <span class="small">(v2.45)</span>.</p>
+    
+  <p><b>Return value:</b> <code>true/false</code>    <span class="experimental">experimental v2.48</span></p>
+  
   <p class="note">The object support for <code>openInTab</code> is not unified among userscript managers.</p>
 
 <table>
@@ -2384,28 +2416,72 @@ xhr.send(<span class="keyword">null</span>);
     </tr>
   </thead>
   <tbody>
-    <tr><th>open_in_background<br><span>true/false</span></th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr><th>open_in_background<br><span>+ default values</span></th>
+      <td class="pass"><code class="small">false</code></td>
+      <td class="pass"><code class="small">false</code></td>
+      <td class="pass"><code class="small">true</code></td>
+      <td class="pass"><code class="small">false</code></td></tr>
     <tr>
-      <th>object</th>
-      <td class="fail"></td>
+      <th>object<br><span>+ default values</span></th>
+      <td class="pass"> 
+<code class="small">
+<p style="border-bottom: 1px solid var(--dim);">object (v2.48)</p>{
+  active    true
+}
+
+<p style="border-bottom: 1px solid var(--dim);">behavior (v2.45)</p>active      !open_in_background
+insert      true (Firefox default)
+setParent   same as opener tab
+incognito   same as opener tab
+pinned      same as opener tab
+container   same as opener tab
+</code></td>
       <td class="fail"><a href="https://wiki.greasespot.net/GM.openInTab" target="_blank">&#x24d8;</a></td>
       <td class="pass"><a href="https://www.tampermonkey.net/documentation.php#GM_openInTab" target="_blank">&#x24d8;</a><br>
-<code class="small" style="font-size: initial;">{
-  active,
-  insert,
-  setParent,
-  incognito
+<code class="small">{
+  active      false
+  insert      true
+
+  setParent   false
+  incognito   false
 }</code>
       </td>
       <td class="pass"><a href="https://violentmonkey.github.io/api/gm/#gm_openintab" target="_blank">&#x24d8;</a><br>
-<code class="small" style="font-size: initial;">{
-  active,
-  insert,
-  container,
-  pinned
+<code class="small">{
+  active      true
+  insert      true v2.11.0
+
+  pinned      false v2.12.5
+  container   0, 1, etc v2.12.5
 }</code>
         </td>
     </tr>
+
+
+    <tr>
+      <th>return value</th>
+      <td class="">
+<code class="small">
+true/false  <span class="experimental">v2.48</span>
+</code></td>
+      <td class="fail"></td>
+      <td class="">
+<code class="small">{
+  onclose     callback
+  closed      boolean
+  close       function
+}</code>
+      </td>
+      <td class="">
+<code class="small">{
+  onclose     callback
+  closed      boolean
+  close       function
+}</code>
+        </td>
+    </tr>
+
+
   </tbody>
 </table>
 
@@ -2413,6 +2489,8 @@ xhr.send(<span class="keyword">null</span>);
 
   <h3 id="registerMenuCommand">registerMenuCommand</h3>
   <p>Script Commands can be accessed via toolbar pop-up and are listed under the userscript name. Please note that <i>onclick</i> must be a <i>function</i>.</p>
+  
+  <p><b>Return value:</b> <code>undefined</code></p>
 
 <pre>
 <span class="gm">GM.registerMenuCommand</span>(name, onclick);
@@ -2440,6 +2518,9 @@ xhr.send(<span class="keyword">null</span>);
 
   <h3 id="unregisterMenuCommand">unregisterMenuCommand</h3>
   <p>Unregister the previously created Script Command.</p>
+  
+  <p><b>Return value:</b> <code>undefined</code></p>
+  
 <pre>
 <span class="gm">GM.unregisterMenuCommand</span>(name);
 <span class="gm">GM_unregisterMenuCommand</span>(name);
@@ -2451,6 +2532,7 @@ xhr.send(<span class="keyword">null</span>);
 </pre>
 
   <h3 id="getResourceText">getResourceText</h3>
+  
 <pre>
 <span class="keyword">const</span> text = <span class="keyword">await</span> <span class="gm">GM.getResourceText</span>(resourceName);
 <span class="keyword">const</span> text = <span class="gm">GM_getResourceText</span>(resourceName);
@@ -2458,6 +2540,8 @@ xhr.send(<span class="keyword">null</span>);
 
   <h4>GM.getResourceText</h4>
   <p>Asynchronous <code>GM.getResourceText</code> is similar to <code>GM.fetch</code>, with fewer options. It uses <code>fetch()</code> to get the target the first time but subsequently <a href="https://developer.mozilla.org/docs/Web/API/Request/cache" target="_blank">Request.cache</a> will be used by the browser.</p>
+  
+  <p><b>Return value:</b> text <code>string</code></p>
 
 <pre>
 <span class="keyword">const</span> text = <span class="keyword">await</span> <span class="gm">GM_getResourceText</span>(<span class="string">'resourceName'</span>); <span class="comment">// returns a Promise</span>
@@ -2465,6 +2549,9 @@ xhr.send(<span class="keyword">null</span>);
 
   <h4>GM_getResourceText</h4>
   <p>In case of synchronous <code>GM_getResourceText</code>, <i>Tampermonkey/ViolentMonkey</i> load & cache the remote resources, and then pass them to the userscript synchronously. Caching remote resources will increase the resources used by the extension, especially when the data is large. <a href="#Storing-require" title="Storing require & resource Targets">&#x24d8;</a></p>
+    
+  <p><b>Return value:</b> empty space <code>string ' '</code></p>
+  
   <p>Implementation of <code>GM_getResourceText</code> is different in FireMonkey.</p>
 
   <ul>
@@ -2475,7 +2562,9 @@ xhr.send(<span class="keyword">null</span>);
 
 
   <h3 id="getResourceUrl">getResourceUrl</h3>
-  <p>The API is added for convenience and compatibility. It works differently in comparison to other script managers as the target is not stored, but it should work out in most cases. It maps directly to the <i>resourceURL</i> and returns the URL, or <code>undefined</code>.</p>
+  <p>The API is added for convenience and compatibility. It works differently in comparison to other script managers as the target is not stored, but it should work out in most cases. It maps directly to the <i>resourceURL</i>.</p>
+  
+  <p><b>Return value:</b> URL || <code>undefined</code></p>
 
 <pre>
 <span class="keyword">const</span> url = <span class="keyword">await</span> <span class="gm">GM.getResource<b style="color: #f30;">Url</b></span>(resourceName); <span class="comment">// returns a Promise</span>
@@ -2523,6 +2612,9 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 
   <h3 id="addValueChangeListener">addValueChangeListener</h3>
   <p>Script storage change listener that returns the key as listener ID (although not necessary in FireMonkey).</p>
+  
+  <p><b>Return value:</b> listener ID = key</p>
+  
 <pre>
 <span class="comment">// note: listenerId = key (not necessary in FireMonkey)</span>
 <span class="keyword">const</span> listenerId = <span class="gm">GM.addValueChangeListener</span>(key, callback);
@@ -2552,6 +2644,9 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 
   <h3 id="removeValueChangeListener">removeValueChangeListener</h3>
   <p>Remove listener for <code>key</code></p>
+  
+  <p><b>Return value:</b> <code>undefined</code></p>
+  
 <pre>
 <span class="gm">GM.removeValueChangeListener</span>(key);
 <span class="gm">GM_removeValueChangeListener</span>(key);
@@ -2567,6 +2662,8 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
   <p>Simple file download from the Internet. <code>url</code> must be valid but <code>filename</code> is optional.</p>
   <p><code>url</code>: http, https, <s>ftp, ftps</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">&#x24d8;</a>, (file not allowed), can be relative to the web page</p>
   <p>If the specified <code>url</code> uses the HTTP or HTTPS protocol, then the request will include all cookies currently set for its hostname.</p>
+  
+  <p><b>Return value:</b> download <code>id</code> number || <code>undefined</code> || Promise reject (check log for error)</p>
 
 <pre>
 <span class="comment">// usually there is no need to wait for the following, but if needed, use await</span>
@@ -2589,6 +2686,9 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 
   <h3 id="popup">popup</h3>
   <p><i>FireMonkey</i> only utility function to create a <a href="https://developer.mozilla.org/docs/Web/Web_Components/Using_shadow_DOM" target="_blank">shadow DOM</a> popup blank element with animation that can be customized.</p>
+  
+  <p><b>Return value:</b> popup element</p>
+  
 <pre>
 <span class="keyword">const</span> popup = <span class="gm">GM.popup</span>(options);
 <span class="keyword">const</span> popup = <span class="gm">GM_popup</span>(options);
@@ -2744,11 +2844,15 @@ popup.addStyle(css);
 
 
   <h3 id="info">info</h3>
+  
+ <p><b>Return value:</b> <code>object</code></p>
+
+ 
 <pre>
-<span class="gm">GM.info</span>
-<span class="gm">GM_info</span>
+<span class="keyword">const</span> info = <span class="gm">GM.info</span>;
+<span class="keyword">const</span> info = <span class="gm">GM_info</span>;
 </pre>
-<precaption>Example</precaption>
+<precaption>Return Object</precaption>
 <pre>{
   <span class="property">scriptHandler</span>:    <span class="string">'FireMonkey'</span>,
   <span class="property">version</span>:          <span class="string">'e.g. 2.45'</span>,
@@ -2782,6 +2886,9 @@ popup.addStyle(css);
 
   <h3 id="setClipboard">setClipboard</h3>
   <p>Copy text (<i>default</i>) or data (must include <i>type</i>) to the clipboard</p>
+  
+  <p><b>Return value:</b> <code>undefined</code></p>
+  
 <pre>
 <span class="comment">// usually there is no need to wait for the following, but if needed, use await</span>
 <span class="gm">GM.setClipboard</span>(text);
@@ -2806,7 +2913,7 @@ popup.addStyle(css);
     <tr>
       <th>type</th>
       <td class="pass">v2.45<br>
-        <span class="small">object e.g. mimetype: 'text/plain'}<br>
+        <span class="small">object e.g. {mimetype: 'text/plain'}<br>
         string MIME type e.g. 'text/plain'
         </span>
       </td>
@@ -2824,6 +2931,8 @@ popup.addStyle(css);
 
   <h3 id="log">log</h3>
   <p>The API is added for convenience and compatibility and is no longer supported by Greasemonkey or Violentmonkey but Tampermonkey still has it. Multiple parameters can be passed e.g. <code>GM_log('one', 'two', 'three')</code>. You can also use <code>console.log()</code> instead.</p>
+  
+  <p><b>Return value:</b> <code>undefined</code></p>
 
 <pre>
 <span class="gm">GM.log</span>(text [, text2, ..., textN])
@@ -2839,6 +2948,9 @@ popup.addStyle(css);
 
   <h3 id="unsafeWindow">unsafeWindow &#x26a0;&#xfe0f;</h3>
   <p><code>unsafeWindow</code> in <i>FireMonkey</i> is an alias for <code>window.wrappedJSObject</code>. You can also use <code>window.wrappedJSObject</code> or <code>window.eval()</code> to access page JavaScript <b>globals</b> or to create function & objects in `page` context.</p>
+  
+  <p><b>Return value:</b> <code>window.wrappedJSObjec</code></p>
+  
   <p class="warning"><code>window.eval()</code> makes the object available to the page script as well while <code>unsafeWindow</code>, <code>window.wrappedJSObject</code> does not.</p>
 
 
@@ -3326,7 +3438,7 @@ script.<span class="method">remove</span>();
 */</span>
 
 <span class="html">body</span> {
-  <span class="property">border-top</span>: 2px <span class="value">solid</span> <span class="color">grey</span>;
+  <span class="property">border-top</span>: <span class="value">2px solid</span> <span class="color">grey</span>;
 }
 </pre>
 
@@ -3461,11 +3573,11 @@ script.<span class="method">remove</span>();
 
 
 <span class="comment">// in userScript </span>
-<span class="keyword">const</span> css = <span class="string">`</span>
+<span class="keyword">const</span> css = <span class="string">`
 .lg\\:mb-32 {
-  <span class="property">border</span>: 1px solid red;
+  border: 1px solid red;
 }
-<span class="string">`</span>;
+`</span>;
 <span class="gm">GM_addStyle</span>(css);
 
 

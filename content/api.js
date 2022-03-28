@@ -116,13 +116,13 @@
     checkURL(url) {
       try { url = new URL(url, location.href); }
       catch (error) {
-        this.log(name, `checkURL ${url} ➜ ${error.message}`, 'error');
+        api.log(`checkURL ${url} ➜ ${error.message}`, 'error');
         return;
       }
 
       // --- check protocol
       if (!['http:', 'https:'].includes(url.protocol)) {
-        this.log(name, `checkURL ${url} ➜ Unsupported Protocol ${url.protocol}`, 'error');
+        api.log(`checkURL ${url} ➜ Unsupported Protocol ${url.protocol}`, 'error');
         return;
       }
       return url.href;
@@ -216,12 +216,18 @@
       delete valueChange[key];
     },
 
-    openInTab(url, open_in_background) {
-      return browser.runtime.sendMessage({
+    async openInTab(url, open_in_background) {
+      // TM|VM compatibility
+      const active = !open_in_background || typeof open_in_background === 'boolean' ? 
+                        !open_in_background : !!open_in_background?.active;
+      // Error: Return value not accessible to the userScript
+      // resolve -> tab object | reject -> undefined
+      const tab = await browser.runtime.sendMessage({
         name,
         api: 'openInTab',
-        data: {url, active: !open_in_background}
+        data: {url, active}
       });
+      return !!tab; // true/false
     },
 
     setClipboard(data, type) {
