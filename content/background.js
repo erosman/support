@@ -1,6 +1,202 @@
 ﻿import {pref, App, Meta, RemoteUpdate, CheckMatches} from './app.js';
 const RU = new RemoteUpdate();
 
+// ----------------- Process Preference --------------------
+class ProcessPref {
+
+  async process() {
+    await Sync.get();                                       // storage sync ➜ local update
+
+    await Migrate.run();                                    // migrate after storage sync check
+
+    browser.storage.onChanged.addListener((changes, area) => { // Change Listener, after migrate
+      switch (true) {
+        case Sync.noUpdate:                                 // prevent loop from sync update
+          Sync.noUpdate = false;
+          break;
+
+        case area === 'local':
+          Object.keys(changes).forEach(item => pref[item] = changes[item].newValue); // update pref with the saved version
+          this.processPrefUpdate(changes, area);            // apply changes
+          Sync.set(changes);                                // set changes to sync
+          break;
+
+        case area === 'sync':                               // from sync
+          Sync.apply(changes);                              // apply changes to local
+          break;
+      }
+    });
+
+    await scriptReg.init();                                 // await data initialization
+    App.getIds().forEach(item => scriptReg.process(item));
+
+    // --- Script Counter
+    counter.init();
+  }
+
+  processPrefUpdate(changes, area) {
+    // check counter preference has changed
+    if (changes.counter && changes.counter.newValue !== changes.counter.oldValue) {
+      counter.init();
+    }
+
+    // global change
+    if (changes.globalScriptExcludeMatches &&
+      changes.globalScriptExcludeMatches.newValue !== changes.globalScriptExcludeMatches.oldValue) {
+      App.getIds().forEach(scriptReg.process);              // re-register all
+    }
+    // find changed scripts
+    else {
+      const relevant = ['name', 'enabled', 'injectInto', 'require', 'requireRemote', 'resource',
+      'allFrames', 'js', 'css', 'style', 'container', 'grant',
+      'matches', 'excludeMatches', 'includeGlobs', 'excludeGlobs', 'includes', 'excludes', 'matchAboutBlank', 'runAt'];
+
+      Object.keys(changes).forEach(item => {
+        if (!item.startsWith('_')) { return; }              // skip
+
+        const oldValue = changes[item].oldValue;
+        const newValue = changes[item].newValue;
+        const id = item;
+
+        // if deleted, unregister
+        if(!newValue) {
+          delete pref[id];
+          oldValue.style[0] ? oldValue.style.forEach((item, i) => scriptReg.unregister(id + 'style' + i)) : scriptReg.unregister(id);
+        }
+        // if added or relevant data changed
+        else if (!oldValue || relevant.some(i => !this.equal(oldValue[i], newValue[i]))) {
+          scriptReg.process(id);
+
+          // apply userCSS changes to tabs
+          switch (true) {
+            case !newValue.css:                             // not userCSS
+              break;
+
+            case !oldValue.enabled && newValue.enabled:     // enabled
+              this.updateTabs(id);
+              break;
+
+            case newValue.enabled && oldValue.css !== newValue.css: // enabled & CSS change
+            case oldValue.enabled && !newValue.enabled:     // disabled
+              this.updateTabs(id, oldValue.css);
+              break;
+          }
+        }
+      });
+    }
+  }
+
+  equal(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+  }
+
+  updateTabs(id, oldCSS) {
+    const {name, css, allFrames, enabled} = pref[id];
+    const gExclude = pref.globalScriptExcludeMatches?.split(/\s+/) || [];
+
+    browser.tabs.query({}).then(tabs => {
+      tabs.forEach(async tab => {
+        if (tab.discarded)  { return; }
+        if (!CheckMatches.supported(tab.url)) { return; }
+
+        let urls;
+        if (allFrames) {
+          const frames = await browser.webNavigation.getAllFrames({tabId: tab.id});
+          urls = [...new Set(frames.map(CheckMatches.cleanUrl).filter(CheckMatches.supported))];
+        }
+        else {
+          urls = [CheckMatches.cleanUrl(tab.url)];
+        }
+
+        const containerId = tab.cookieStoreId.substring(8);
+        if (!CheckMatches.get(pref[id], tab.url, urls, gExclude, containerId)) { return; }
+
+        oldCSS && browser.tabs.removeCSS(tab.id, {code: Meta.prepare(oldCSS), allFrames});
+        enabled && browser.tabs.insertCSS(tab.id, {code: Meta.prepare(css), allFrames});
+      });
+    });
+  }
+}
+const processPref = new ProcessPref();
+// ----------------- /Process Preference -------------------
+
+// ----------------- Storage Sync --------------------------
+class Sync {
+
+  static allowed() {
+    if (!pref.sync) { return; }
+
+    const size = JSON.stringify(pref).length;
+    if (size > 102400) {
+      const text = browser.i18n.getMessage('syncError', (size/1024).toFixed(1));
+      App.notify(text);
+      App.log('Sync', text, 'error');
+      pref.sync = false;
+      this.noUpdate = true;
+      browser.storage.local.set({sync: false});
+      return;
+    }
+    return true;
+  }
+
+  // --- storage sync ➜ local update (must be async)
+  static async get() {
+    if (!this.allowed()) { return; }
+
+    const result = await browser.storage.sync.get();
+    if (!Object.keys(result)[0]) { return; }
+
+    Object.keys(result).forEach(item => pref[item] = result[item]); // update pref with the saved version
+
+    const deleted = [];
+    App.getIds().forEach(item => {
+      if (!result[item]) {                                  // remove deleted in sync from pref
+        delete pref[item];
+        deleted.push(item);
+      }
+    });
+    deleted[0] && await browser.storage.local.remove(deleted); // delete scripts from storage local
+    browser.storage.local.set(pref);                        // update local saved pref, no storage.onChanged.addListener() yet
+  }
+
+  // --- storage sync ➜ local update
+  static async apply(changes) {
+    if (!this.allowed()) { return; }
+
+    const [keep, deleted] = this.sortChanges(changes);
+    this.noUpdate = false;
+    deleted[0] && await browser.storage.local.remove(deleted); // delete scripts from storage local
+    browser.storage.local.set(keep)
+    .catch(error => App.log('local', error.message, 'error'));
+  }
+
+  // --- storage local ➜ sync update
+  static set(changes) {
+    if (!this.allowed()) { return; }
+
+    const [keep, deleted] = this.sortChanges(changes);
+    this.noUpdate = true;
+    browser.storage.sync.set(keep)
+    .then(() => deleted[0] && browser.storage.sync.remove(deleted)) // delete scripts from storage sync
+    .catch(error => {
+      this.noUpdate = false;
+      App.log('Sync', error.message, 'error');
+    });
+  }
+
+  static sortChanges(changes) {
+    const keep = {};
+    const deleted = [];
+    Object.keys(changes).forEach(item => {
+      item.startsWith('_') && !changes[item].newValue ? deleted.push(item) :
+          keep[item] = changes[item].newValue;              // or pref[item]
+    });
+    return [keep, deleted];
+  }
+}
+Sync.noUpdate = false;
+// ----------------- /Storage Sync -------------------------
+
 // ----------------- Context Menu --------------------------
 class ContextMenu {
 
@@ -38,7 +234,8 @@ class ContextMenu {
     browser.runtime.openOptionsPage();
   }
 }
-!App.android && new ContextMenu();                          // prepare for Android
+// menus not supported on Android
+!App.android && new ContextMenu();
 // ----------------- /Context Menu -------------------------
 
 // ----------------- Script Counter ------------------------
@@ -47,10 +244,14 @@ class Counter {
   constructor() {
     browser.browserAction.setBadgeBackgroundColor({color: '#cd853f'});
     browser.browserAction.setBadgeTextColor({color: '#fff'});
-    this.process = this.process.bind(this);
   }
 
   init() {
+    if (!pref.counter) {
+      browser.tabs.onUpdated.removeListener(this.process);
+      return;
+    }
+
     // extraParameters not supported on Android
     App.android ?
       browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
@@ -61,16 +262,14 @@ class Counter {
       });
   }
 
-  terminate() {
-    browser.tabs.onUpdated.removeListener(this.process);
-  }
-
-  async process(tabId, changeInfo, tab) {
+  process(tabId, changeInfo, tab) {
     if (changeInfo.status !== 'complete') { return; }
 
-    const count = await CheckMatches.process(tab, true);
-    browser.browserAction.setBadgeText({tabId, text: (count[0] ? count.length.toString() : '')});
-    browser.browserAction.setTitle({tabId, title: (count[0] ? count.join('\n') : '')});
+    CheckMatches.process(tab, true)
+    .then(count => {
+      browser.browserAction.setBadgeText({tabId, text: count[0] ? count.length + '' : ''});
+      browser.browserAction.setTitle({tabId, title: count[0] ? count.join('\n') : ''});
+    });
   }
 }
 const counter = new Counter();
@@ -85,7 +284,7 @@ class ScriptRegister {
   }
 
   async init() {
-    this.process = this.process.bind(this);
+//    this.process = this.process.bind(this);
     this.platformInfo = await browser.runtime.getPlatformInfo();
     this.browserInfo = await browser.runtime.getBrowserInfo();
     this.containerSupport = {
@@ -317,194 +516,6 @@ class ScriptRegister {
 const scriptReg = new ScriptRegister();
 // ----------------- /Register Content Script|CSS ----------
 
-// ----------------- User Preference -----------------------
-App.getPref().then(() => new ProcessPref());
-
-class ProcessPref {
-
-  constructor() {
-    this.process();
-  }
-
-  async process() {
-    pref.sync && await Sync.get();                          // storage sync ➜ local update
-
-    await Migrate.run();                                    // migrate after storage sync check
-
-    browser.storage.onChanged.addListener((changes, area) => { // Change Listener, after migrate
-      switch (true) {
-        case Sync.noUpdate:                                 // prevent loop from sync update
-          Sync.noUpdate = false;
-          break;
-
-        case area === 'local':
-          Object.keys(changes).forEach(item => pref[item] = changes[item].newValue); // update pref with the saved version
-          this.processPrefUpdate(changes, area);            // apply changes
-          pref.sync && Sync.set(changes);                   // set changes to sync
-          break;
-
-        case area === 'sync':                               // from sync
-          pref.sync && Sync.apply(changes);                 // apply changes to local
-          break;
-      }
-    });
-
-    await scriptReg.init();                                 // await data initialization
-    App.getIds().forEach(item => scriptReg.process(item));
-
-    // --- Script Counter
-    pref.counter && counter.init();
-  }
-
-  async processPrefUpdate(changes, area) {
-    // check counter preference has changed
-    if (changes.counter && changes.counter.newValue !== changes.counter.oldValue) {
-      changes.counter.newValue ? counter.init() : counter.terminate();
-    }
-
-    // global change
-    if (changes.globalScriptExcludeMatches &&
-      changes.globalScriptExcludeMatches.oldValue !== changes.globalScriptExcludeMatches.newValue) {
-      App.getIds().forEach(scriptReg.process);              // re-register all
-    }
-    // find changed scripts
-    else {
-      const relevant = ['name', 'enabled', 'injectInto', 'require', 'requireRemote', 'resource',
-      'allFrames', 'js', 'css', 'style', 'container', 'grant',
-      'matches', 'excludeMatches', 'includeGlobs', 'excludeGlobs', 'includes', 'excludes', 'matchAboutBlank', 'runAt'];
-
-      Object.keys(changes).forEach(item => {
-        if (!item.startsWith('_')) { return; }              // skip
-
-        const oldValue = changes[item].oldValue;
-        const newValue = changes[item].newValue;
-        const id = item;
-
-        // if deleted, unregister
-        if(!newValue) {
-          delete pref[id];
-          oldValue.style[0] ? oldValue.style.forEach((item, i) => scriptReg.unregister(id + 'style' + i)) : scriptReg.unregister(id);
-        }
-        // if added or relevant data changed
-        else if (!oldValue || relevant.some(i => !this.equal(oldValue[i], newValue[i]))) {
-          scriptReg.process(id);
-
-          // apply userCSS changes to tabs
-          switch (true) {
-            case !newValue.css:                             // not userCSS
-              break;
-
-            case !oldValue.enabled && newValue.enabled:     // enabled
-              this.updateTabs(id);
-              break;
-
-            case newValue.enabled && oldValue.css !== newValue.css: // enabled & CSS change
-            case oldValue.enabled && !newValue.enabled:     // disabled
-              this.updateTabs(id, oldValue.css);
-              break;
-          }
-        }
-      });
-    }
-  }
-
-  equal(a, b) {
-    return JSON.stringify(a) === JSON.stringify(b);
-  }
-
-  updateTabs(id, oldCSS) {
-    const {name, css, allFrames, enabled} = pref[id];
-    const gExclude = pref.globalScriptExcludeMatches?.split(/\s+/) || [];
-
-    browser.tabs.query({}).then(tabs => {
-      tabs.forEach(async tab => {
-        if (tab.discarded)  { return; }
-        if (!CheckMatches.supported(tab.url)) { return; }
-
-        let urls;
-        if (allFrames) {
-          const frames = await browser.webNavigation.getAllFrames({tabId: tab.id});
-          urls = [...new Set(frames.map(CheckMatches.cleanUrl).filter(CheckMatches.supported))];
-        }
-        else {
-          urls = [CheckMatches.cleanUrl(tab.url)];
-        }
-
-        const containerId = tab.cookieStoreId.substring(8);
-        if (!CheckMatches.get(pref[id], tab.url, urls, gExclude, containerId)) { return; }
-
-        oldCSS && browser.tabs.removeCSS(tab.id, {code: Meta.prepare(oldCSS), allFrames});
-        enabled && browser.tabs.insertCSS(tab.id, {code: Meta.prepare(css), allFrames});
-      });
-    });
-  }
-}
-
-// ----- Storage Sync
-class Sync {
-
-  // --- storage sync ➜ local update
-  static async get() {
-    const deleted = [];
-    await browser.storage.sync.get(null, result => {
-      Object.keys(result).forEach(item => pref[item] = result[item]); // update pref with the saved version
-      App.getIds().forEach(item => {
-        if (!result[item]) {                                // remove deleted in sync from pref
-          delete pref[item];
-          deleted.push(item);
-        }
-      });
-    });
-    deleted[0] && await browser.storage.local.remove(deleted); // delete scripts from storage local
-    await browser.storage.local.set(pref);                  // update local saved pref, no storage.onChanged.addListener() yet
-  }
-
-  // --- storage sync ➜ local update
-  static async apply(changes) {
-    const [keep, deleted] = this.sortChanges(changes);
-    this.noUpdate = false;
-    deleted[0] && await browser.storage.local.remove(deleted); // delete scripts from storage local
-    browser.storage.local.set(keep)
-    .catch(error => App.log('local', error.message, 'error'));
-  }
-
-  // --- storage local ➜ sync update
-  static async set(changes) {
-    const size = JSON.stringify(pref).length;
-    if (size > 102400) {
-      const text = browser.i18n.getMessage('syncError', (size/1024).toFixed(1));
-      App.notify(text);
-      App.log('Sync', text, 'error');
-      pref.sync = false;
-      this.noUpdate = true;
-      browser.storage.local.set({sync: false});
-      return;
-    }
-
-    const [keep, deleted] = this.sortChanges(changes);
-    this.noUpdate = true;
-    deleted[0] && await browser.storage.sync.remove(deleted); // delete scripts from storage sync
-    this.noUpdate = true;
-    browser.storage.sync.set(keep)
-    .catch(error => {
-      this.noUpdate = false;
-      App.log('Sync', error.message, 'error');
-    });
-  }
-
-  static sortChanges(changes) {
-    const keep = {};
-    const deleted = [];
-    Object.keys(changes).forEach(item => {
-      item.startsWith('_') && !changes[item].newValue ?  deleted.push(item) :
-          keep[item] = changes[item].newValue;              // or pref[item]
-    });
-    return [keep, deleted];
-  }
-}
-Sync.noUpdate = false;
-// ----------------- /User Preference ----------------------
-
 // ----------------- Web/Direct Installer & Remote Update --
 class Installer {
 
@@ -584,6 +595,7 @@ class Installer {
     // not on these URLs
     if (tab.url.startsWith('https://github.com/')) { return; }
     if (tab.url.startsWith('https://gitee.com/') && !tab.url.includes('/raw/')) { return; }
+    if (tab.url.startsWith('https://gitlab.com/') && !tab.url.includes('/raw/')) { return; }
     if (tab.url.startsWith('https://codeberg.org/') && !tab.url.includes('/raw/')) { return; }
 
     const code = String.raw`(() => {
@@ -1093,3 +1105,8 @@ class Migrate {
   }
 }
 // ----------------- /Migrate ------------------------------
+
+// ----------------- User Preference -----------------------
+App.getPref().then(() => processPref.process());
+
+// ----------------- /User Preference ----------------------

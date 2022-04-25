@@ -218,7 +218,7 @@
 
     async openInTab(url, open_in_background) {
       // TM|VM compatibility
-      const active = !open_in_background || typeof open_in_background === 'boolean' ? 
+      const active = !open_in_background || typeof open_in_background === 'boolean' ?
                         !open_in_background : !!open_in_background?.active;
       // Error: Return value not accessible to the userScript
       // resolve -> tab object | reject -> undefined

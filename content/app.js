@@ -14,6 +14,7 @@ let pref = {
 };
 // ----------------- /Default Preference -------------------
 
+// ----------------- App -----------------------------------
 class App {
 
   // ----------------- User Preference -----------------------
@@ -73,11 +74,11 @@ class App {
   static export() {
     const data = JSON.stringify(pref, null, 2);
     const filename = `${browser.i18n.getMessage('extensionName')}_${new Date().toISOString().substring(0, 10)}.json`;
-    App.saveFile(data, filename);
+    App.saveFile({data, filename});
   }
 
-  static saveFile(data, filename, saveAs = true) {
-    if (!browser.downloads) {                               // Android
+  static saveFile({data, filename, saveAs = true, type = 'text/plain'}) {
+    if (!browser.downloads) {
       const a = document.createElement('a');
       a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(data);
       a.setAttribute('download', filename);
@@ -85,7 +86,7 @@ class App {
       return;
     }
 
-    const blob = new Blob([data], {type: 'text/plain;charset=utf-8'});
+    const blob = new Blob([data], {type});
     browser.downloads.download({
       url: URL.createObjectURL(blob),
       filename,
@@ -100,7 +101,7 @@ class App {
     this.i18nSet();
 
     document.body.classList.toggle('dark', localStorage.getItem('dark') === 'true'); // light/dark theme
-    document.body.style.opacity = 1;                            // show after i18n
+    document.body.style.opacity = 1;                        // show after i18n
   }
 
   static i18nSet(target = document) {
@@ -145,6 +146,7 @@ class App {
   }
 }
 App.android = navigator.userAgent.includes('Android');
+// ----------------- /App ----------------------------------
 
 // ----------------- Parse Metadata Block ------------------
 class Meta {                                                // bg options
@@ -262,7 +264,7 @@ class Meta {                                                // bg options
         // --- add @require
         case 'require':
           const url = value.toLowerCase().replace(/^(http:)?\/\//, 'https://'); // change starting http:// & Protocol-relative URL //
-          const [protocol, host] = url.split(/:?\/+/);
+          const [protocol, host] = url.split(/[:/]+/);
           const cdnHosts = ['ajax.aspnetcdn.com', 'ajax.googleapis.com', 'apps.bdimg.com', 'cdn.bootcdn.net',
                             'cdn.bootcss.com', 'cdn.jsdelivr.net', 'cdn.staticfile.org', 'cdnjs.cloudflare.com',
                             'code.jquery.com', 'lib.baomitu.com', 'libs.baidu.com', 'pagecdn.io', 'unpkg.com'];
@@ -371,7 +373,7 @@ class Meta {                                                // bg options
         };
 
         const r = rule.split(/\s*[\s()'",]+\s*/);             // split into pairs
-        for (let i = 0, len = r.length; i < len; i+=2) {
+        for (let i = 0; i < r.length; i+=2) {
           if(!r[i+1]) { break; }
           const func = r[i];
           const value = r[i+1];
@@ -676,29 +678,21 @@ class RemoteUpdate {                                        // bg options
     return version && this.higherVersion(version[1], item.version);
   }
 
-  getScript(item) {                                         // here bg 1
+  getScript(item) {                                         // here & bg
     fetch(item.updateURL)
     .then(response => response.text())
     .then(text => this.callback(text, item.name, item.updateURL))
     .catch(error => App.log(item.name, `getScript ${item.updateURL} ➜ ${error.message}`, 'error'));
   }
 
-  higherVersion(a, b) {                                     // here bg 1 opt 1
-    a = a.split('.').map(n => parseInt(n));
-    b = b.split('.').map(n => parseInt(n));
-
-    for (let i = 0, len = Math.max(a.length, b.length); i < len; i++) {
-      if (!a[i]) { return false; }
-      else if ((a[i] && !b[i]) || a[i] > b[i]) { return true; }
-      else if (a[i] < b[i]) { return false; }
-    }
-    return false;
+  higherVersion(a, b) {                                     // here & bg & opt
+    return a.localeCompare(b, undefined, {numeric: true, sensitivity: 'base'}) > 0;
   }
 }
 // ----------------- /Remote Update ------------------------
 
 // ----------------- Match Pattern Check -------------------
-class CheckMatches {                                        // used in bg & popup
+class CheckMatches {                                        // bg & popup
 
   static async process(tab, bg) {
     const supported = this.supported(tab.url);

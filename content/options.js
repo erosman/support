@@ -13,12 +13,6 @@ class Options {
     this.pBar = document.querySelector('.progressBar');
 
     this.globalScriptExcludeMatches = document.querySelector('#globalScriptExcludeMatches');
-
-    // --- from browser pop-up & contextmenu (not in Private Window)
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'nav') { this.getNav(e.newValue); }
-      else if (e.key === 'log') { showLog.update(e.newValue); }
-    });
   }
 
   process(save) {
@@ -47,7 +41,7 @@ class Options {
     if (cmOptionsNode.value) {
       let cmOptions = App.JSONparse(cmOptionsNode.value);
       if (!cmOptions) {
-        App.notify(browser.i18n.getMessage('cmOptionsError')) ;
+        App.notify(browser.i18n.getMessage('jsonError')) ;
         return;
       }
       // remove disallowed
@@ -59,31 +53,6 @@ class Options {
 
     // --- save options
     this.process(true);
-  }
-
-  getNav(nav) {
-    nav = nav || localStorage.getItem('nav');
-    localStorage.removeItem('nav');
-    if (!nav) { return; }                                   // end execution if not found
-
-    switch (nav) {
-      case 'help':
-        document.getElementById('nav1').checked = true;
-        break;
-
-      case 'log':
-        document.getElementById('nav5').checked = true;
-        break;
-
-      case 'js':
-      case 'css':
-        document.getElementById('nav4').checked = true;
-        script.newScript(nav);
-        break;
-
-      default:
-        document.getElementById(nav).click();
-    }
   }
 }
 const options = new Options(['autoUpdateInterval', 'globalScriptExcludeMatches', 'sync',
@@ -194,6 +163,7 @@ class Script {
       const dark = opt.parentNode.dataset.type === 'dark';
       localStorage.setItem('dark', dark);
       this.addTheme(dark);
+      [0, 1].forEach(i => window.frames[i]?.document?.body?.classList.toggle('dark', dark));
     });
 
     // --- color picker
@@ -211,8 +181,10 @@ class Script {
         if (!item.startsWith('_')) { return; }              // skip
 
         const {oldValue, newValue} = changes[item];
-        if (oldValue && newValue && newValue.enabled !== oldValue.enabled) { // if enabled/disabled
-          const id = item;
+        const id = item;
+
+        // enabled/disabled
+        if (oldValue && newValue && newValue.enabled !== oldValue.enabled) {
           const li = document.getElementById(id);
           li && li.classList.toggle('disabled', !newValue.enabled);
           if (id === this.box.id) {
@@ -220,12 +192,16 @@ class Script {
             this.enable.checked = newValue.enabled;
           }
         }
+
+        // check script storage
+        if (newValue.storage !== oldValuestorage && id === this.box.id) {
+          this.storage.value = Object.keys(pref[id].storage).length ? JSON.stringify(pref[id].storage, null, 2) : '';
+        }
       });
     });
   }
 
   addTheme(dark) {
-    [0, 1].forEach(i => window.frames[i]?.document?.body?.classList.toggle('dark', dark));
     const url =  `../lib/codemirror/theme/${this.theme}.css`;
     if (this.theme === 'default' || document.querySelector(`link[href="${url}"]`)) { // already added
       document.body.classList.toggle('dark', dark);
@@ -551,7 +527,7 @@ class Script {
       'white': '#ffffff',
       'whitesmoke': '#f5f5f5',
       'yellow': '#ffff00',
-      '#9acd32': 'yellowgreen'
+      'yellowgreen': '#9acd32'
     };
 
     if (back) { return Object.keys(names).find(item => names[item] === color) || color; }
@@ -673,7 +649,6 @@ class Script {
       this.box.textContent = '';
       document.getElementById(this.box.id).click();
     }
-    options.getNav();                                       // run after scripts are loaded
   }
 
   addScript(item) {
@@ -746,7 +721,7 @@ class Script {
     this.userMeta.value = pref[id].userMeta || '';
 
     this.storage.parentNode.style.display = pref[id].js ? 'list-item' : 'none';
-    this.storage.value = Object.keys(pref[id].storage).length ?  JSON.stringify(pref[id].storage, null, 2) : '';
+    this.storage.value = Object.keys(pref[id].storage).length ? JSON.stringify(pref[id].storage, null, 2) : '';
 
     // --- CodeMirror
     this.setCodeMirror();
@@ -1132,10 +1107,8 @@ class Script {
 
   export(data, ext, name, folder = '', saveAs = true) {
     navigator.userAgent.includes('Windows') && (data = data.replace(/\r?\n/g, '\r\n'));
-    const blob = new Blob([data], {type: 'text/plain;charset=utf-8'});
     const filename = folder + name.replace(/[<>:"/\\|?*]/g, '') + '.user' + ext; // removing disallowed characters
-
-    App.saveFile(data, filename, saveAs);
+    App.saveFile({data, filename, saveAs});
   }
 }
 const script = new Script();
@@ -1261,16 +1234,46 @@ class Pattern {
 }
 // ----------------- /Match Pattern Tester -----------------
 
-// ----------------- User Preference -----------------------
-App.getPref().then(() => {
-  options.process();
-  script.process();
-  showLog.process();
+// ----------------- Navigation ----------------------------
+class Nav {
 
-  // --- add custom style
-  pref.customOptionsCSS && (document.querySelector('style').textContent = pref.customOptionsCSS);
-});
-// ----------------- /User Preference ----------------------
+  constructor() {
+    // --- from browser pop-up & contextmenu (not in Private Window)
+    window.addEventListener('storage', this.process);
+  }
+
+  process(e = {}) {
+    if (e.key === 'log') {
+      showLog.update(e.newValue);
+      return;
+    }
+
+    const nav = e.key === 'nav' ? e.newValue : localStorage.getItem('nav');
+    localStorage.removeItem('nav');
+    if (!nav) { return; }                                   // end execution if not found
+
+    switch (nav) {
+      case 'help':
+        document.getElementById('nav1').checked = true;
+        break;
+
+      case 'log':
+        document.getElementById('nav5').checked = true;
+        break;
+
+      case 'js':
+      case 'css':
+        document.getElementById('nav4').checked = true;
+        script.newScript(nav);
+        break;
+
+      default:
+        document.getElementById(nav).click();
+    }
+  }
+}
+const nav = new Nav();
+// ----------------- /Navigation ---------------------------
 
 // ----------------- Import/Export Preferences -------------
 App.importExport(() => {
@@ -1278,3 +1281,16 @@ App.importExport(() => {
   script.process();                                         // update page display
 });
 // ----------------- /Import/Export Preferences ------------
+
+// ----------------- User Preference -----------------------
+App.getPref().then(() => {
+  options.process();
+  script.process();
+  showLog.process();
+  nav.process();
+
+  // --- add custom style
+  pref.customOptionsCSS && (document.querySelector('style').textContent = pref.customOptionsCSS);
+});
+// ----------------- /User Preference ----------------------
+

@@ -54,7 +54,7 @@ class Popup {
     });
 
     // ----- Find Scripts
-    this.url = '';
+    this.url = '';                                          // default
     document.querySelector('h3.findScript').addEventListener('click', () => {
       const [scheme, host, ...path] = this.url.split(/:\/{2,3}|\/+/);
       if (scheme.startsWith('http') && host) {
@@ -223,8 +223,9 @@ class Popup {
     const edit = document.querySelector('div.edit');
     edit.id = id;
     const active = e.target.parentNode.parentNode.classList.contains('tab') && script.enabled;
-    edit.children[1].disabled = active;
-    edit.children[2].disabled = active;
+    edit.children[1].title = active ? browser.i18n.getMessage('runDisabled') : '';
+    edit.children[2].disabled = !!script.js;
+    edit.children[2].title = script.js ? browser.i18n.getMessage('undoDisabled') : '';
     this.info.parentNode.style.transform = 'translateX(-50%)';
   }
 

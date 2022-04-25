@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <title>Help</title>
     <link rel="stylesheet" href="iframe.css">
+    <link rel="stylesheet" href="firemonkey.css">
     <script type="module" src="iframe.js"></script>
   </head>
   <body>
 
   <nav>
     <a href="#Preamble">Preamble</a>
-    <div><a href="#how_to">How to Use</a>
+    <div><a href="#how-to">How to Use</a>
       <ul>
         <li><a href="#toolbar">Toolbar Icon</a></li>
         <li><a href="#page-menu">Page Context Menu</a></li>
@@ -18,7 +19,7 @@
         <li><a href="#android">Firefox on Android</a></li>
       </ul>
     </div>
-    <div><a href="#options">Options</a>
+    <div><a href="#Options">Options</a>
       <ul>
         <li><a href="#auto-update-interval">Auto-Update Interval</a></li>
         <li><a href="#enable-storage">Enable Storage Sync</a></li>
@@ -34,12 +35,12 @@
     <div><a href="#Script-CSS">Script & CSS</a>
       <ul>
         <li><a href="#Sidebar">Sidebar</a></li>
-        <li><a href="#editing">Editing</a></li>
-        <li><a href="#self-update">Self-Update</a></li>
-        <li><a href="#auto-update">Update & Auto-Update</a></li>
-        <li class="arrow"><a href="#metadata-block">Metadata Block</a>
+        <li><a href="#Editing">Editing</a></li>
+        <li><a href="#Self-Update">Self-Update</a></li>
+        <li><a href="#Auto-Update">Update & Auto-Update</a></li>
+        <li class="arrow"><a href="#Metadata-Block">Metadata Block</a>
           <ul>
-            <li><a href="#match-patterns">Match Patterns</a></li>
+            <li><a href="#Match-Patterns">Match Patterns</a></li>
             <li><a href="#require">require</a></li>
           </ul>
         </li>
@@ -80,7 +81,7 @@
         <li><a href="#JavaScript-Best-Practices">JavaScript Best Practices</a></li>
       </ul>
     </div>
-    <a href="#support">Support</a>
+    <a href="#Support">Support</a>
   </nav>
 
   <article>
@@ -128,14 +129,14 @@
   </thead>
   <tbody class="slim">
     <tr><th>1.0 - 1.24</th><td>65 <span class="dim">(2019-01-29)</span></td><td>Initial <i>userScripts</i> API release<br>API was added in Firefox 65-67 but was disabled and had to be enabled via <code>about:config?filter=extensions.webextensions.userScripts.enabled</code></td></tr>
-    <tr><th>1.25</th><td>68 <span class="dim">(2019-07-09)</span></td><td>Offitial <i>userScripts</i> API release</td></tr>
-    <tr><th>2.42</th><td>74 <span class="dim">(2020-03-10)</span></td><td>To benefit from ECMAScript 2020 aka ES11<br>Statitics: no <i>FireMonkey</i> users below Firefox 77</td></tr>
+    <tr><th>1.25</th><td>68 <span class="dim">(2019-07-09)</span></td><td>Official <i>userScripts</i> API release</td></tr>
+    <tr><th>2.42</th><td>74 <span class="dim">(2020-03-10)</span></td><td>To benefit from ECMAScript 2020 aka ES11<br>Statistics: no <i>FireMonkey</i> users below Firefox 77</td></tr>
   </tbody>
 </table>
 
 
 
-  <h2 id="how_to">How to Use</h2>
+  <h2 id="how-to">How to Use</h2>
 
   <h3 id="toolbar">Toolbar Icon</h3>
 
@@ -143,23 +144,23 @@
 
   <dl>
     <dt><img src="../image/gear.svg" alt=""> Options</dt>
-      <dd>Open the Options page</dd>
+    <dd>Open the Options page</dd>
 
     <dt><img src="../image/js.svg" alt=""> New UserScript</dt>
-      <dd>Open the Options page and display a new Script Template that you can edit and Save <sup>1</sup></dd>
+    <dd>Open the Options page and display a new Script Template that you can edit and Save <sup>1</sup></dd>
 
     <dt><img src="../image/css.svg" alt=""> New UserCSS</dt>
-      <dd>Open the Options page and display a new CSS Template that you can edit and Save <sup>1</sup></dd>
+    <dd>Open the Options page and display a new CSS Template that you can edit and Save <sup>1</sup></dd>
 
     <dt><img src="../image/help.svg" alt=""> Help</dt>
-      <dd>Display Help document <sup>1</sup></dd>
+    <dd>Display the Help document <sup>1</sup></dd>
 
     <dt><img src="../image/document.svg" alt=""> Log</dt>
-      <dd>Display the latest (default 100) error and script-update messages when not in Private Window <sup>1</sup></dd>
-      <dd>Log data is not available in Container/Private mode</dd>
+    <dd>Display the latest (default 100) error and script-update messages when not in Private Window <sup>1</sup></dd>
+    <dd>Log data is not available in Container/Private mode</dd>
 
     <dt><img src="../locale-maker/locale-maker.svg" alt=""> Locale Maker</dt>
-      <dd>Open the Locale Maker stand-alone module to create & share locale translations</dd>
+    <dd>Open the Locale Maker stand-alone module to create & share locale translations</dd>
 
   </dl>
   <p><sup>1</sup><i> In Private Window opens the Options page (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1659998" title="localStorage accessibility within extension privileged pages in Private Window" target="_blank">Bug 1659998</a>).</i></p>
@@ -176,70 +177,70 @@
 
   <dl>
     <dt style="color: var(--link);">✔</dt>
-      <dd>Shows Script/CSS is enabled. Disabled Script/CSS are greyed out and clicking that area toggles the enable/disable</dd>
+    <dd>Shows Script/CSS is enabled. Disabled Script/CSS are greyed out and clicking that area toggles the enable/disable</dd>
 
     <dt style="color: #f00;">✘</dt>
-      <dd>Shows that there was an error when registering the script & the Information page displays the error</dd>
+    <dd>Shows that there was an error when registering the script & the Information page displays the error</dd>
 
     <dt><img src="../image/js.svg" alt=""> <img src="../image/css.svg" alt=""></dt>
-      <dd>Click to Hide/Show Script & CSS</dd>
+    <dd>Click to Hide/Show Script & CSS</dd>
 
     <dt><i>{name}</i> <img src="../image/next.svg" style="margin-left: 2em;" alt=""></dt>
-      <dd>Shows the Information for the Script/CSS</dd>
-      <dd>Displays <i>homepage</i> link if script has <code>@homepage</code>, <code>@homepageURL</code>, <code>updateURL</code>, <code>@website</code>, or <code>@source</code></dd>
-      <dd>Displays <i>support</i> link if script has <code>@support</code>, or <code>@supportURL</code></dd>
+    <dd>Shows the Information for the Script/CSS</dd>
+    <dd>Displays <i>homepage</i> link if script has <code>@homepage</code>, <code>@homepageURL</code>, <code>updateURL</code>, <code>@website</code>, or <code>@source</code></dd>
+    <dd>Displays <i>support</i> link if script has <code>@support</code>, or <code>@supportURL</code></dd>
 
-      <dd>
+    <dd>
         <dl>
           <dt>&#x1f58c; Edit</dt>
-          <dd>Button on Information page opens the Options Page and selects the current Script/CSS</dd>
+        <dd>Button on Information page opens the Options Page and selects the current Script/CSS</dd>
 
           <dt>&#x25b7; Run</dt>
-            <dd>Inject the displayed userScript or userCSS (not userStyle) as long as it was not already injected in the tab</dd>
+          <dd>Inject the displayed userScript or userCSS (not userStyle) as long as it was not already injected in the tab</dd>
             <dd class="note">The userScript is injected as plain JavaScript. Its metadata block would not be processed and it has no access to GM API.</dd>
             <dd class="warning">UserScript is injected into <code>content</code> context which has more privilege than <code>userScript</code> context and untrusted code should not be used.</dd>
 
           <dt style="color: #f00;">&#x25c1; Undo</dt>
-            <dd>Undo/Remove the displayed userCSS if it was injected temporarily by &#x25b7; Run</dd>
+          <dd>Undo/Remove the displayed userCSS if it was injected temporarily by &#x25b7; Run</dd>
         </dl>
       </dd>
 
     <dt style="margin-top: 2em;">Script Commands <img src="../image/next.svg" style="margin-left: 2em;" alt=""></dt>
-      <dd>Shows available Script Commands, click on each to run</dd>
+    <dd>Shows available Script Commands, click on each to run</dd>
 
     <dt style="margin-top: 2em;">Scratchpad <img src="../image/next.svg" style="margin-left: 2em;" alt=""></dt>
-      <dd>Insert CSS & JavaScript temporarily into the active tab</dd>
-      <dd>Scratchpad recalls the last entries for repeated use</dd>
+    <dd>Insert CSS & JavaScript temporarily into the active tab</dd>
+    <dd>Scratchpad recalls the last entries for repeated use</dd>
 
       <dd class="warning">JavaScript is injected into <code>content</code> context which has more privilege than <code>userScript</code> context and untrusted code should not be used.</dd>
 
-      <dd>
+    <dd>
         <dl>
           <dt>&#x25b7; Run</dt>
-            <dd>Insert the Scratchpad code (JavaScript or CSS)</dd>
+          <dd>Insert the Scratchpad code (JavaScript or CSS)</dd>
 
           <dt style="color: #f00;">&#x25c1; Undo</dt>
-            <dd>Undo/Remove the CSS Inserted by Scratchpad</dd>
+          <dd>Undo/Remove the CSS Inserted by Scratchpad</dd>
 
           <dt><img src="../image/bin.svg" alt=""></dt>
-            <dd>Click to clear the box and the saved code</dd>
+          <dd>Click to clear the box and the saved code</dd>
         </dl>
       </dd>
 
     <dt style="margin-top: 1em;">Find scripts for this site</dt>
-      <dd>Search <i>greasyfork.org</i> for scripts for this site</dd>
+    <dd>Search <i>greasyfork.org</i> for scripts for this site</dd>
 
     <dt style="margin-top: 2em;"><img src="../image/gear.svg" alt=""> Options</dt>
-      <dd>Open the Options Page</dd>
+    <dd>Open the Options Page</dd>
 
     <dt>&#x2795; <img src="../image/js.svg" alt=""></dt>
-      <dd>Display a new Script Template that you can edit and Save</dd>
+    <dd>Display a new Script Template that you can edit and Save</dd>
 
     <dt>&#x2795; <img src="../image/css.svg" alt=""></dt>
-      <dd>Display a new CSS Template that you can edit and Save</dd>
+    <dd>Display a new CSS Template that you can edit and Save</dd>
 
     <dt>Help</dt>
-      <dd>Open the Help document</dd>
+    <dd>Display the Help document</dd>
 
 
   </dl>
@@ -264,7 +265,7 @@
 
 
 
-  <h2 id="options">Options</h2>
+  <h2 id="Options">Options</h2>
 
   <h3 id="auto-update-interval">Auto-Update Interval</h3>
 
@@ -374,17 +375,17 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
   <dl>
     <dt>CodeMirror Options</dt>
-      <dd>Any option except <code>lint</code> | <code>mode</code></dd>
+    <dd>Any option except <code>lint</code> | <code>mode</code></dd>
 
     <dt>JSHint Options</dt>
-      <dd>Any option except <code>globals</code></dd>
+    <dd>Any option except <code>globals</code></dd>
 
     <dt>Tab to indent with spaces</dt>
-      <dd>Also relates to <code>tabSize</code>, <code>indentWithTabs</code> & <code>indentUnit</code></dd>
+    <dd>Also relates to <code>tabSize</code>, <code>indentWithTabs</code> & <code>indentUnit</code></dd>
       <dd class="note">The setting causes the whole line to move, no matter where the cursor is</dd>
 
     <dt>Key Maps</dt>
-      <dd>Set <a href="https://codemirror.net/doc/manual.html#keymaps" target="_blank">Key Maps</a> to Emacs, Vim, and Sublime Text-style keymaps.</dd>
+    <dd>Set <a href="https://codemirror.net/doc/manual.html#keymaps" target="_blank">Key Maps</a> to Emacs, Vim, and Sublime Text-style keymaps.</dd>
 
   </dl>
 
@@ -471,34 +472,34 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
   <dl>
     <dt><img src="../image/js.svg" alt=""><img src="../image/css.svg" alt=""></dt>
-      <dd>Click to hide/show all enabled Script & CSS</dd>
+    <dd>Click to hide/show all enabled Script & CSS</dd>
 
     <dt><img src="../image/js.svg" style="filter: grayscale(1);" alt=""><img src="../image/css.svg" style="filter: grayscale(1);" alt=""></dt>
-      <dd>Click to hide/show all disabled Script & CSS</dd>
+    <dd>Click to hide/show all disabled Script & CSS</dd>
 
     <dt><img src="../image/js.svg" alt=""></dt>
-      <dd>Click to hide/show all Scripts</dd>
+    <dd>Click to hide/show all Scripts</dd>
 
     <dt><img src="../image/css.svg" alt=""></dt>
-      <dd>Click to hide/show all CSS</dd>
+    <dd>Click to hide/show all CSS</dd>
 
     <dt>Counter</dt>
-      <dd>The counter shows the number of Script & CSS at the bottom</dd>
+    <dd>The counter shows the number of Script & CSS at the bottom</dd>
 
     <dt>&#x1f4e5; Import</dt>
-      <dd>Import one or more Script/CSS from file, same name Script/CSS will be overwritten without warning</dd>
+    <dd>Import one or more Script/CSS from file, same name Script/CSS will be overwritten without warning</dd>
 
     <dt>&#x1f4e4; Export</dt>
-      <dd>Export all Script/CSS to <i>FireMonkey</i> folder in the download location set in <i>Firefox Options -> Downloads</i></dd>
-      <dd>&#x1f4f1; <i>Disabled on Android</i></dd>
+    <dd>Export all Script/CSS to <i>FireMonkey</i> folder in the download location set in <i>Firefox Options -> Downloads</i></dd>
+    <dd>&#x1f4f1; <i>Disabled on Android</i></dd>
 
     <dt>&#x1f4e5; Import from Stylus</dt>
-      <dd>Export styles from <i>Stylus</i> and Import the JSON (on pop-up change the file type selection to <i>All Files</i>), same name Script/CSS will be overwritten without warning <i>(note: <a href="#UserStyle">UserStyle</a>)</i></dd>
+    <dd>Export styles from <i>Stylus</i> and Import the JSON (on pop-up change the file type selection to <i>All Files</i>), same name Script/CSS will be overwritten without warning <i>(note: <a href="#UserStyle">UserStyle</a>)</i></dd>
 
   </dl>
 
 
-  <h3 id="editing">Editing</h3>
+  <h3 id="Editing">Editing</h3>
   <p><a href="https://codemirror.net/" target="_blank">CodeMirror</a> editor and a number of its addons is used for easier editing <span class="small">(v2.0)</span>.</p>
 
   <h4>CodeMirror & addon Guide</h4>
@@ -522,62 +523,62 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
   <dl>
     <dt>&#x1f4be; Save</dt>
-      <dd>Save the currently displaying Script/CSS</dd>
+    <dd>Save the currently displaying Script/CSS</dd>
       <dd class="note">Trailing Spaces are removed automatically when saving</dd>
 
     <dt>&#x1f504; Update</dt>
-      <dd>Update the currently displaying Script/CSS</dd>
+    <dd>Update the currently displaying Script/CSS</dd>
 
     <dt>&#x1f4e4; Export</dt>
-      <dd>Export the currently displaying Script/CSS to file</dd>
+    <dd>Export the currently displaying Script/CSS to file</dd>
 
     <dt>&#x2611;&#xfe0f; Enable</dt>
-      <dd>Enable/Disable the currently displaying Script/CSS</dd>
+    <dd>Enable/Disable the currently displaying Script/CSS</dd>
       <dd class="note">Changes apply immediately without the need to SAVE</dd>
 
     <dt>&#x2611;&#xfe0f; Auto-update</dt>
-      <dd>Enable/Disable the Auto-Update of the currently displaying Script/CSS</dd>
+    <dd>Enable/Disable the Auto-Update of the currently displaying Script/CSS</dd>
       <dd class="note">Changes apply immediately without the need to SAVE</dd>
 
     <dt><img src="../image/bin.svg" alt=""> Delete</dt>
-      <dd>Delete the currently displaying Script/CSS after confirmation</dd>
+    <dd>Delete the currently displaying Script/CSS after confirmation</dd>
 
     <dt>&#x2795; <img src="../image/js.svg" alt=""></dt>
-      <dd>Display a new Script Template that you can edit and Save</dd>
+    <dd>Display a new Script Template that you can edit and Save</dd>
 
     <dt>&#x2795; <img src="../image/css.svg" alt=""></dt>
-      <dd>Display a new CSS Template that you can edit and Save</dd>
+    <dd>Display a new CSS Template that you can edit and Save</dd>
 
     <dt>&#x1f5d2; Menu</dt>
-      <dd>Display Lint Report with click-able lines to go to the corresponding line in the Script/CSS</dd>
+    <dd>Display Lint Report with click-able lines to go to the corresponding line in the Script/CSS</dd>
 
 
     <dt><img src="../image/menu-dot.svg" alt=""> Menu</dt>
-      <dd>
+    <dd>
         <dl>
           <dt>Theme</dt>
-            <dd>Select Light/Dark Theme for the editor</dd>
+          <dd>Select Light/Dark Theme for the editor</dd>
             <dd class="note">Default scheme is based on <a href="https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme" target="_blank">prefers-color-scheme</a> but also possible to set to dark on light schemes.</dd>
 
           <dt>&#x1f4be; Save Template</dt>
-            <dd>Save the currently displaying Script/CSS as a Template</dd>
+          <dd>Save the currently displaying Script/CSS as a Template</dd>
 
           <dt>➜ Tabs to Spaces</dt>
-            <dd>Convert Tabs to spaces (2 per tab)</dd>
+          <dd>Convert Tabs to spaces (2 per tab)</dd>
 <!--
           <dt>✂ Trim Trailing Spaces</dt>
-            <dd>Remove trailing spaces</dd>
+          <dd>Remove trailing spaces</dd>
  -->
           <dt>&#x1f520; Selection to Uppercase</dt>
-            <dd>&nbsp;</dd>
+          <dd>&nbsp;</dd>
 
           <dt>&#x1f521; Selection to Lowercase</dt>
-            <dd>&nbsp;</dd>
+          <dd>&nbsp;</dd>
 
           <dt>&#x1f464; User Metadata</dt>
-            <dd>Persistent user metadata rules to add/amend/disable original Script & CSS metadata rules</dd>
-            <dd>You can use the select to quickly enter values.</dd>
-            <dd><pre>
+          <dd>Persistent user metadata rules to add/amend/disable original Script & CSS metadata rules</dd>
+          <dd>You can use the select to quickly enter values.</dd>
+          <dd><pre>
 <span class="comment">// Disable Rule
 // without a value disables ALL original metadata rules of each entry
 // with a value disables SINGLE original metadata rule of each entry</span>
@@ -598,21 +599,21 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 </pre></dd>
 
           <dt>&#x1f4bf; Storage</dt>
-            <dd>View/Edit userscript storage. Storage value must be a <b>valid JSON</b>.</dd>
+          <dd>View/Edit userscript storage. Storage value must be a <b>valid JSON</b>.</dd>
         </dl>
       </dd>
 
 
 
     <dt>Multiple Enable/Disable, Delete & Export</dt>
-      <dd><kbd>Ctrl</kbd> or <kbd>Shift</kbd> click to select multiple of items listed under Script & CSS</dd>
+    <dd><kbd>Ctrl</kbd> or <kbd>Shift</kbd> click to select multiple of items listed under Script & CSS</dd>
 
   </dl>
 
   <h4>Editor Area Statistic Info</h4>
   <p>Statistical information is displayed under the the editor of the Script/CSS.</p>
 
-  <h3 id="self-update">Self-Update</h3>
+  <h3 id="Self-Update">Self-Update</h3>
   <p>For users that edit scripts regularly, a proper editor is more convenient. You can then update the installed version by:</p>
   <ul>
     <li>Copy & Paste directly into the script Editor</li>
@@ -621,7 +622,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
       <br>In case of repeated edit, you can keep the tab open and refresh and confirm to update the old one.</li>
   </ul>
 
-  <h3 id="auto-update">Update & Auto-Update</h3>
+  <h3 id="Auto-Update">Update & Auto-Update</h3>
   <p>Any target can be set for <code>@updateURL</code> as long it directly leads to the final file and it is in plain text. The <code>.js</code> or <code>.css</code> file extensions are not necessary although it makes sense to have them. The <code>.user.</code> is not necessary.</p>
   <p><i>FireMonkey</i> uses <code>@version</code> for the update process and both the current file and the update file must have <code>@version</code> and the version of the target file must be higher.</p>
   <p>In case of <i>GreasyFork</i> & <i>OpenUserJS</i>, the <code>@version</code> via Metadata Block in <code>https://...../*.meta.js</code> is verified first.</p>
@@ -669,7 +670,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-  <h2 id="metadata-block">Metadata Block</h2>
+  <h2 id="Metadata-Block">Metadata Block</h2>
   <p>For easier compatibility, format is similar to <i>Greasemonkey</i> Metadata Block for UserScripts. The commenting is different for CSS and as a result a uniform commenting for Metadata Block can be used. The Metadata Block identifier (case-insensitive e.g. ==userscript== etc) for UserScript is <code>==UserScript== ... ==/UserScript==</code> and for UserCSS is <code>==UserCSS== ... ==/UserCSS==</code>. For clarity, it is best to have the Metadata Block on top (or after <code>'use strict';</code> if wanted, but <i>FireMonkey</i> can pick it up from anywhere within the code.</p>
   <p class="note">Read <a href="#UserStyle">UserStyle</a> for <code>==UserStyle== ... ==/UserStyle==</code></p>
 
@@ -867,28 +868,27 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
   <dl>
     <dt>document_start</dt>
-      <dd>Corresponds to <code>loading</code>. The DOM is still loading.</dd>
+    <dd>Corresponds to <code>loading</code>. The DOM is still loading.</dd>
 
     <dt>document_end</dt>
-      <dd>Corresponds to <code>interactive</code>. The DOM has finished loading, but resources such as scripts, images, stylesheets and frames may still be loading.</dd>
-      <dd>The state indicates that the <a href="https://developer.mozilla.org/docs/Web/API/Window/DOMContentLoaded_event" target="_blank">DOMContentLoaded</a> event is about to fire.</dd>
+    <dd>Corresponds to <code>interactive</code>. The DOM has finished loading, but resources such as scripts, images, stylesheets and frames may still be loading.</dd>
+    <dd>The state indicates that the <a href="https://developer.mozilla.org/docs/Web/API/Window/DOMContentLoaded_event" target="_blank">DOMContentLoaded</a> event is about to fire.</dd>
 
     <dt>document_idle</dt>
-      <dd>Corresponds to <code>complete</code>. The document and all its resources have finished loading.</dd>
-      <dd>The state indicates that the <a href="https://developer.mozilla.org/docs/Web/API/Window/load_event" target="_blank">load</a> event is about to fire.</dd>
+    <dd>Corresponds to <code>complete</code>. The document and all its resources have finished loading.</dd>
+    <dd>The state indicates that the <a href="https://developer.mozilla.org/docs/Web/API/Window/load_event" target="_blank">load</a> event is about to fire.</dd>
   </dl>
 
-  <h4>@run-at <span>(non-standard)</span></h4>
   <p><i>Tampermonkey</i> supports additional non-standard <code>run-at</code>.</p>
 
   <blockquote>
     <dl>
       <dt>document-body</dt>
-        <dd>The script will be injected if the body element exists.</dd>
+      <dd>The script will be injected if the body element exists.</dd>
 
       <dt>context-menu</dt>
-        <dd>The script will be injected if it is clicked at the browser context menu (desktop Chrome-based browsers only).</dd>
-        <dd>Note: all <code>@include</code> and <code>@exclude</code> statements will be ignored if this value is used, but this may change in the future.</dd>
+      <dd>The script will be injected if it is clicked at the browser context menu (desktop Chrome-based browsers only).</dd>
+      <dd>Note: all <code>@include</code> and <code>@exclude</code> statements will be ignored if this value is used, but this may change in the future.</dd>
     </dl>
     <cite><a href="https://www.tampermonkey.net/documentation.php#_run_at" target="_blank">Tampermonkey Documentation</a></cite>
   </blockquote>
@@ -974,17 +974,17 @@ element.<span class="property">innerHTML</span> = dom;
 
   <dl>
     <dt>no container</dt>
-      <dd>inject into all tabs</dd>
+    <dd>inject into all tabs</dd>
 
     <dt>default</dt>
-      <dd>inject only into non-private, non-container tabs</dd>
+    <dd>inject only into non-private, non-container tabs</dd>
 
     <dt>private</dt>
-      <dd>inject only into private tabs</dd>
+    <dd>inject only into private tabs</dd>
       <dd class="note">`private` only works if user has allowed the extension to run in private mode.</dd>
 
     <dt>container-N</dt>
-      <dd>inject only into Firefox container-N tabs</dd>
+    <dd>inject only into Firefox container-N tabs</dd>
   </dl>
 
 
@@ -1288,7 +1288,7 @@ element.<span class="property">innerHTML</span> = dom;
   <p>Some example of how you can convert to more robust Match Patterns.</p>
 
 <table>
-  <caption>Conversation Examples</caption>
+  <caption>Conversion Examples</caption>
   <thead>
   <tr>
     <th>@include</th>
@@ -1305,7 +1305,7 @@ element.<span class="property">innerHTML</span> = dom;
   </tbody>
 </table>
 
-  <h3 id="match-patterns">Match Patterns</h3>
+  <h3 id="Match-Patterns">Match Patterns</h3>
 
   <p><a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/match_patterns" target="_blank">Match Patterns</a> is used in <code>match/exclude-match</code> and <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_scripts#globs" target="_blank">globs</a> in <code>includeGlobs/excludeGlobs</code>.</p>
 
@@ -1354,10 +1354,9 @@ element.<span class="property">innerHTML</span> = dom;
         <td>
           <code class="pass">http://example.org/</code><br>
           <code class="pass">https://www.example.org/aaa/</code>
-
         </td>
         <td>
-          <code class="fail"><s>ftp://www.example.org/aaa/</s></code>
+          <code class="fail"><s>ftp://www.example.org/</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">&#x24d8;</a></code>
         </td>
       </tr>
 
@@ -1371,6 +1370,7 @@ element.<span class="property">innerHTML</span> = dom;
           <code class="pass">http://www.sub.example.org/aaa/</code>
         </td>
         <td>
+          <code class="fail"><s>ftp://www.example.org/</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">&#x24d8;</a></code>
         </td>
       </tr>
 
@@ -1379,9 +1379,8 @@ element.<span class="property">innerHTML</span> = dom;
           <code>*://example.org/</code>
         </td>
         <td>
-          <code class="pass">http://example.org/</code>
-
-
+          <code class="pass">http://example.org/</code><br>
+          <code class="pass">https://example.org/</code>
         </td>
         <td>
           <code class="fail">https://www.example.org/</code><br>
@@ -1489,13 +1488,13 @@ element.<span class="property">innerHTML</span> = dom;
   <p>You can use <code>@require</code> for both scripts and CSS.</p>
   <dl>
     <dt>UserCSS</dt>
-      <dd>Require another installed UserCSS by name</dd>
-      <dd>Require a remote CSS</dd>
+    <dd>Require another installed UserCSS by name</dd>
+    <dd>Require a remote CSS</dd>
 
     <dt>UserScript</dt>
-      <dd>Require another installed UserScript by name</dd>
-      <dd>Require a remote JS</dd>
-      <dd>Require a remote CSS (URL ending with <code>.css</code>)</dd>
+    <dd>Require another installed UserScript by name</dd>
+    <dd>Require a remote JS</dd>
+    <dd>Require a remote CSS (URL ending with <code>.css</code>)</dd>
    </dl>
 
 
@@ -1902,10 +1901,10 @@ element.<span class="property">innerHTML</span> = dom;
   <p>There are 2 types storage systems available to extensions:</p>
   <dl>
     <dt>Extension Storage</dt>
-      <dd>Asynchronous private permanent storage accessible to the extension only</dd>
-      <dd>Synchronous private Web API storage accessible only to the extension domain's privileged pages (background, options, popup etc, but not contentScript or userscript)  e.g. <i>sessionStorage</i> | <i>localStorage</i> | <i>IndexedDB</i></dd>
+    <dd>Asynchronous private permanent storage accessible to the extension only</dd>
+    <dd>Synchronous private Web API storage accessible only to the extension domain's privileged pages (background, options, popup etc, but not contentScript or userscript)  e.g. <i>sessionStorage</i> | <i>localStorage</i> | <i>IndexedDB</i></dd>
     <dt>Web Storage</dt>
-      <dd>Synchronous public storage which is also accessible to web pages to read/write/delete e.g. <i>sessionStorage</i> | <i>localStorage</i> | <i>IndexedDB</i></dd>
+    <dd>Synchronous public storage which is also accessible to web pages to read/write/delete e.g. <i>sessionStorage</i> | <i>localStorage</i> | <i>IndexedDB</i></dd>
   </dl>
 
 
@@ -1922,8 +1921,8 @@ element.<span class="property">innerHTML</span> = dom;
 
   <dl>
     <dt>parentNode <span>(optional)</span></dt>
-      <dd>Any node or ShadowRoot</dd>
-      <dd>If ommited, it will be set as
+    <dd>Any node or ShadowRoot</dd>
+    <dd>If omitted, it will be set as
         <ul>
           <li><code>document.head</code> (<code>&lt;head&gt;</code>) || <code>document.body</code> (<code>&lt;body&gt;</code>) for  'script', 'link', 'style', 'meta' tags</li>
           <li><code>document.body</code> (<code>&lt;body&gt;</code>) || <code>document.documentElement</code> (<code>&lt;html&gt;</code>) for others</li>
@@ -1931,10 +1930,10 @@ element.<span class="property">innerHTML</span> = dom;
       </dd>
 
     <dt>tagName <span>(string)</span></dt>
-      <dd>Any valid HTML tag</dd>
+    <dd>Any valid HTML tag</dd>
 
     <dt>attributes <span>(object)</span></dt>
-      <dd>Object with any valid attribute and/or <code>textContent</code></dd>
+    <dd>Object with any valid attribute and/or <code>textContent</code></dd>
   </dl>
 
 
@@ -2012,15 +2011,15 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
   <p class="note">Experimental sync storage feature was added in v2.43 which can improve compatibility for most userscripts. It delays userscript execution until sync storage is available (<i>~5-10ms</i>), for userscripts that use sync <code>GM_getValue/GM_setValue/GM_listValues/GM_deleteValue</code> AND NOT their async <code>GM.*</code> counterparts.</p>
 
   <p>The async <code>GM.getValue</code> & <code>GM.listValues</code> will get the most up-to-date values at that moment.</p>
-  
+
   <p><b>Return value:</b> GM.* Promise | GM_* synch return</p>
     <ul>
       <li>getValue: value || default</li>
       <li>listValues: <code>array</code></li>
-      <li>setValue: <code>undefiend</code></li>
-      <li>deleteValue: <code>undefied</code></li>
+      <li>setValue: <code>undefined</code></li>
+      <li>deleteValue: <code>undefined</code></li>
     </ul>
-  
+
 
 <pre>
 <span class="comment">// stored value for key OR default</span>
@@ -2039,7 +2038,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 <span class="gm">GM_deleteValue</span>(key)
 </pre>
 
-<!-- 
+<!--
   <p class="dim" style="text-decoration: line-through;">Partial compatibility has been implemented. Please note:</p>
   <ul class="dim" style="text-decoration: line-through;">
     <li>Scripts that run <code>GM_getValue</code> & <code>GM_listValues</code> immediately will get the values at the start of the session which is the browser start-up time or script enabled time, whichever later</li>
@@ -2061,9 +2060,9 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
   <p><i>FireMonkey</i> <code>fetch</code> API is based on the JavaScript <a href="https://developer.mozilla.org/docs/Web/API/WindowOrWorkerGlobalScope/fetch" target="_blank">Fetch API</a> which provides the new Promise based interface for fetching resources (including across the network). It will seem familiar to anyone who has used <code>XMLHttpRequest</code>, but it provides a more powerful and flexible feature set.</p>
   <p>For simplicity and compatibility, the same GM style naming is kept for <code>fetch</code> API although it is not available in <i>Greasemonkey</i>.</p>
   <p><i>FireMonkey</i> <code>fetch</code> returns response object/string or <code>null</code> (check console & the log for errors e.g.: <i>TypeError: "NetworkError when attempting to fetch resource.</i>").</p>
-  
+
   <p><b>Return value:</b> response <code>object</code></p>
-  
+
   <p class="warning">Since v2.33. GM.fetch returns an object in all cases.</p>
 
   <p class="note"><i>FireMonkey</i> GM <code>fetch</code> fixes <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1405971" title="Webextension UUID leak via Fetch requests" target="_blank">Bug 1405971</a>.</p>
@@ -2076,11 +2075,11 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
   <dl>
     <dt>url</dt>
-      <dd><i>http, https, <s>ftp, ftps</s></i> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">&#x24d8;</a>, (<i>file</i> not allowed), can be relative to the web page</dd>
+    <dd><i>http, https, <s>ftp, ftps</s></i> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">&#x24d8;</a>, (<i>file</i> not allowed), can be relative to the web page</dd>
 
       <dt>init <span>(Optional)</span></dt>
-      <dd>An options object containing any custom settings that you want to apply to the request. The possible options are:</dd>
-      <dd>
+    <dd>An options object containing any custom settings that you want to apply to the request. The possible options are:</dd>
+    <dd>
         <ul>
           <li><code>method:</code> The request method, e.g. GET, HEAD, POST, PUT, DELETE, etc. (can be omitted, defaults to 'GET')</li>
           <li><code>headers:</code> Any headers you want to add to your request, contained within a Headers object or an object literal with ByteString values.</li>
@@ -2174,7 +2173,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
   <h3 id="xmlHttpRequest">xmlHttpRequest</h3>
   <p>The xmlHttpRequest interface and mostly compatible with <i>Greasemonkey</i> API.</p>
-  
+
   <p><b>Return value:</b> response <code>object</code></p>
 
 <pre>
@@ -2296,7 +2295,7 @@ xhr.send(<span class="keyword">null</span>);
 
 
   <h4 id="JavaScript-xmlHttpRequest-fetch">&#x2139;&#xfe0f; JavaScript xmlHttpRequest & fetch</h4>
-  <p>Due to a bug in Firefox <code>userScript</code> context, CORS fails in JavaScript <code>new XMLHttpRequest()</code> & <code>fetch()</code>. Therefore the behaviour of <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts#xhr_and_fetch" title="XHR and Fetch" target="_blank">JavaScript xmlHttpRequest & fetch</a> in GM|TM|VM will be somwhow different.</p>
+  <p>Due to a bug in Firefox <code>userScript</code> context, CORS fails in JavaScript <code>new XMLHttpRequest()</code> & <code>fetch()</code>. Therefore the behaviour of <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts#xhr_and_fetch" title="XHR and Fetch" target="_blank">JavaScript xmlHttpRequest & fetch</a> in GM|TM|VM will be somehow different.</p>
   <p>After liaising with Mozilla engineers, once the bug is fixed, userscripts will get the same origin as the web-page they are on.</p>
 
   <blockquote>
@@ -2374,16 +2373,16 @@ xhr.send(<span class="keyword">null</span>);
 
   <dl>
     <dt>text</dt>
-      <dd>text string</dd>
+    <dd>text string</dd>
 
     <dt>title</dt>
-      <dd><span class="fail"></span>Not processed, script name shows as title</dd>
+    <dd><span class="fail"></span>Not processed, script name shows as title</dd>
 
     <dt>image</dt>
-      <dd>a data URL, blob URL, or http/https URL</dd>
+    <dd>a data URL, blob URL, or http/https URL</dd>
 
     <dt>onclick</dt>
-      <dd><span class="fail"></span>Not processed, may be added on popular demand</dd>
+    <dd><span class="fail"></span>Not processed, may be added on popular demand</dd>
 
   </dl>
 
@@ -2398,10 +2397,10 @@ xhr.send(<span class="keyword">null</span>);
 <span class="gm">GM.openInTab</span>(url);
 <span class="gm">GM_openInTab</span>(url, open_in_background);
 </pre>
-  <p>The default value for <code>open_in_background</code> honors Firefox configuration. Tabs openned with GM openInTab can be closed with JavaScript <code>window.close()</code> <span class="small">(v2.45)</span>.</p>
-    
+  <p>The default value for <code>open_in_background</code> honours Firefox configuration. Tabs opened with GM openInTab can be closed with JavaScript <code>window.close()</code> <span class="small">(v2.45)</span>.</p>
+
   <p><b>Return value:</b> <code>true/false</code>    <span class="experimental">experimental v2.48</span></p>
-  
+
   <p class="note">The object support for <code>openInTab</code> is not unified among userscript managers.</p>
 
 <table>
@@ -2423,13 +2422,13 @@ xhr.send(<span class="keyword">null</span>);
       <td class="pass"><code class="small">false</code></td></tr>
     <tr>
       <th>object<br><span>+ default values</span></th>
-      <td class="pass"> 
+      <td class="pass">
 <code class="small">
 <p style="border-bottom: 1px solid var(--dim);">object (v2.48)</p>{
   active    true
 }
 
-<p style="border-bottom: 1px solid var(--dim);">behavior (v2.45)</p>active      !open_in_background
+<p style="border-bottom: 1px solid var(--dim);">behaviour (v2.45)</p>active      !open_in_background
 insert      true (Firefox default)
 setParent   same as opener tab
 incognito   same as opener tab
@@ -2489,7 +2488,7 @@ true/false  <span class="experimental">v2.48</span>
 
   <h3 id="registerMenuCommand">registerMenuCommand</h3>
   <p>Script Commands can be accessed via toolbar pop-up and are listed under the userscript name. Please note that <i>onclick</i> must be a <i>function</i>.</p>
-  
+
   <p><b>Return value:</b> <code>undefined</code></p>
 
 <pre>
@@ -2518,9 +2517,9 @@ true/false  <span class="experimental">v2.48</span>
 
   <h3 id="unregisterMenuCommand">unregisterMenuCommand</h3>
   <p>Unregister the previously created Script Command.</p>
-  
+
   <p><b>Return value:</b> <code>undefined</code></p>
-  
+
 <pre>
 <span class="gm">GM.unregisterMenuCommand</span>(name);
 <span class="gm">GM_unregisterMenuCommand</span>(name);
@@ -2532,7 +2531,7 @@ true/false  <span class="experimental">v2.48</span>
 </pre>
 
   <h3 id="getResourceText">getResourceText</h3>
-  
+
 <pre>
 <span class="keyword">const</span> text = <span class="keyword">await</span> <span class="gm">GM.getResourceText</span>(resourceName);
 <span class="keyword">const</span> text = <span class="gm">GM_getResourceText</span>(resourceName);
@@ -2540,7 +2539,7 @@ true/false  <span class="experimental">v2.48</span>
 
   <h4>GM.getResourceText</h4>
   <p>Asynchronous <code>GM.getResourceText</code> is similar to <code>GM.fetch</code>, with fewer options. It uses <code>fetch()</code> to get the target the first time but subsequently <a href="https://developer.mozilla.org/docs/Web/API/Request/cache" target="_blank">Request.cache</a> will be used by the browser.</p>
-  
+
   <p><b>Return value:</b> text <code>string</code></p>
 
 <pre>
@@ -2549,9 +2548,9 @@ true/false  <span class="experimental">v2.48</span>
 
   <h4>GM_getResourceText</h4>
   <p>In case of synchronous <code>GM_getResourceText</code>, <i>Tampermonkey/ViolentMonkey</i> load & cache the remote resources, and then pass them to the userscript synchronously. Caching remote resources will increase the resources used by the extension, especially when the data is large. <a href="#Storing-require" title="Storing require & resource Targets">&#x24d8;</a></p>
-    
+
   <p><b>Return value:</b> empty space <code>string ' '</code></p>
-  
+
   <p>Implementation of <code>GM_getResourceText</code> is different in FireMonkey.</p>
 
   <ul>
@@ -2563,7 +2562,7 @@ true/false  <span class="experimental">v2.48</span>
 
   <h3 id="getResourceUrl">getResourceUrl</h3>
   <p>The API is added for convenience and compatibility. It works differently in comparison to other script managers as the target is not stored, but it should work out in most cases. It maps directly to the <i>resourceURL</i>.</p>
-  
+
   <p><b>Return value:</b> URL || <code>undefined</code></p>
 
 <pre>
@@ -2612,9 +2611,9 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 
   <h3 id="addValueChangeListener">addValueChangeListener</h3>
   <p>Script storage change listener that returns the key as listener ID (although not necessary in FireMonkey).</p>
-  
+
   <p><b>Return value:</b> listener ID = key</p>
-  
+
 <pre>
 <span class="comment">// note: listenerId = key (not necessary in FireMonkey)</span>
 <span class="keyword">const</span> listenerId = <span class="gm">GM.addValueChangeListener</span>(key, callback);
@@ -2644,9 +2643,9 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 
   <h3 id="removeValueChangeListener">removeValueChangeListener</h3>
   <p>Remove listener for <code>key</code></p>
-  
+
   <p><b>Return value:</b> <code>undefined</code></p>
-  
+
 <pre>
 <span class="gm">GM.removeValueChangeListener</span>(key);
 <span class="gm">GM_removeValueChangeListener</span>(key);
@@ -2662,7 +2661,7 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
   <p>Simple file download from the Internet. <code>url</code> must be valid but <code>filename</code> is optional.</p>
   <p><code>url</code>: http, https, <s>ftp, ftps</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">&#x24d8;</a>, (file not allowed), can be relative to the web page</p>
   <p>If the specified <code>url</code> uses the HTTP or HTTPS protocol, then the request will include all cookies currently set for its hostname.</p>
-  
+
   <p><b>Return value:</b> download <code>id</code> number || <code>undefined</code> || Promise reject (check log for error)</p>
 
 <pre>
@@ -2686,9 +2685,9 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 
   <h3 id="popup">popup</h3>
   <p><i>FireMonkey</i> only utility function to create a <a href="https://developer.mozilla.org/docs/Web/Web_Components/Using_shadow_DOM" target="_blank">shadow DOM</a> popup blank element with animation that can be customized.</p>
-  
+
   <p><b>Return value:</b> popup element</p>
-  
+
 <pre>
 <span class="keyword">const</span> popup = <span class="gm">GM.popup</span>(options);
 <span class="keyword">const</span> popup = <span class="gm">GM_popup</span>(options);
@@ -2746,15 +2745,15 @@ popup.remove();
   <p>Ready-made styles can be set when creating a popup e.g. <code>{type: 'panel-top', modal: false}</code></p>
   <dl>
     <dt>{type: 'center'}</dt>
-      <dd>Basic Center type: <i>center (default, same as omitted)</i></dd>
-      <dd>Slide Center types: <i>slide-left</i> | <i>slide-right</i> | <i>slide-top</i> | <i>slide-bottom</i></dd>
-      <dd>Panel types: <i>panel-left</i> | <i>panel-right</i> | <i>panel-top</i> | <i>panel-bottom</i></dd>
+    <dd>Basic Center type: <i>center (default, same as omitted)</i></dd>
+    <dd>Slide Center types: <i>slide-left</i> | <i>slide-right</i> | <i>slide-top</i> | <i>slide-bottom</i></dd>
+    <dd>Panel types: <i>panel-left</i> | <i>panel-right</i> | <i>panel-top</i> | <i>panel-bottom</i></dd>
 
 
     <dt>{modal: true} <span>true (default)/false</span></dt>
-      <dd>By default, popup is modal. In modal mode, clicking the background closes the popup.</dd>
-      <dd>All Center Types are also Modal but the Panel Types can be non-Modal.</dd>
-      <dd>If modal is set to false, use CSS to control the width/height of both <code>:host</code> & <code>.content</code></dd>
+    <dd>By default, popup is modal. In modal mode, clicking the background closes the popup.</dd>
+    <dd>All Center Types are also Modal but the Panel Types can be non-Modal.</dd>
+    <dd>If modal is set to false, use CSS to control the width/height of both <code>:host</code> & <code>.content</code></dd>
   </dl>
 
 <pre>
@@ -2844,10 +2843,10 @@ popup.addStyle(css);
 
 
   <h3 id="info">info</h3>
-  
+
  <p><b>Return value:</b> <code>object</code></p>
 
- 
+
 <pre>
 <span class="keyword">const</span> info = <span class="gm">GM.info</span>;
 <span class="keyword">const</span> info = <span class="gm">GM_info</span>;
@@ -2886,9 +2885,9 @@ popup.addStyle(css);
 
   <h3 id="setClipboard">setClipboard</h3>
   <p>Copy text (<i>default</i>) or data (must include <i>type</i>) to the clipboard</p>
-  
+
   <p><b>Return value:</b> <code>undefined</code></p>
-  
+
 <pre>
 <span class="comment">// usually there is no need to wait for the following, but if needed, use await</span>
 <span class="gm">GM.setClipboard</span>(text);
@@ -2931,7 +2930,7 @@ popup.addStyle(css);
 
   <h3 id="log">log</h3>
   <p>The API is added for convenience and compatibility and is no longer supported by Greasemonkey or Violentmonkey but Tampermonkey still has it. Multiple parameters can be passed e.g. <code>GM_log('one', 'two', 'three')</code>. You can also use <code>console.log()</code> instead.</p>
-  
+
   <p><b>Return value:</b> <code>undefined</code></p>
 
 <pre>
@@ -2948,9 +2947,9 @@ popup.addStyle(css);
 
   <h3 id="unsafeWindow">unsafeWindow &#x26a0;&#xfe0f;</h3>
   <p><code>unsafeWindow</code> in <i>FireMonkey</i> is an alias for <code>window.wrappedJSObject</code>. You can also use <code>window.wrappedJSObject</code> or <code>window.eval()</code> to access page JavaScript <b>globals</b> or to create function & objects in `page` context.</p>
-  
+
   <p><b>Return value:</b> <code>window.wrappedJSObjec</code></p>
-  
+
   <p class="warning"><code>window.eval()</code> makes the object available to the page script as well while <code>unsafeWindow</code>, <code>window.wrappedJSObject</code> does not.</p>
 
 
@@ -3057,26 +3056,26 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
 
   <dl>
     <dt>Normal Browsing Mode</dt>
-      <dd>Cookies are handled by Firefox according to <code>withCredentials</code> or <code>credentials</code></dd>
-      <dd>
+    <dd>Cookies are handled by Firefox according to <code>withCredentials</code> or <code>credentials</code></dd>
+    <dd>
       <ul>
         <li><code>xmlHttpRequest</code>: Firefox sends cookies, <code>withCredentials</code> has no effect <a href="https://developer.mozilla.org/docs/Web/API/XMLHttpRequest/withCredentials" title="XMLHttpRequest.withCredentials" target="_blank">&#x24d8;</a></li>
         <li><code>fetch</code> : Firefox sends cookies, unless <code>{credentials: 'omit'}</code> <a href="https://developer.mozilla.org/docs/Web/API/Request/credentials" title="Request.credentials" target="_blank">&#x24d8;</a></li>
       </ul>
     </dd>
-    <dd>Cookies set via GM API headers will merge with Firefox cookies</dd>
-    <dd>Cookies sent back in the response will be handled by Firefox</dd>
+  <dd>Cookies set via GM API headers will merge with Firefox cookies</dd>
+  <dd>Cookies sent back in the response will be handled by Firefox</dd>
 
     <dt>Container or Private (Incognito) Browsing Mode</dt>
-      <dd><i>FireMonkey</i> gets and sends contextual cookies according to the mode</dd>
-      <dd>Cookies set via GM API headers will merge with above cookies</dd>
+    <dd><i>FireMonkey</i> gets and sends contextual cookies according to the mode</dd>
+    <dd>Cookies set via GM API headers will merge with above cookies</dd>
 
 
     <dt>anonymous: true</dt>
-      <dd>Tells browsers to exclude credentials from the request, and ignore any credentials sent back in the response (e.g., any <a href="https://developer.mozilla.org/docs/Web/HTTP/Headers/Set-Cookie"><code>Set-Cookie</code></a> header)</dd>
-      <dd>Cookies set via GM API headers will be sent</dd>
-      <dd><code>fetch</code>: Same as userscript setting <code>{credentials: 'omit'}</code> <a href="https://developer.mozilla.org/en-US/docs/Web/API/fetch#parameters" title="fetch() Parameters" target="_blank">&#x24d8;</a></dd>
-      <dd><code>xmlHttpRequest</code>: <code>mozAnon</code> will be set <a href="https://developer.mozilla.org/docs/Web/API/XMLHttpRequest/mozAnon" title="XMLHttpRequest.mozAnon" target="_blank">&#x24d8;</a></dd>
+    <dd>Tells browsers to exclude credentials from the request, and ignore any credentials sent back in the response (e.g., any <a href="https://developer.mozilla.org/docs/Web/HTTP/Headers/Set-Cookie"><code>Set-Cookie</code></a> header)</dd>
+    <dd>Cookies set via GM API headers will be sent</dd>
+    <dd><code>fetch</code>: Same as userscript setting <code>{credentials: 'omit'}</code> <a href="https://developer.mozilla.org/en-US/docs/Web/API/fetch#parameters" title="fetch() Parameters" target="_blank">&#x24d8;</a></dd>
+    <dd><code>xmlHttpRequest</code>: <code>mozAnon</code> will be set <a href="https://developer.mozilla.org/docs/Web/API/XMLHttpRequest/mozAnon" title="XMLHttpRequest.mozAnon" target="_blank">&#x24d8;</a></dd>
   </dl>
 
 
@@ -3234,7 +3233,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
   </thead>
   <tbody>
     <tr>
-      <th>broswer</th>
+      <th>browser</th>
       <td class="pass">all</td>
       <td>Trusted privileged code to interact with the browser</td>
     </tr>
@@ -3563,7 +3562,7 @@ script.<span class="method">remove</span>();
 
 
   <h4>Character Escaping in CSS</h4>
-  <p>CSS Escaping in userScript requires double scaping.</p>
+  <p>CSS Escaping in userScript requires double escaping.</p>
 
 
     <precaption>Example</precaption>
@@ -3591,30 +3590,30 @@ script.<span class="method">remove</span>();
   <h3 id="debugging">Debugging Script & CSS</h3>
   <dl>
     <dt>CodeMirror Lint</dt>
-      <dd>Check lint messages and report for errors and warnings</dd>
+    <dd>Check lint messages and report for errors and warnings</dd>
 
     <dt>JavaScript Compile Errors (Syntax Errors)</dt>
-      <dd>Usually appear in <b>Browser Console</b> (<kbd>Ctrl + Shift + J</kbd>) with a line number and a clickable link to the blob (with some string name) e.g.
+    <dd>Usually appear in <b>Browser Console</b> (<kbd>Ctrl + Shift + J</kbd>) with a line number and a clickable link to the blob (with some string name) e.g.
 <pre class="error">
 SyntaxError: missing : after property id [Learn More]                 1f0135df-f993-4f26-9127-bc8ffa21951e:18:11</pre></dd>
 
     <dt>JavaScript Run Errors</dt>
-      <dd>Some JavaScript run errors in a page can be checked in <b>Developer Tool</b> (<kbd>Ctrl + Shift + I</kbd> or <kbd>F12</kbd>) for the page that the JS is injected into e.g.
+    <dd>Some JavaScript run errors in a page can be checked in <b>Developer Tool</b> (<kbd>Ctrl + Shift + I</kbd> or <kbd>F12</kbd>) for the page that the JS is injected into e.g.
 <pre class="error">
 ReferenceError: assignment to undeclared variable abc [Learn More]    1f0135df-f993-4f26-9127-bc8ffa21951e:18:11
 ReferenceError: abc is not defined[Learn More]                        1f0135df-f993-4f26-9127-bc8ffa21951e:20:11
 </pre></dd>
 
     <dt>View Inserted UserScript</dt>
-      <dd>You can see the actual blob JavaScript in <a href="https://developer.mozilla.org/en-US/docs/Tools" target="_blank">Developer Tools</a> (<kbd>F12</kbd>) <b>Debugger</b> tab under <b>user-script://</b> (you may have to refresh the page)</dd>
+    <dd>You can see the actual blob JavaScript in <a href="https://developer.mozilla.org/en-US/docs/Tools" target="_blank">Developer Tools</a> (<kbd>F12</kbd>) <b>Debugger</b> tab under <b>user-script://</b> (you may have to refresh the page)</dd>
 
     <dt>CSS Errors</dt>
-      <dd>The CSS error can be checked in <b>Developer Tools</b> (<kbd>F12</kbd>) for the page that the CSS is injected into.</dd>
-      <dd>You can check <a href="https://developer.mozilla.org/en-US/docs/Tools/Style_Editor" target="_blank">Style Editor</a> tab and the injected CSS shows as a <b>blob</b> with a string of characters e.g. <i>da084755-6d22-45a5-870d-82c369299d55</i>.</dd>
-      <dd>More Information: <a href="https://developer.mozilla.org/docs/Learn/CSS/Building_blocks/Debugging_CSS" target="_blank">Debugging CSS</a></dd>
+    <dd>The CSS error can be checked in <b>Developer Tools</b> (<kbd>F12</kbd>) for the page that the CSS is injected into.</dd>
+    <dd>You can check <a href="https://developer.mozilla.org/en-US/docs/Tools/Style_Editor" target="_blank">Style Editor</a> tab and the injected CSS shows as a <b>blob</b> with a string of characters e.g. <i>da084755-6d22-45a5-870d-82c369299d55</i>.</dd>
+    <dd>More Information: <a href="https://developer.mozilla.org/docs/Learn/CSS/Building_blocks/Debugging_CSS" target="_blank">Debugging CSS</a></dd>
 
     <dt>Injection Errors</dt>
-      <dd>Check the Log page for recent errors</dd>
+    <dd>Check the Log page for recent errors</dd>
 
   </dl>
 
@@ -3655,14 +3654,15 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
     <li><a href="https://deepsource.io/blog/javascript-code-quality-best-practices/" target="_blank">JavaScript best practices to improve code quality </a></li>
     <li><a href="https://www.w3schools.com/js/js_best_practices.asp" target="_blank">JavaScript Best Practices</a></li>
     <li><a href="https://www.w3.org/wiki/JavaScript_best_practices" target="_blank">JavaScript best practices</a></li>
+    
   </ul>
 
 
 
 
-  <h2 id="support"><img src="../image/help.svg" alt=""> Support</h2>
+  <h2 id="Support"><img src="../image/help.svg" alt=""> Support</h2>
   <p>Please use the GitHub Community <a href="https://github.com/erosman/support" target="_blank">Support</a>.</p>
 
-    </article>
+  </article>
   </body>
 </html>
