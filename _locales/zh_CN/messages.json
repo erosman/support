@@ -161,6 +161,9 @@
   "undo": {
     "message": "撤销"
   },
+  "undoDisabled": {
+    "message": "Only for CSS"
+  },
   "insertError": {
     "message": "插入失败"
   },
@@ -184,9 +187,6 @@
   },
   "cmOptionsDescription": {
     "message": "自定义 CodeMirror, 插件 & JavaScript lint 配置。"
-  },
-  "cmOptionsError": {
-    "message": "无效 CodeMirror JSON"
   },
   "about": {
     "message": "关于"
@@ -215,10 +215,16 @@
   "import": {
     "message": "导入"
   },
+  "jsonError": {
+    "message": "Invalid JSON"
+  },
   "options": {
     "message": "选项"
   },
   "saveOptions": {
     "message": "保存"
+  },
+  "cmOptionsError": {
+    "message": "无效 CodeMirror JSON"
   }
 }

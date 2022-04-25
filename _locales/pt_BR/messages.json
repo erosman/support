@@ -161,6 +161,9 @@
   "undo": {
     "message": "Desfazer"
   },
+  "undoDisabled": {
+    "message": "Only for CSS"
+  },
   "insertError": {
     "message": "A execução falhou"
   },
@@ -184,9 +187,6 @@
   },
   "cmOptionsDescription": {
     "message": "Personalizar configuração do CodeMirror, addons & JavaScript lint"
-  },
-  "cmOptionsError": {
-    "message": "JSON inválido para o CodeMirror."
   },
   "about": {
     "message": "Sobre"
@@ -215,10 +215,16 @@
   "import": {
     "message": "Importar"
   },
+  "jsonError": {
+    "message": "Invalid JSON"
+  },
   "options": {
     "message": "Opções"
   },
   "saveOptions": {
     "message": "Salvar"
+  },
+  "cmOptionsError": {
+    "message": "JSON inválido para o CodeMirror."
   }
 }

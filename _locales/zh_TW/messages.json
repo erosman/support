@@ -161,6 +161,9 @@
   "undo": {
     "message": "Undo"
   },
+  "undoDisabled": {
+    "message": "Only for CSS"
+  },
   "insertError": {
     "message": "Failed to insert"
   },
@@ -184,9 +187,6 @@
   },
   "cmOptionsDescription": {
     "message": "Customize CodeMirror, addons & JavaScript lint configuration."
-  },
-  "cmOptionsError": {
-    "message": "Invalid CodeMirror JSON"
   },
   "about": {
     "message": "關於"
@@ -215,10 +215,16 @@
   "import": {
     "message": "匯入"
   },
+  "jsonError": {
+    "message": "Invalid JSON"
+  },
   "options": {
     "message": "選項"
   },
   "saveOptions": {
     "message": "儲存"
+  },
+  "cmOptionsError": {
+    "message": "Invalid CodeMirror JSON"
   }
 }

@@ -161,6 +161,9 @@
   "undo": {
     "message": "Ongedaan maken"
   },
+  "undoDisabled": {
+    "message": "Only for CSS"
+  },
   "insertError": {
     "message": "Het invoegen is mislukt"
   },
@@ -184,9 +187,6 @@
   },
   "cmOptionsDescription": {
     "message": "Pas de CodeMirror-, add-ons- en JavaScript-lintconfiguratie aan."
-  },
-  "cmOptionsError": {
-    "message": "Ongeldige CodeMirror-json"
   },
   "about": {
     "message": "Over"
@@ -215,10 +215,16 @@
   "import": {
     "message": "Importeren"
   },
+  "jsonError": {
+    "message": "Invalid JSON"
+  },
   "options": {
     "message": "Opties"
   },
   "saveOptions": {
     "message": "Opslaan"
+  },
+  "cmOptionsError": {
+    "message": "Ongeldige CodeMirror-json"
   }
 }

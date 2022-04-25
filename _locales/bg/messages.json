@@ -1,100 +1,230 @@
 {
-  "extensionName": { "message": "FireMonkey" },
-  "extensionDescription": { "message": "Потребителски скриптове и стилове в лек вариант" },
-
-
-  "tabScript": { "message": "Скриптове и стилове в раздела" },
-  "otherScript": { "message": "Други скриптове и стилове" },
-  "scriptCommands": { "message": "Команди от скриптове" },
-  "back": { "message": "Назад" },
-  "edit": { "message": "Променяне" },
-
-  "autoUpdateInterval": { "message": "Период на автоматично обновяване" },
-  "autoUpdateIntervalDescription": { "message": "Брой дни между проверки за обновяване (0 = без проверка)" },
-
-  "enableSync": { "message": "Синхронизиране със Sync" },
-  "syncError": { "message": "Грешка при синхронизиране\n\nХранилището ($1КБ) е по-голямо от 100KB. Sync ще бъде изключен." },
-
-  "counter": { "message": "Брояч" },
-
-  "globalScriptExcludeMatches": { "message": "Общи шаблони за изключване на скриптове" },
-  "globalScriptExcludeMatchesDescription": { "message": "Шаблоните (по един на ред) за изключване чрез съвпадение предотвратяват изпълнение на скриптовете." },
-
-  "userMeta": { "message": "Описателни данни" },
-  "storage": { "message": "Хранилище" },
-  "storageError": { "message": "Стойността в хранилището трябва да бъде валиден JSON" },
-
-  "sidebar": { "message": "Странична лента" },
-  "script": { "message": "Скрипт и стил" },
-
-  "saveScript": { "message": "Запазване" },
-  "enable": { "message": "Включване" },
-  "update": { "message": "Обновяване" },
-  "autoUpdate": { "message": "Автоматично обновяване" },
-  "theme": { "message": "Тема" },
-
-  "light": { "message": "Светла" },
-  "dark": { "message": "Тъмна" },
-
-  "newJS": { "message": "Нов UserScript" },
-  "newCSS": { "message": "Нов UserCSS" },
-  "saveTemplate": { "message": "Запазване като шаблон" },
-
-  "tabToSpaces": { "message": "Табулатори в интервали" },
-  "trimTrailingSpaces": { "message": "Изчистване на висящи интервали" },
-  "toUpperCase": { "message": "Избраното в главни букви" },
-  "toLowerCase": { "message": "Избраното в малки букви" },
-
-  "stylish": { "message": "Инсталиране на стил на Stylish" },
-  "report": { "message": "Доклад" },
-
-  "discardConfirm": { "message": "Потвърждавате ли отказ без запазване?" },
-
-  "delete": { "message": "Премахване" },
-  "deleteConfirm": { "message": "Потвърдете премахване на \n„$1“\n и всички прилежащи данни." },
-  "deleteMultiConfirm": { "message": "Потвърдете премахване на избраните $1 скрипта или стилови листа и всички прилежащи данни." },
-
-  "installConfirm": { "message": "Желаете ли скрипт или стилов лист „$1“ да бъде инсталиран?\n\nСкриптове или стилови листове с еднакви имена, но по-стари издания ще бъде презаписани." },
-
-  "metaError": { "message": "Грешка в описателните данни" },
-  "noNameError": { "message": "Скриптът или стиловият лист трябва да има наименование." },
-  "nameError": { "message": "Вече съществува скрипт или стилов лист с това наименование.\n\nДа бъде ли презаписан?" },
-  "updateUrlError": { "message": "Скриптът или стиловият лист е без поле „updateURL“ или „version“." },
-  "noNewUpdate": { "message": "Няма по-ново издание." },
-  "scriptUpdated": { "message": "Скрипт или стилов лист е обновен до издание $1" },
-
-
-  "exportAll": { "message": "Изнасяне" },
-
-  "log": { "message": "Дневник" },
-  "time": { "message": "Време" },
-  "reference": { "message": "Обяснение" },
-  "message": { "message": "Съобщение" },
-
-  "scratchpad": { "message": "Бележник" },
-  "run": { "message": "Изпълняване" },
-  "undo": { "message": "Отменяне" },
-  "insertError": { "message": "Грешка при вмъкване" },
-  "findScript": { "message": "Търсене на скриптове за страницата" },
-
-  "advanced": { "message": "Разширени" },
-  "customOptionsCSS": { "message": "Потребителски стилове за настройките" },
-  "customOptionsCSSDescription": { "message": "Настройка на външния вид на страницата с настройки и CodeMirror." },
-  "customPopupCSS": { "message": "Потребителски стилове за изскачащия прозорец" },
-  "customPopupCSSDescription": { "message": "Настройка на външния вид на изскачащия прозорец" },
-  "cmOptionsDescription": { "message": "Настройка на CodeMirror, добавките и проверките на кода на JavaScript." },
-  "cmOptionsError": { "message": "Грешен JSON на CodeMirror" },
-
-
-  "about": { "message": "Относно" },
-  "error": { "message": "Грешка при действието" },
-  "export": { "message": "Изнасяне" },
-  "fileParseError": { "message": "Грешка при разбор на файла" },
-  "fileReadError": { "message": "Грешка при отваряне на файла" },
-  "fileSizeError": { "message": "Дължината на файла е по голяма от разрешените $1 КБ" },
-  "fileTypeError": { "message": "Неподдържан формат на файла" },
-  "help": { "message": "Помощ" },
-  "import": { "message": "Внасяне" },
-  "options": { "message": "Настройки" },
-  "saveOptions": { "message": "Запазване" }
+  "extensionName": {
+    "message": "FireMonkey"
+  },
+  "extensionDescription": {
+    "message": "Потребителски скриптове и стилове в лек вариант"
+  },
+  "tabScript": {
+    "message": "Скриптове и стилове в раздела"
+  },
+  "otherScript": {
+    "message": "Други скриптове и стилове"
+  },
+  "scriptCommands": {
+    "message": "Команди от скриптове"
+  },
+  "back": {
+    "message": "Назад"
+  },
+  "edit": {
+    "message": "Променяне"
+  },
+  "autoUpdateInterval": {
+    "message": "Период на автоматично обновяване"
+  },
+  "autoUpdateIntervalDescription": {
+    "message": "Брой дни между проверки за обновяване (0 = без проверка)"
+  },
+  "enableSync": {
+    "message": "Синхронизиране със Sync"
+  },
+  "syncError": {
+    "message": "Грешка при синхронизиране\n\nХранилището ($1КБ) е по-голямо от 100KB. Sync ще бъде изключен."
+  },
+  "counter": {
+    "message": "Брояч"
+  },
+  "globalScriptExcludeMatches": {
+    "message": "Общи шаблони за изключване на скриптове"
+  },
+  "globalScriptExcludeMatchesDescription": {
+    "message": "Шаблоните (по един на ред) за изключване чрез съвпадение предотвратяват изпълнение на скриптовете."
+  },
+  "userMeta": {
+    "message": "Описателни данни"
+  },
+  "storage": {
+    "message": "Хранилище"
+  },
+  "storageError": {
+    "message": "Стойността в хранилището трябва да бъде валиден JSON"
+  },
+  "sidebar": {
+    "message": "Странична лента"
+  },
+  "script": {
+    "message": "Скрипт и стил"
+  },
+  "saveScript": {
+    "message": "Запазване"
+  },
+  "enable": {
+    "message": "Включване"
+  },
+  "update": {
+    "message": "Обновяване"
+  },
+  "autoUpdate": {
+    "message": "Автоматично обновяване"
+  },
+  "theme": {
+    "message": "Тема"
+  },
+  "light": {
+    "message": "Светла"
+  },
+  "dark": {
+    "message": "Тъмна"
+  },
+  "newJS": {
+    "message": "Нов UserScript"
+  },
+  "newCSS": {
+    "message": "Нов UserCSS"
+  },
+  "saveTemplate": {
+    "message": "Запазване като шаблон"
+  },
+  "tabToSpaces": {
+    "message": "Табулатори в интервали"
+  },
+  "trimTrailingSpaces": {
+    "message": "Изчистване на висящи интервали"
+  },
+  "toUpperCase": {
+    "message": "Избраното в главни букви"
+  },
+  "toLowerCase": {
+    "message": "Избраното в малки букви"
+  },
+  "stylish": {
+    "message": "Инсталиране на стил на Stylish"
+  },
+  "report": {
+    "message": "Доклад"
+  },
+  "discardConfirm": {
+    "message": "Потвърждавате ли отказ без запазване?"
+  },
+  "delete": {
+    "message": "Премахване"
+  },
+  "deleteConfirm": {
+    "message": "Потвърдете премахване на \n„$1“\n и всички прилежащи данни."
+  },
+  "deleteMultiConfirm": {
+    "message": "Потвърдете премахване на избраните $1 скрипта или стилови листа и всички прилежащи данни."
+  },
+  "installConfirm": {
+    "message": "Желаете ли скрипт или стилов лист „$1“ да бъде инсталиран?\n\nСкриптове или стилови листове с еднакви имена, но по-стари издания ще бъде презаписани."
+  },
+  "metaError": {
+    "message": "Грешка в описателните данни"
+  },
+  "noNameError": {
+    "message": "Скриптът или стиловият лист трябва да има наименование."
+  },
+  "nameError": {
+    "message": "Вече съществува скрипт или стилов лист с това наименование.\n\nДа бъде ли презаписан?"
+  },
+  "updateUrlError": {
+    "message": "Скриптът или стиловият лист е без поле „updateURL“ или „version“."
+  },
+  "noNewUpdate": {
+    "message": "Няма по-ново издание."
+  },
+  "scriptUpdated": {
+    "message": "Скрипт или стилов лист е обновен до издание $1"
+  },
+  "exportAll": {
+    "message": "Изнасяне"
+  },
+  "log": {
+    "message": "Дневник"
+  },
+  "time": {
+    "message": "Време"
+  },
+  "reference": {
+    "message": "Обяснение"
+  },
+  "message": {
+    "message": "Съобщение"
+  },
+  "scratchpad": {
+    "message": "Бележник"
+  },
+  "run": {
+    "message": "Изпълняване"
+  },
+  "undo": {
+    "message": "Отменяне"
+  },
+  "undoDisabled": {
+    "message": "Only for CSS"
+  },
+  "insertError": {
+    "message": "Грешка при вмъкване"
+  },
+  "findScript": {
+    "message": "Търсене на скриптове за страницата"
+  },
+  "advanced": {
+    "message": "Разширени"
+  },
+  "customOptionsCSS": {
+    "message": "Потребителски стилове за настройките"
+  },
+  "customOptionsCSSDescription": {
+    "message": "Настройка на външния вид на страницата с настройки и CodeMirror."
+  },
+  "customPopupCSS": {
+    "message": "Потребителски стилове за изскачащия прозорец"
+  },
+  "customPopupCSSDescription": {
+    "message": "Настройка на външния вид на изскачащия прозорец"
+  },
+  "cmOptionsDescription": {
+    "message": "Настройка на CodeMirror, добавките и проверките на кода на JavaScript."
+  },
+  "about": {
+    "message": "Относно"
+  },
+  "error": {
+    "message": "Грешка при действието"
+  },
+  "export": {
+    "message": "Изнасяне"
+  },
+  "fileParseError": {
+    "message": "Грешка при разбор на файла"
+  },
+  "fileReadError": {
+    "message": "Грешка при отваряне на файла"
+  },
+  "fileSizeError": {
+    "message": "Дължината на файла е по голяма от разрешените $1 КБ"
+  },
+  "fileTypeError": {
+    "message": "Неподдържан формат на файла"
+  },
+  "help": {
+    "message": "Помощ"
+  },
+  "import": {
+    "message": "Внасяне"
+  },
+  "jsonError": {
+    "message": "Invalid JSON"
+  },
+  "options": {
+    "message": "Настройки"
+  },
+  "saveOptions": {
+    "message": "Запазване"
+  },
+  "cmOptionsError": {
+    "message": "Грешен JSON на CodeMirror"
+  }
 }

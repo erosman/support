@@ -74,6 +74,7 @@
   "scratchpad": { "message": "Scratchpad" },
   "run": { "message": "Run" },
   "undo": { "message": "Undo" },
+  "undoDisabled": { "message": "Only for CSS" },
   "insertError": { "message": "Failed to insert" },
   "findScript": { "message": "Find scripts for this site" },
 
@@ -83,7 +84,6 @@
   "customPopupCSS": { "message": "Custom Popup CSS" },
   "customPopupCSSDescription": { "message": "Customize toolbar popup style configuration" },
   "cmOptionsDescription": { "message": "Customize CodeMirror, addons & JavaScript lint configuration" },
-  "cmOptionsError": { "message": "Invalid CodeMirror JSON" },
 
 
   "about": { "message": "About" },
@@ -95,6 +95,7 @@
   "fileTypeError": { "message": "Unsupported File Format" },
   "help": { "message": "Help" },
   "import": { "message": "Import" },
+  "jsonError": { "message": "Invalid JSON" },
   "options": { "message": "Options" },
   "saveOptions": { "message": "Save" }
 }
