@@ -1,0 +1,646 @@
+@import 'default.css';
+
+/* ----- Dark Theme ----- */
+:root, body.dark {
+  --border: #444;
+
+  --dim: #ccc;
+  --nav: #444;
+  --shadow: #fff8;
+  --h2: #0cf;
+  --dt: #abc;
+  --dt-bg: #555;
+  --pre: #cdf;
+  --table: #345;
+  --table1: #678;
+  --table3: #567;
+  --table5: #456;
+  --table-border: #678;
+  --quote: #400;
+  --note: #335;
+  --warn: #422;
+  --pass: #0c0;
+  --img-filter: invert(1) grayscale(1);
+}
+
+/* ----- Light Theme ----- */
+@media screen and (prefers-color-scheme: light) {
+  :root {
+    --border: #ddd;
+
+    --dim: #777;
+    --nav: #fff;
+    --shadow: #0004;
+    --h2: #066;
+    --dt: #567;
+    --dt-bg: #eee;
+    --pre: #48b1;
+    --table: #abc;
+    --table1: #abc1;
+    --table3: #abc3;
+    --table5: #abc5;
+    --table-border: #fff;
+    --quote: #fed;
+    --warn: #fee;
+    --note: #17f1;
+    --pass: #080;
+    --img-filter: none;
+  }
+}
+
+/* ----- General ----- */
+html {
+  scroll-padding-top: 2.5em; /* FF68 */
+}
+
+body {
+  font-size: 0.9em;
+}
+
+img {
+  vertical-align: text-bottom;
+}
+
+img[src$=".svg"]:not([src$="js.svg"]):not([src$="css.svg"]) {
+  filter: var(--img-filter);
+}
+
+article {
+  padding: 0.5em;
+}
+
+article > *:not(h2):not(h3) {
+  margin-left: 2rem;
+}
+
+h1, h2, h3, h4 {
+  letter-spacing: 0.5px;
+}
+
+article > h2 {
+  color: var(--h2);
+}
+
+h4 {
+  margin-bottom: 0;
+}
+
+h2 img, h3 img, h4 img {
+  width: 1em;
+}
+
+h3 span, h4 span {
+  color: var(--dim);
+  font-size: 0.8em;
+  font-style: italic;
+  font-weight: normal;
+  margin-left: 0.5em;
+}
+
+h3 i {
+  color: var(--dim);
+}
+
+h4 sup {
+  background-color: #cd853f;
+  color: #fff;
+  padding: 0.1em 0.4em;
+}
+
+dt {
+  color: var(--dt);
+  background-color: var(--dt-bg);
+  font-weight: bold;
+  display: table;
+  padding: 0.2em 0.5em;
+}
+
+dd + dt {
+  margin-top: 0.5em;
+}
+
+dd > dl {
+  margin: 1em auto;
+}
+
+dt img, dd img {
+  width: 1.2em;
+}
+
+dt span {
+  margin-left: 0.5em;
+  color: var(--dim);
+  font-style: italic;
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+dd sup, p sup {
+  color: #05f;
+}
+
+del {
+  text-decoration: line-through wavy #f50;
+}
+
+/* ----- About ----- */
+.about dl {
+  margin-left: initial;
+}
+
+.about dt {
+  color: #fff;
+  background-color: var(--table);
+  padding: 0.2em 0.5em;
+  position: relative;
+  border-radius: 1em;
+  min-width: 3em;
+  text-align: center;
+}
+
+.about dt::before {
+  background-color: var(--table);
+  content: '';
+  height: 2px;
+  width: 20vw;
+  position: absolute;
+  bottom: 0;
+  left: 1em;
+}
+/* ----- /About ----- */
+
+
+article li::marker { /* FF68 */
+  color: var(--dim);
+}
+
+article li img {
+  max-width: 70vw;
+}
+
+a[href^="http"]::after {
+  content: '🔗';
+  margin-left: 0.3em;
+  font-size: 0.7em;
+}
+
+a[href^="https://bugzilla.mozilla.org/show_bug.cgi?id="]::before {
+  content: '🐞';
+  margin-right: 0.3em;
+}
+
+a[href^="https://github.com/"]::before,
+a[href^="https://addons.mozilla.org/"]::before,
+a[href^="https://blog.mozilla.org/"]::before,
+a[href^="https://developer.mozilla.org/"]::before,
+a[href^="https://support.mozilla.org/"]::before,
+a[href^="https://www.mozilla.org/"]::before,
+a[href^="https://extensionworkshop.com/"]::before {
+  content: '';
+  background: url('../image/dino.svg') no-repeat center / contain;
+  display: inline-block;
+  height: 1.1em;
+  width: 1.1em;
+  margin-right: 0.3em;
+  vertical-align: text-bottom;
+  filter: var(--img-filter);
+}
+
+a[href^="https://blog.mozilla.org/"]::before {
+  background-image: url('../image/moz.svg');
+  border-radius: 1em;
+}
+
+a[href^="https://github.com/"]::before {
+  background-image: url('../image/github.svg');
+}
+
+/* ----- Navigation ----- */
+nav  {
+  background-color: var(--nav);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  box-shadow: 0px 3px 6px var(--shadow);
+}
+
+nav div {
+  display: inline-block;
+}
+
+nav > a, nav div {
+  position: relative;
+  display: inline-block;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  transition: all 0.5s ease-in-out;
+}
+
+nav > a:hover, nav div:hover {
+  border-top-color: #f84;
+}
+
+nav a {
+  color: var(--h2);
+  display: inline-block;
+  padding: 0.3em 0.5em;
+  text-align: center;
+  min-width: 5em;
+}
+
+nav div ul {
+  position: absolute;
+  left: 0;
+  top: 1em;
+  display: none;
+  background-color: var(--nav);
+  box-shadow: 0px 8px 16px 0px var(--shadow);
+  list-style: none;
+  padding: 0;
+  border-radius: 5px;
+}
+
+nav div:hover > ul {
+  display: block;
+  animation: fade 0.5s ease-in-out;
+}
+
+nav ul::after {
+  content: '';
+  position: absolute;
+  top: -1.8em;
+  left: 0.5em;
+  border-width: 1em;
+  border-style: solid;
+  border-color: transparent transparent var(--nav) transparent;
+}
+
+nav li {
+  padding: 0.2em 0.5em;
+  white-space: nowrap;
+  position: relative;
+}
+
+nav li.arrow::after {
+  content: '\203a';
+  position: absolute;
+  right: 0.5em;
+  top: 0;
+  font-size: 1.5em;
+  color: var(--h2);
+  opacity: 0.5;
+  font-weight: bold;
+}
+
+nav li:hover {
+  background-color: var(--hover);
+}
+
+nav li a {
+  border: 0;
+  display: block;
+  text-align: left;
+}
+
+nav li ul {
+  left: 10em;
+  top: 0.5em;
+  z-index: 2;
+}
+
+nav li ul::after {
+  content: '';
+  top: 0;
+  left: -1.8em;
+  border-width: 1em;
+  border-style: solid;
+  border-color: transparent var(--nav) transparent transparent;
+}
+
+nav li:hover ul {
+  display: block;
+  animation: fade 0.5s ease-in-out;
+}
+
+@keyframes fade {
+  0%    { opacity: 0; }
+  100%  { opacity: 1; }
+}
+/* ----- /Navigation ----- */
+
+strong {
+  color: #905;
+}
+
+
+/* ----- Pre/figure ----- */
+pre {
+  color: #000;
+  background-color: var(--pre);
+  border-left: 4px solid #48b;
+  padding: 1em;
+  font-size: 1.2em;
+}
+
+pre code {
+  display: block;
+  font-size: 1em;
+  padding: 1em;
+  background-color: #f5fffa;
+  position: relative;
+  margin: auto -1em;
+}
+
+pre code::after {
+  content: '\2714';
+  color: #080;
+  opacity: 0.6;
+  font-size: 2em;
+  position: absolute;
+  top: 0.1em;
+  right: 0.2em;
+}
+
+pre code.deprecated {
+  background-color: #fff5f5;
+}
+
+pre code.deprecated::after {
+  content: '\2718';
+  color: #f00;
+}
+
+pre.error {
+  color: #800;
+  background-color: #fff5f5;
+  border-left-color: #800;
+  display: table;
+}
+
+precaption {
+  color: #fff;
+  background-color: #48b;
+  padding: 0.3em 0.5em;
+  font-weight: bold;
+  font-size: 0.9em;
+  display: table;
+  min-width: 25em;
+  clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
+}
+
+precaption + pre {
+  margin-top: 0;
+}
+
+precaption span {
+  margin-left: 0.5em;
+  color: #eee;
+  font-style: italic;
+  font-weight: normal;
+}
+
+.scroll {
+  max-height: 25em;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+q {
+  font-style: italic;
+}
+
+blockquote {
+  color: var(--color);
+  padding: 0.5em 3.5em 1em;
+  font-style: italic;
+  position: relative;
+  border-radius: 1.5em;
+  background-color: var(--quote);
+  mask: url('../image/blob.svg') 0 0/100% 100%;
+}
+
+blockquote::before,
+blockquote::after {
+  color: #e9967a;
+  opacity: 0.6;
+  font-size: 4em;
+  position: absolute;
+}
+
+blockquote::before {
+  content: '\201c';
+  top: 0;
+  left: 0.3em;
+}
+
+blockquote::after {
+  content: '\201d';
+  bottom: -0.5em;
+  right: 0.5em;
+}
+
+td blockquote {
+  margin: 0.5em;
+}
+
+cite {
+  display: block;
+  margin-top: 1em;
+  color: #999;
+}
+
+cite::before {
+  content: '\2014\00A0source: ';
+}
+
+code {
+  font-size: 1.2em;
+  padding: 0 0.3em;
+  background-color: var(--dt-bg);
+}
+
+
+kbd {
+  color: #333;
+  padding: 0.1em 0.4em;
+  background: transparent linear-gradient(to bottom, #eee, #fff 60%);
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  line-height: 1;
+  display: inline-block;
+  font-family: monospace;
+}
+
+
+.note, .footnote, .warning  {
+  color: var(--color);
+  background-color: var(--note);
+  border: 1px solid var(--border);
+  border-left: 4px solid #17f;
+  padding: 0.5em;
+  margin-top: 0.5em;
+  border-radius: 4px;
+  display: table;
+  padding-left: 2em;
+  position: relative;
+}
+
+.note::before, .footnote::before, .warning::before {
+  content: '\1f4cc';
+  /*margin-right: 0.5em;*/
+  position: absolute;
+  top: 0.5em;
+  left: 0.8em;
+}
+
+.footnote {
+  font-size: 0.9em;
+  font-style: italic;
+}
+
+.warning {
+  border-left-color: #d40;
+  background-color: var(--warn);
+}
+
+.warning::before {
+  content: '\26a0\fe0f';
+  /*margin-right: 0.3em;*/
+}
+
+.experimental::after {
+  content: '';
+  background: url('../image/beaker.svg') no-repeat center / contain;
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  margin-left: 0.5em;
+  vertical-align: text-bottom;
+}
+
+/* ----- Table ----- */
+table {
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  margin-bottom: 1em;
+  min-width: 70%;
+}
+
+caption {
+  color: #fff;
+  background-color: var(--table);
+  padding: 0.3em 0.5em;
+  font-weight: bold;
+  font-size: 0.9em;
+  text-align: left;
+  width: 25em;
+  clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
+}
+
+caption ~ thead, caption ~ tbody {
+  border-left: 4px solid var(--table);
+}
+
+thead {
+  border-top: 1px solid var(--table);
+}
+
+th {
+  background-color: var(--table5);
+  text-align: left;
+  padding: 0.5em;
+}
+
+tbody th {
+  font-weight: normal;
+  min-width: 10em;
+}
+
+thead tr, tbody tr:not(:last-of-type) {
+  border-bottom: 1px solid var(--table-border);
+}
+
+tr:nth-child(odd) td {
+  background-color: var(--table1);
+}
+
+tr:nth-child(even) td {
+  background-color: var(--table3);
+}
+
+td {
+  padding: 0.5em;
+}
+
+td p {
+  margin: 0;
+}
+
+td code {
+  background-color: transparent;
+  padding: 0;
+  font-size: 1.2em;
+  white-space: pre;
+}
+
+.code td {
+  font-family: monospace;
+  font-size: 1.2em;
+  white-space: pre;
+}
+
+td .pass, td .fail,
+td.pass span, td.fail span {
+ font-family: monospace;
+ font-size: initial;
+}
+
+td.top {
+  vertical-align: top;
+}
+
+th span, .small {
+  color: var(--dim);
+  font-style: italic;
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+code.small {
+  font-size: initial;
+}
+
+th sup {
+  color: var(--dim);
+}
+
+.slim th:first-of-type, .slim td {
+  padding: 0 0.5em;
+}
+
+.pass {
+  color: var(--pass);
+}
+
+.pass::before {
+  content: '\2714\00A0';
+  font-weight: 900;
+}
+
+.fail {
+  color: #f00;
+}
+
+.fail::before {
+  content: '\2718\00A0';
+  font-weight: 900;
+}
+
+.unknown::before {
+  content: '\2753\00A0';
+  font-weight: 900;
+}
+
+.dim {
+  color: var(--dim);
+}
