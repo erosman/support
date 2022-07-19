@@ -1,19 +1,19 @@
-![firemonkey](https://github.com/erosman/support/blob/master/image/firemonkey.png)
-![edit](https://github.com/erosman/support/blob/master/image/edit.png)
-![foxyimage](https://github.com/erosman/support/blob/master/image/foxyimage.png)
-![foxylink](https://github.com/erosman/support/blob/master/image/foxylink.png)
-![foxypac](https://github.com/erosman/support/blob/master/image/foxypac.png)
-![historia](https://github.com/erosman/support/blob/master/image/historia.png)
-![imdbplus](https://github.com/erosman/support/blob/master/image/imdbplus.png)
-![imgoogle](https://github.com/erosman/support/blob/master/image/imgoogle.png)
-![replace](https://github.com/erosman/support/blob/master/image/replace.png)
-![textmulticopy](https://github.com/erosman/support/blob/master/image/textmulticopy.png)
-![urlmulticopy](https://github.com/erosman/support/blob/master/image/urlmulticopy.png)
+![firemonkey](/image/firemonkey.png)
+![edit](/image/edit.png)
+![foxyimage](/image/foxyimage.png)
+![foxylink](/image/foxylink.png)
+![foxypac](/image/foxypac.png)
+![historia](/image/historia.png)
+![imdbplus](/image/imdbplus.png)
+![imgoogle](/image/imgoogle.png)
+![replace](/image/replace.png)
+![textmulticopy](/image/textmulticopy.png)
+![urlmulticopy](/image/urlmulticopy.png)
 
-![copyplaintext](https://github.com/erosman/support/blob/master/image/copyplaintext.png)
-![Recommended](https://github.com/erosman/support/blob/master/image/recommended.png)
-![foxytab](https://github.com/erosman/support/blob/master/image/foxytab.png)
-![Recommended](https://github.com/erosman/support/blob/master/image/recommended.png)
+![copyplaintext](/image/copyplaintext.png)
+![Recommended](/image/recommended.png)
+![foxytab](/image/foxytab.png)
+![Recommended](/image/recommended.png)
 
 # Support
 Support Location for all my extensions
@@ -40,7 +40,7 @@ Please post all feature requests and issue to "Issues".
 
 
 
-## [FireMonkey](https://github.com/erosman/support/tree/FireMonkey)
+## ![firemonkey](/image/firemonkey.png) [FireMonkey](https://github.com/erosman/support/tree/FireMonkey)
 Main FireMonkey JavaScript files (not including libraries) for reference and discussion
 
 #### [FireMonkey Help](https://erosman.github.io/support/content/help.html)
