@@ -43,7 +43,6 @@
             <li><a href="#var">var</a></li>
             <li><a href="#Match-Patterns">Match Patterns</a></li>
             <li><a href="#require">require</a></li>
-
           </ul>
         </li>
 
@@ -128,7 +127,13 @@
 
 
     <dt><code>@grant none</code> & works in TM|VM</dt>
-    <dd>💡 Try setting <code>@inject-into page</code> in User Metadata</dd>
+    <dd>💡 Try setting <code>@inject-into &nbsp;&nbsp;&nbsp; page</code> in User Metadata</dd>
+
+    <dt>defaults <a href="#defaults">ⓘ</a></dt>
+    <dd>Userscript needs to run in sub-frames</dd>
+    <dd>💡 Try setting <code>@allFrames &nbsp;&nbsp;&nbsp; true</code> in User Metadata</dd>
+
+
   </dl>
 
 
@@ -570,7 +575,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
     <dd>Import one or more Script/CSS from file, same name Script/CSS will be overwritten without warning</dd>
 
     <dt>&#x1f4e4; Export</dt>
-    <dd>Export all Script/CSS to <i>FireMonkey</i> folder in the download location set in <i>Firefox Options -> Downloads</i></dd>
+    <dd>Export all Script/CSS to <i>FireMonkey</i> folder in the download location set in <i>Firefox Options ➜ Downloads</i></dd>
     <dd>&#x1f4f1; <i>Disabled on Android</i></dd>
 
     <dt>&#x1f4e5; Import from Stylus</dt>
@@ -919,7 +924,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-  <h4>defaults</h4>
+  <h4 id="defaults">defaults</h4>
   <p><i>FireMonkey</i> conforms to the Firefox (& Chrome) <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_scripts" target="_blank">content_scripts</a> API defaults. In most cases, it would be sufficient and prevents unnecessary overheads of injecting into sub-frames needlessly. However, Captcha, Disqus, etc are usually included as <code>iframes</code>, therefore, userscript dealing with them should be set to inject into all frames.</p>
 
 
@@ -2004,7 +2009,7 @@ body {
 
     <tr>
       <th>&#x1f465; Firefox Users</th>
-      <td>~760</td>
+      <td>~810</td>
       <td>247k</td>
       <td>524k</td>
       <td>54k</td>
@@ -2091,7 +2096,7 @@ body {
 
     <tr>
       <th>&#x1f465; Firefox Users</th>
-      <td>~760</td>
+      <td>~810</td>
       <td>66k</td>
       <td>66k</td>
       <td>320</td>
@@ -2146,7 +2151,7 @@ body {
 <pre>
 <span class="comment">// loading an external script</span>
 <span class="keyword">const</span> elem = <span class="gm">GM.addElement</span>(<span class="string">'script'</span>, {src: <span class="string">'https://....'</span>});
-elem.<span class="property">onload</span> = () => <span class="property">console</span>.<span class="method">log</span>(elem, <span class="string">'loaded'</span>);
+elem.<span class="property">onload</span> = () =&gt; <span class="property">console</span>.<span class="method">log</span>(elem, <span class="string">'loaded'</span>);
 
 <span class="comment">// appending to shadowRoot</span>
 <span class="keyword">const</span> elem = <span class="gm">GM_addElement</span>(parentElement.<span class="property">shadowRoot</span>, <span class="string">'iframe'</span>, {src: <span class="string">'https://....'</span>});
@@ -2229,7 +2234,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 <pre>
 <span class="comment">// stored value for key OR default</span>
 <span class="keyword">const</span> <span class="property">value</span> = <span class="keyword">await</span> <span class="gm">GM.getValue</span>(key, default);
-<span class="keyword">const</span> <span class="property">value</span> = <span class="gm">GM_getValue</span>(key, default);</span>
+<span class="keyword">const</span> <span class="property">value</span> = <span class="gm">GM_getValue</span>(key, default);
 
 <span class="comment">// an array of keys set by script OR []</span>
 <span class="keyword">const</span> <span class="method">keys</span> = <span class="keyword">await</span> <span class="gm">GM.listValues</span>();
@@ -2274,8 +2279,8 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
 <pre>
 <span class="comment">// Response Object</span>
-<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM.fetch</span>(url [, init]);</span>
-<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM_fetch</span>(url [, init]);</span>
+<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM.fetch</span>(url [, init]);
+<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM_fetch</span>(url [, init]);
 </pre>
 
   <dl>
@@ -2383,8 +2388,8 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
 <pre>
 <span class="comment">// Response Object</span>
-<span class="keyword">await</span> <span class="gm">GM.xmlHttpRequest</span>({url, onload});</span>
-<span class="keyword">await</span> <span class="gm">GM_xmlhttpRequest</span>({url, onload});</span>
+<span class="keyword">await</span> <span class="gm">GM.xmlHttpRequest</span>({url, onload});
+<span class="keyword">await</span> <span class="gm">GM_xmlhttpRequest</span>({url, onload});
 </pre>
 
   <p class="note">All requests are <code>asynchronous</code>, therefore <code>synchronous</code> is not supported.</p>
@@ -2501,7 +2506,7 @@ xhr.send(<span class="keyword">null</span>);
 <span class="object">window</span>.fetch(<span class="string">'https://example.com/'</span>, {
   credentials: 'include'
 })
-.<span class="keyword">then</span>(response => response.json())
+.<span class="keyword">then</span>(response =&gt; response.json())
 .<span class="keyword">catch</span>(<span class="method">error</span> =&gt; <span class="property">console</span>.<span class="method">error</span>(<span class="method">error</span>.message));
 </pre>
 
@@ -2719,7 +2724,7 @@ true/false  <span class="experimental">v2.48</span>
 
 
 <precaption>Example</precaption>
-<pre><code class="deprecated"><span class="comment">// direct method -> error: alert runs immediately</span>
+<pre><code class="deprecated"><span class="comment">// direct method ➜ error: alert runs immediately</span>
 <span class="gm">GM_registerMenuCommand</span>(<span class="string">'Hello, world (direct)'</span>, <span class="method">alert</span>(<span class="string">'Hello, world! (direct)'</span>));</code>
 <span class="comment">// anonymous function</span>
 <span class="gm">GM_registerMenuCommand</span>(<span class="string">'Hello, world (anon)'</span>, <span class="keyword">function</span>() { <span class="method">alert</span>(<span class="string">'Hello, world! (anon)'</span>); });
@@ -2851,7 +2856,7 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 <span class="gm">GM_addValueChangeListener</span>(<span class="string">'test-key'</span>, <span class="keyword">function</span>(...arg) { <span class="property">console</span>.<span class="method">log</span>(...arg); });
 
 <span class="comment">// anonymous arrow function</span>
-<span class="gm">GM_addValueChangeListener</span>(<span class="string">'test-key'</span>, (key, oldValue, newValue, remote) => { <span class="property">console</span>.<span class="method">log</span>(key, oldValue, newValue, remote); });
+<span class="gm">GM_addValueChangeListener</span>(<span class="string">'test-key'</span>, (key, oldValue, newValue, remote) =&gt; { <span class="property">console</span>.<span class="method">log</span>(key, oldValue, newValue, remote); });
 </pre>
 
 
@@ -3123,7 +3128,7 @@ popup.addStyle(css);
     </tr>
   </thead>
   <tbody>
-    <tr><th>text</span></th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr><th>text</th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr>
       <th>type</th>
       <td class="pass">v2.45<br>
@@ -3421,7 +3426,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
 <pre>
 <span class="comment">// select a simple node that changes in navigation to attach a MutationObserver e.g. &lt;title&gt;
 // For better performance avoid using a node with a lot of children like &lt;body&gt; when childList: true  </span>
-<span class="keyword">new</span> MutationObserver((mutationsList) => {
+<span class="keyword">new</span> MutationObserver((mutationsList) =&gt; {
   <span class="property">console</span>.<span class="method">log</span>(mutationsList[0].target.<span class="property">textContent</span>);
   <span class="comment">// re-run the necessary function</span>
 }).<span class="method">observe</span>(
