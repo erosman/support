@@ -120,21 +120,22 @@
   <h3>Quick Fixes</h3>
   <dl>
     <dt>SyntaxError: return not in function</dt>
-    <dd>💡 Use Wrap code in IIFE <a href="#IIFE">ⓘ</a></dd>
+    <dd>💡 Use Wrap code in <a href="#IIFE">IIFE</a></dd>
     <dd><i>Greasemonkey</i>, <i>Tampermonkey</i> & <i>Violentmonkey</i>, wrap the userscripts in an anonymous IIFE (Immediately Invoked Function Expression) in order to limit its exposure to the page JavaScript. As a result, such JavaScript parse errors do not cause a problem but that created a situation where developers write JavaScript with syntax errors.</dd>
     <dd><a href="https://eslint.org/demo" target="_blank">ESLint</a> already displays the parse error for above.</dd>
     <dd><a href="https://jshint.com/" target="_blank">JSHint</a> currently doesn't display the error, as posted to <a href="https://github.com/jshint/jshint/issues/3612" target="_blank">JavaScript: Mark return out of function</a>.</dd>
 
 
     <dt><code>@grant none</code> & works in TM|VM</dt>
-    <dd>💡 Try setting <code>@inject-into &nbsp;&nbsp;&nbsp; page</code> in User Metadata</dd>
+    <dd>💡 Try setting <code>@inject-into &nbsp;&nbsp;&nbsp; page</code> in <a href="#User-Metadata">User Metadata</a></dd>
 
-    <dt>defaults <a href="#defaults">ⓘ</a></dt>
+    <dt><a href="#defaults">defaults</a></dt>
     <dd>Userscript needs to run in sub-frames</dd>
-    <dd>💡 Try setting <code>@allFrames &nbsp;&nbsp;&nbsp; true</code> in User Metadata</dd>
+    <dd>💡 Try setting <code>@allFrames &nbsp;&nbsp;&nbsp; true</code> in <a href="#User-Metadata">User Metadata</a></dd>
 
 
   </dl>
+  <br>
 
 
 <table>
@@ -670,7 +671,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
           <dt id="IIFE">&#x1f6e0; Wrap code in IIFE</dt>
           <dd>Wrap code in IIFE (Immediately Invoked Function Expression) to fix <code>SyntaxError: return not in function</code>.</dd>
 
-          <dt>&#x1f464; User Metadata</dt>
+          <dt id="User-Metadata">&#x1f464; User Metadata</dt>
           <dd>Persistent user metadata rules to add/amend/disable original Script & CSS metadata rules</dd>
           <dd>You can use the select to quickly enter values.</dd>
           <dd><pre>
