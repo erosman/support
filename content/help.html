@@ -121,7 +121,7 @@
   <dl>
     <dt>SyntaxError: return not in function</dt>
     <dd>💡 Use Wrap code in <a href="#IIFE">IIFE</a></dd>
-    <dd><i>Greasemonkey</i>, <i>Tampermonkey</i> & <i>Violentmonkey</i>, wrap the userscripts in an anonymous IIFE (Immediately Invoked Function Expression) in order to limit its exposure to the page JavaScript. As a result, such JavaScript parse errors do not cause a problem but that created a situation where developers write JavaScript with syntax errors.</dd>
+    <dd><i>Greasemonkey</i>, <i>Tampermonkey</i> & <i>Violentmonkey</i> (as well as <i>Node.js</i>), wrap the userscripts in an anonymous IIFE (Immediately Invoked Function Expression) in order to limit its exposure to the page JavaScript. As a result, such JavaScript parse errors do not cause a problem but that created a situation where developers write JavaScript with syntax errors.</dd>
     <dd><a href="https://eslint.org/demo" target="_blank">ESLint</a> already displays the parse error for above.</dd>
     <dd><a href="https://jshint.com/" target="_blank">JSHint</a> currently doesn't display the error, as posted to <a href="https://github.com/jshint/jshint/issues/3612" target="_blank">JavaScript: Mark return out of function</a>.</dd>
 
@@ -130,8 +130,17 @@
     <dd>💡 Try setting <code>@inject-into &nbsp;&nbsp;&nbsp; page</code> in <a href="#User-Metadata">User Metadata</a></dd>
 
     <dt><a href="#defaults">defaults</a></dt>
-    <dd>Userscript needs to run in sub-frames</dd>
-    <dd>💡 Try setting <code>@allFrames &nbsp;&nbsp;&nbsp; true</code> in <a href="#User-Metadata">User Metadata</a></dd>
+    <dd>
+      <dl>
+        <dt>Userscript needs to run in sub-frames</dt>
+        <dd>💡 Try setting <code>@allFrames &nbsp;&nbsp;&nbsp; true</code> in <a href="#User-Metadata">User Metadata</a></dd>
+
+        <dt>No <code>@run-at</code> and script runs late</dt>
+        <dd>💡 Try setting <code>@run-at &nbsp;&nbsp;&nbsp; document-end</code> in <a href="#User-Metadata">User Metadata</a></dd>
+      </dl>
+
+    </dd>
+
 
 
   </dl>
@@ -143,7 +152,7 @@
   <thead>
     <tr>
       <th style="min-width: 12em;">Area</th>
-      <th style="min-width: 20;">Details</th>
+      <th style="min-width: 20em;">Details</th>
       <th style="min-width: 5em;">Exposure</th>
     </tr>
   </thead>
@@ -170,7 +179,7 @@
 
     <tr><th>@var checkbox</th><td>Requires JavaScript to process logical <i>true/false</i> which is not part of CSS</td><td class="unknown"></td></tr>
     <tr><th>@preprocessor less</th><td>Require <a href="https://lesscss.org/" target="_blank">Less</a> JavaScript Library</td><td class="unknown"></td></tr>
-    <tr><th>@preprocessor stylus</th><td>If uses JavaScript or featuers which are not part of CSS</td><td class="unknown"></td></tr>
+    <tr><th>@preprocessor stylus</th><td>If uses JavaScript or features which are not part of CSS</td><td class="unknown"></td></tr>
     <tr><th>@-moz-document regexp</th><td class="fail">not supported by Firefox API</td><td class="unknown"></td></tr>
   </tbody>
 </table>
@@ -199,6 +208,9 @@
   <h3 id="">Manifest V3</h3>
   <p>Chrome manifest v3 has removed <code>includeGlobs/excludeGlobs</code> parameters which affects the use of <code>include/exclude</code>. <a href="#include">ⓘ</a></p>
 
+  <blockquote><p>With the info available so far, ManifestV3 will kill Violentmonkey, Tampermonkey, Stylus, Stylish, and similar extensions. Google's engineers are either lying or evading such questions when asked directly. There's nothing we can do about that.</p>
+    <cite><a href="https://github.com/violentmonkey/violentmonkey/issues/505" target="_blank">Violentmonkey and manifest V3</a></cite></blockquote>
+
   <ul>
     <li><a href="https://www.techrepublic.com/article/google-makes-the-perfect-case-for-why-you-shouldnt-use-chrome/" target="_blank">Google makes the perfect case for why you shouldn’t use Chrome</a></li>
     <li><a href="https://www.eff.org/deeplinks/2021/12/chrome-users-beware-manifest-v3-deceitful-and-threatening" target="_blank">Chrome Users Beware: Manifest V3 is Deceitful and Threatening</a></li>
@@ -214,11 +226,6 @@
     <!-- <li><a href="" target="_blank"></a></li> -->
 
   </ul>
-
-
-  <blockquote><p>With the info available so far, ManifestV3 will kill Violentmonkey, Tampermonkey, Stylus, Stylish, and similar extensions. Google's engineers are either lying or evading such questions when asked directly. There's nothing we can do about that.</p>
-  <cite><a href="https://github.com/violentmonkey/violentmonkey/issues/505" target="_blank">Violentmonkey and manifest V3</a></cite></blockquote>
-
 
 
 
@@ -1621,10 +1628,10 @@ body {
         </td>
         <td>
           <code class="pass">file:///blah/</code><br>
-          <code class="pass">file:///blah/bleh</code>
+          <code class="pass">file:///blah/etc</code>
         </td>
         <td>
-          <code class="fail">file:///bleh/</code>
+          <code class="fail">file:///etc/</code>
         </td>
       </tr>
     </tbody>
@@ -3652,7 +3659,6 @@ script.<span class="method">remove</span>();
 ==UserCSS==
 @name           ABC Style
 @match          *://*.example.com/*
-@author         erosman
 @version        1.0
 ==/UserCSS==
 */</span>
@@ -3879,6 +3885,7 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
     <li><a href="https://deepsource.io/blog/javascript-code-quality-best-practices/" target="_blank">JavaScript best practices to improve code quality </a></li>
     <li><a href="https://www.w3schools.com/js/js_best_practices.asp" target="_blank">JavaScript Best Practices</a></li>
     <li><a href="https://www.w3.org/wiki/JavaScript_best_practices" target="_blank">JavaScript best practices</a></li>
+    <li><a href="https://github.com/airbnb/javascript" target="_blank">Airbnb JavaScript Style Guide</a></li>
 
   </ul>
 
