@@ -207,9 +207,12 @@
 
   <h3 id="">Manifest V3</h3>
   <p>Chrome manifest v3 has removed <code>includeGlobs/excludeGlobs</code> parameters which affects the use of <code>include/exclude</code>. <a href="#include">ⓘ</a></p>
+  <p>Furthermore, the MV3 <code>scripting.executeScript()</code> API does not have option to inject strings (e.g. userscript) or <code>runAt</code>.</p>
 
   <blockquote><p>With the info available so far, ManifestV3 will kill Violentmonkey, Tampermonkey, Stylus, Stylish, and similar extensions. Google's engineers are either lying or evading such questions when asked directly. There's nothing we can do about that.</p>
     <cite><a href="https://github.com/violentmonkey/violentmonkey/issues/505" target="_blank">Violentmonkey and manifest V3</a></cite></blockquote>
+
+
 
   <ul>
     <li><a href="https://www.techrepublic.com/article/google-makes-the-perfect-case-for-why-you-shouldnt-use-chrome/" target="_blank">Google makes the perfect case for why you shouldn’t use Chrome</a></li>
@@ -225,6 +228,7 @@
     <li><a href="https://adguard.com/en/blog/manifestv3-timeline.html" target="_blank">Objects in Manifest V3 are closer than they appear — and it's not good news</a></li>
     <li><a href="https://www.neowin.net/news/the-eff-will-fight-google-chrome-manifest-v3-which-kills-extensions-that-reliably-block-ads/" target="_blank">The EFF will fight Google Chrome Manifest v3 which kills extensions that reliably block ads</a></li>
     <li><a href="https://www.forbes.com/sites/kateoflahertyuk/2022/06/13/firefox-just-gave-3-billion-google-chrome-users-a-reason-to-switch/?sh=7e0de5921a3f" target="_blank">Firefox Just Gave 3 Billion Google Chrome Users A Reason To Switch</a></li>
+    <li><a href="https://bugs.chromium.org/p/chromium/issues/detail?id=1054624" target="_blank">Issue 1054624: Dynamic content script support</a></li>
 
     <!-- <li><a href="" target="_blank"></a></li> -->
   </ul>
