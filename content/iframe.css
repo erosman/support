@@ -40,7 +40,7 @@
     --table3: #abc3;
     --table5: #abc5;
     --table-border: #fff;
-    --quote: #fed;
+    --quote: #fed8;
     --warn: #fee;
     --note: #17f1;
     --pass: #080;
@@ -414,7 +414,7 @@ blockquote {
   padding: 0.5em 3.5em 1em;
   font-style: italic;
   position: relative;
-  border-radius: 1.5em;
+  font-size: 0.9em;
   background-color: var(--quote);
   mask: url('../image/blob.svg') 0 0/100% 100%;
 }

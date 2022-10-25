@@ -206,15 +206,75 @@
 
 
   <h3 id="manifest-v3">Manifest V3</h3>
-  <p>Chrome manifest v3 has removed <code>includeGlobs/excludeGlobs</code> parameters which affects the use of <code>include/exclude</code>. <a href="#include">ⓘ</a></p>
+  <p>Changes introduced by Chrome in manifest v3 (MV3) will have considerable affect on the extensions.</p>
 
   <blockquote><p>With the info available so far, ManifestV3 will kill Violentmonkey, Tampermonkey, Stylus, Stylish, and similar extensions. Google's engineers are either lying or evading such questions when asked directly. There's nothing we can do about that.</p>
-    <cite><a href="https://github.com/violentmonkey/violentmonkey/issues/505" target="_blank">Violentmonkey and manifest V3</a></cite></blockquote>
+    <cite><a href="https://github.com/violentmonkey/violentmonkey/issues/505" target="_blank">Violentmonkey and manifest V3</a></cite>
+  </blockquote>
 
+  <h4>Executing arbitrary strings</h4>
+  <p>Chrome MV3 initially removed the option to execute arbitrary strings which is need to inject userscripts.</p>
 
+  <blockquote>
+    <p>In Manifest V2, it was possible to execute an arbitrary string of code using <code>tabs.executeScript()</code> and the code property on the options object. Manifest V3 does not allow arbitrary code execution. In order to adapt to this requirement, extension developers can use the <code>scripting.executeScript()</code> method to either inject a static file or a function.</p>
 
+    <cite><a href="https://developer.chrome.com/docs/extensions/mv3/mv3-migration/#executing-arbitrary-strings" target="_blank">Executing arbitrary strings</a></cite>
+  </blockquote>
+
+  <p>Chrome has since changed its position on supporting userscript managers.</p>
+
+  <blockquote>
+    <p><b>Summary:</b> Userscript managers cannot inject scripts that are not included in the extension's package due to platform and policy changes that prevent arbitrary code execution. To address this, the Manifest V3 platform will be expanded to specifically support user-authored scripts and styles.</p>
+
+    <p><b>Estimated timeline:</b> Canary support around October, 2022.</p>
+    <cite><a href="https://developer.chrome.com/docs/extensions/mv3/known-issues/#userscript-managers-support" target="_blank">Known issues when migrating to Manifest V3</a></cite>
+  </blockquote>
+
+  <p>See Also</p>
   <ul>
     <li><a href="https://github.com/w3c/webextensions/issues/279" target="_blank">User scripts in Manifest V3</a></li>
+    <li><a href="https://github.com/w3c/webextensions/issues/284" target="_blank">Main world User Script shared params</a></li>
+  </ul>
+
+
+  <h4>includeGlobs/excludeGlobs</h4>
+  <p>Chrome MV3 has removed <code>includeGlobs/excludeGlobs</code> parameters which affects the use of <code>include/exclude</code>. <a href="#include">ⓘ</a></p>
+
+  <h4>GM xmlHttpRequest</h4>
+  <p><code>GM xmlHttpRequest</code> was created to bypass CORS restrictions. The API is performed from the background script where CORS does not apply. Additionally, it can set a few <a href="#forbidden-header-name">Forbidden header name</a> which might not be possible in Chrome MV3 due to the removal of blocking version of the Web Request API. <a href="https://developer.chrome.com/docs/extensions/mv3/mv3-migration/#modifying-network-requests" target="_blank">ⓘ</a>.</p>
+
+  <ul>
+    <li><a href="https://wiki.greasespot.net/GM.xmlHttpRequest" target="_blank">Greasemonkey:</a> This method performs a similar function to the standard XMLHttpRequest object, but allows these requests to cross the same origin policy boundaries.</li>
+    <li><a href="https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest" target="_blank">Violentmonkey:</a> Makes a request like XMLHttpRequest, with some special capabilities, not restricted by same-origin policy.</li>
+  </ul>
+
+  <p>The future of <code>GM xmlHttpRequest</code> in Chrome for <i>Tampermonkey</i> & <i>Violentmonkey</i> will be subject to change.</p>
+
+  <blockquote>
+    <p>An example of a cross-origin request: the front-end JavaScript code served from <code>https://domain-a.com</code> uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest" target="_blank">XMLHttpRequest</a> to make a request for <code>https://domain-b.com/data.json</code>.</p>
+
+    <p>For security reasons, browsers restrict cross-origin HTTP requests initiated from scripts. For example, <code>XMLHttpRequest</code> and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" target="_blank">Fetch API</a> follow the <a href="https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy" target="_blank">same-origin policy</a>. This means that a web application using those APIs can only request resources from the same origin the application was loaded from unless the response from other origins includes the right CORS headers.</p>
+
+    <cite><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank">Cross-Origin Resource Sharing (CORS)</a></cite>
+  </blockquote>
+
+
+  <blockquote>
+    <p>To improve security, cross-origin fetches will soon be disallowed from content scripts in Chrome Extensions. Such requests can be made from extension background pages instead, and relayed to content scripts when needed. [The document has been edited on 2020-09-17 to reflect that CORS-for-content-scripts has successfully launched in Chrome 85*.]</p>
+
+    <cite><a href="https://www.chromium.org/Home/chromium-security/extension-content-script-fetches/" target="_blank">Changes to Cross-Origin Requests in Chrome Extension Content Scripts</a></cite>
+  </blockquote>
+
+  <blockquote>
+    <p>⚠️ <b>Warning</b></p>
+    <p>In Manifest V3, <code>XMLHttpRequest</code> is not supported in background pages (provided by Service Workers). Please consider using its modern replacement, <code>fetch()</code>.</p>
+
+    <cite><a href="https://developer.chrome.com/docs/extensions/mv3/xhr/" target="_blank">Cross-origin XMLHttpRequest</a></cite>
+  </blockquote>
+
+
+  <p>See Also</p>
+   <ul>
     <li><a href="https://www.techrepublic.com/article/google-makes-the-perfect-case-for-why-you-shouldnt-use-chrome/" target="_blank">Google makes the perfect case for why you shouldn’t use Chrome</a></li>
     <li><a href="https://www.eff.org/deeplinks/2021/12/chrome-users-beware-manifest-v3-deceitful-and-threatening" target="_blank">Chrome Users Beware: Manifest V3 is Deceitful and Threatening</a></li>
     <li><a href="https://www.eff.org/deeplinks/2021/12/googles-manifest-v3-still-hurts-privacy-security-innovation" target="_blank">Google’s Manifest V3 Still Hurts Privacy, Security, and Innovation</a></li>
