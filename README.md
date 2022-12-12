@@ -22,20 +22,20 @@ The Support repository is created for all my extensions.
 
 Please post all feature requests and issue to "Issues".
 
-- [Copy PlainText](https://addons.mozilla.org/en-US/firefox/addon/copy-plaintext/)
-- [Edit](https://addons.mozilla.org/en-US/firefox/addon/edit/)
-- [FireMonkey](https://addons.mozilla.org/en-US/firefox/addon/firemonkey/)
-- [FoxyImage](https://addons.mozilla.org/en-US/firefox/addon/foxyimage/)
-- [FoxyLink](https://addons.mozilla.org/en-US/firefox/addon/foxylink/)
-- [FoxyPAC](https://addons.mozilla.org/en-US/firefox/addon/foxypac/)
-- [FoxyTab](https://addons.mozilla.org/en-US/firefox/addon/foxytab/)
-- [Historia](https://addons.mozilla.org/en-US/firefox/addon/historia/)
-- [IMDb Plus](https://addons.mozilla.org/en-US/firefox/addon/imdb-plus/)
-- [IMGoogle - Google Reverse Image Search](https://addons.mozilla.org/en-US/firefox/addon/igoogle/)
-- [Replace](https://addons.mozilla.org/en-US/firefox/addon/replace/)
-- [RPNet Helper](https://addons.mozilla.org/en-US/firefox/addon/rpnet-helper/)
-- [Text MultiCopy](https://addons.mozilla.org/en-US/firefox/addon/text-multicopy/)
-- [URL MultiCopy](https://addons.mozilla.org/en-US/firefox/addon/url-multicopy/)
+- [Copy PlainText](https://addons.mozilla.org/firefox/addon/copy-plaintext/)
+- [Edit](https://addons.mozilla.org/firefox/addon/edit/)
+- [FireMonkey](https://addons.mozilla.org/firefox/addon/firemonkey/)
+- [FoxyImage](https://addons.mozilla.org/firefox/addon/foxyimage/)
+- [FoxyLink](https://addons.mozilla.org/firefox/addon/foxylink/)
+- [FoxyPAC](https://addons.mozilla.org/firefox/addon/foxypac/)
+- [FoxyTab](https://addons.mozilla.org/firefox/addon/foxytab/)
+- [Historia](https://addons.mozilla.org/firefox/addon/historia/)
+- [IMDb Plus](https://addons.mozilla.org/firefox/addon/imdb-plus/)
+- [IMGoogle - Google Reverse Image Search](https://addons.mozilla.org/firefox/addon/igoogle/)
+- [Replace](https://addons.mozilla.org/firefox/addon/replace/)
+- [RPNet Helper](https://addons.mozilla.org/firefox/addon/rpnet-helper/)
+- [Text MultiCopy](https://addons.mozilla.org/firefox/addon/text-multicopy/)
+- [URL MultiCopy](https://addons.mozilla.org/firefox/addon/url-multicopy/)
 
 
 
