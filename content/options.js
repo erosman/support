@@ -1,8 +1,17 @@
-﻿import {pref, App, Meta, RemoteUpdate} from './app.js';
-const RU = new RemoteUpdate();
+import {pref, App, Meta} from './app.js';
+import {RemoteUpdate} from './remote-update.js';
+import './i18n.js';
 
-// ----------------- Internationalization ------------------
-App.i18n();
+// ----------------- Progress Bar --------------------------
+class ProgressBar {
+
+  static bar = document.querySelector('.progressBar');
+
+  static show() {
+    this.bar.classList.toggle('on');
+    setTimeout(() => this.bar.classList.toggle('on'), 2000);
+  }
+}
 
 // ----------------- Options -------------------------------
 class Options {
@@ -10,7 +19,6 @@ class Options {
   constructor(keys = Object.keys(pref)) {
     this.prefNode = document.querySelectorAll('#' + keys.join(',#')); // defaults to pref keys
     document.querySelector('button[type="submit"]').addEventListener('click', () => this.check()); // submit button
-    this.pBar = document.querySelector('.progressBar');
 
     this.globalScriptExcludeMatches = document.querySelector('#globalScriptExcludeMatches');
   }
@@ -23,12 +31,7 @@ class Options {
       save ? pref[node.id] = node[attr] : node[attr] = pref[node.id];
     });
 
-    save && !this.progressBar() && browser.storage.local.set(pref); // update saved pref
-  }
-
-  progressBar() {
-    this.pBar.classList.toggle('on');
-    setTimeout(() => this.pBar.classList.toggle('on'), 2000);
+    save && !ProgressBar.show() && browser.storage.local.set(pref); // update saved pref
   }
 
   check() {
@@ -64,9 +67,9 @@ class Script {
 
   constructor() {
     // class RemoteUpdate in app.js
-    RU.callback = this.processResponse.bind(this);
+    RemoteUpdate.callback = this.processResponse.bind(this);
 
-    this.docfrag = document.createDocumentFragment();
+    this.docFrag = document.createDocumentFragment();
     this.liTemplate = document.createElement('li');
     this.navUL = document.querySelector('aside ul');
     this.legend = document.querySelector('.script legend');
@@ -81,6 +84,11 @@ class Script {
     this.autoUpdate.addEventListener('change', () => this.toggleAutoUpdate());
     Meta.autoUpdate = this.autoUpdate;
 
+    // --- User Variables
+    this.userVar = document.querySelector('.userVar ul');
+    Meta.userVar = this.userVar;
+    document.querySelector('.userVar button').addEventListener('click', () => this.resetUserVar());
+
     // --- User Metadata
     this.userMeta = document.querySelector('#userMeta');
     this.userMeta.value = '';
@@ -88,7 +96,7 @@ class Script {
 
     const userMetaSelect = document.querySelector('#userMetaSelect');
     userMetaSelect.selectedIndex = 0;
-    userMetaSelect.addEventListener('change', (e) => {
+    userMetaSelect.addEventListener('change', e => {
       this.userMeta.value = (this.userMeta.value + '\n' + e.target.value).trim();
       e.target.selectedIndex = 0;
     });
@@ -100,9 +108,9 @@ class Script {
     document.querySelectorAll('.script button, .script li.button, aside button').forEach(item =>
       item.addEventListener('click', e => this.processButtons(e)));
 
-    window.addEventListener('beforeunload', () => {
-      this.unsavedChanges() ? event.preventDefault() : this.box.value = '';
-    });
+    window.addEventListener('beforeunload', e =>
+      this.unsavedChanges() ? e.preventDefault() : this.box.value = ''
+    );
 
 
     this.template = {
@@ -194,7 +202,7 @@ class Script {
         }
 
         // check script storage
-        if (newValue.storage !== oldValuestorage && id === this.box.id) {
+        if (newValue?.storage !== oldValue?.storage && id === this.box.id) {
           this.storage.value = Object.keys(pref[id].storage).length ? JSON.stringify(pref[id].storage, null, 2) : '';
         }
       });
@@ -228,7 +236,7 @@ class Script {
         eqeqeq: true,
         esversion: 11,
         expr: true,
-       /* forin: true,*/
+  //      forin: true,
         freeze: true,
         globals: {
           GM: false, GM_addScript: false, GM_addStyle: false, GM_addValueChangeListener: false, GM_deleteValue: false,
@@ -364,7 +372,7 @@ class Script {
 
   hexToRgb(color) {
     const m = color.substring(1).match(/.{2}/g).map(hex => parseInt(hex, 16));
-    const op = this.oldColor.match(/[\d.]+/g)[3];
+    const op = this.oldColor.match(/[\d.]+/g)?.[3];
     op && m.push(op);
     return (op ? 'rgba(' : 'rgb(') + m.join(',') + ')';
   }
@@ -562,15 +570,15 @@ class Script {
       case 'delete|title': return this.deleteScript();
       case 'newJS': case 'newJS|title': return this.newScript('js');
       case 'newCSS': case 'newCSS|title': return this.newScript('css');
+      case 'beautify|title': return this.beautify();
       case 'saveTemplate': return this.saveTemplate();
       case 'export': return this.exportScript();
       case 'exportAll': return this.exportScriptAll();
 
       case 'tabToSpaces':
-//      case 'trimTrailingSpaces':
       case 'toLowerCase':
       case 'toUpperCase':
-      case 'includeToMatch':
+      case 'wrapIIFE':
         return this.edit(action);
     }
   }
@@ -585,13 +593,7 @@ class Script {
         this.cm.setValue(text);
         this.makeStats(text);
         break;
-/*
-      case 'trimTrailingSpaces':
-        text = this.cm.getValue().trimEnd().replace(/[ ]+(?=\r?\n)/g, '');
-        this.cm.setValue(text);
-        this.makeStats(text);
-        break;
-*/
+
       case 'toLowerCase':
         this.cm.replaceSelection(this.cm.getSelection().toLowerCase());
         break;
@@ -599,7 +601,27 @@ class Script {
       case 'toUpperCase':
         this.cm.replaceSelection(this.cm.getSelection().toUpperCase());
         break;
+
+      case 'wrapIIFE':
+        if (!this.legend.classList.contains('js')) { return; } // only for JS
+        text = ['(() => { ', this.cm.getValue(), '\n\n})();'].join('');
+        this.cm.setValue(text);
+        this.makeStats(text);
+        break;
     }
+  }
+
+  beautify() {
+    if (!this.cm) { return; }
+
+    const options = {
+      indent_size: this.cm.getOption('tabSize')
+    };
+
+    let text = this.cm.getValue();
+    text = this.legend.classList.contains('js') ? js_beautify(text, options) :  css_beautify(text, options);
+    this.cm.setValue(text);
+    this.makeStats(text);
   }
 
   newScript(type) {
@@ -615,6 +637,8 @@ class Script {
     legend.textContent = '';
     legend.className = type;
     legend.textContent = browser.i18n.getMessage(type === 'js' ? 'newJS' : 'newCSS');
+    this.userMeta.value = '';
+    this.storage.value = '';
 
     const text = pref.template[type] || this.template[type];
     box.value = text;
@@ -635,15 +659,10 @@ class Script {
   }
 
   process() {
-    // --- CodeMirror Key Maps
-    const cmOptions = App.JSONparse(pref.cmOptions) || {};
-    cmOptions.keyMap &&
-      (document.querySelector('#keyMap').src = `../lib/codemirror/keymap/${cmOptions.keyMap}.js`);
-
     this.navUL.textContent = '';                            // clear data
 
     App.getIds().sort(Intl.Collator().compare).forEach(item => this.addScript(pref[item]));
-    this.navUL.appendChild(this.docfrag);
+    this.navUL.appendChild(this.docFrag);
 
     if (this.box.id) {                                      // refresh previously loaded content
       this.box.textContent = '';
@@ -658,7 +677,7 @@ class Script {
     item.error && li.classList.add('error');
     li.textContent = item.name;
     li.id = `_${item.name}`;
-    this.docfrag.appendChild(li);
+    this.docFrag.appendChild(li);
     li.addEventListener('click', e => this.showScript(e));
   }
 
@@ -693,7 +712,7 @@ class Script {
     this.cm?.save();                                        // save CodeMirror to textarea
     if(this.unsavedChanges()) {
       li.classList.remove('on');
-      document.getElementById(box.id).classList.add('on');
+      box.id && document.getElementById(box.id)?.classList.add('on');
       return;
     }
     this.cm?.toTextArea();                        // reset CodeMirror
@@ -723,8 +742,151 @@ class Script {
     this.storage.parentNode.style.display = pref[id].js ? 'list-item' : 'none';
     this.storage.value = Object.keys(pref[id].storage).length ? JSON.stringify(pref[id].storage, null, 2) : '';
 
+    // --- userVar
+    this.showUserVar(id);
+
     // --- CodeMirror
     this.setCodeMirror();
+  }
+
+  prepareColor(node, color) {
+    switch (true) {
+      case color.startsWith('rgba'):                         // convert rgba() -> #rrggbb
+        const op = color.match(/[\d.]+/g)?.[3];
+        op && (node.dataset.opacity = Math.round(op * 255).toString(16).padStart(2, '0'));
+        return this.rgbToHex(color);
+
+      case color.startsWith('rgb'):                         // convert rgba() -> #rrggbb
+        return this.rgbToHex(color);
+
+      case /^#\w{8}$/.test(color):                          // #rrggbbaa
+        node.dataset.opacity = color.slice(-2);
+        return color.slice(0,-2);
+
+      case /^#\w{4}$/.test(color):                          // convert #rgba -> #rrggbbaa
+        node.dataset.opacity = color.slice(-1).repeat(2);
+        return this.hex3to6(color.slice(0,-1));
+
+      case /^#\w{3}$/.test(color):                          // convert #rgb -> #rrggbb
+        return this.hex3to6(color);
+
+      case !color.startsWith('#'):                          // convert named -> #rrggbb
+        return this.namedColors(color);
+
+      default:
+        return color;
+    }
+  }
+
+  showUserVar(id) {
+    this.userVar.textContent = '';                          // reset
+    delete this.userVar.dataset.reset;
+    const tmp = this.liTemplate.cloneNode();
+    tmp.append(document.createElement('label'), document.createElement('input'));
+    const sel = document.createElement('select');
+    const output = document.createElement('output');
+
+    Object.entries(pref[id].userVar || {}).forEach(([key, value]) => {
+      if (!value.hasOwnProperty('user')) { return; }                          // skip
+      const li = tmp.cloneNode(true);
+      switch (value.type) {
+        case 'text':
+          li.children[0].textContent = value.label;
+          li.children[1].dataset.id = key;
+          li.children[1].type = value.type;
+          li.children[1].value = value.user;
+          li.children[1].dataset.default = value.value;
+          break;
+
+        case 'color':
+          const clr = this.prepareColor(li.children[1], value.user);
+          li.children[0].textContent = value.label;
+          li.children[1].dataset.id = key;
+          li.children[1].type = value.type;
+          li.children[1].value = clr;
+          li.children[1].dataset.default = value.value;
+          break;
+
+        case 'checkbox':
+          li.children[0].textContent = value.label;
+          li.children[1].dataset.id = key;
+          li.children[1].type = value.type;
+          li.children[1].checked = Boolean(value.user);
+          li.children[1].dataset.default = value.value;
+          break;
+
+        case 'number':
+          li.children[0].textContent = value.label;
+          li.children[1].dataset.id = key;
+          li.children[1].type = value.type;
+          li.children[1].value = value.user;
+          value.value[1] !== null && (li.children[1].min = value.value[1]);
+          value.value[2] !== null && (li.children[1].max = value.value[2]);
+          li.children[1].step = value.value[3];
+          li.children[1].dataset.default = value.value[0];
+          break;
+
+        case 'range':
+          li.children[0].after(output.cloneNode());
+          li.children[0].textContent = value.label;
+          li.children[1].textContent = value.user + (value.value[4] || '');
+          li.children[2].dataset.id = key;
+          li.children[2].type = value.type;
+          li.children[2].value = value.user;
+          value.value[1] !== null && (li.children[2].min = value.value[1]);
+          value.value[2] !== null && (li.children[2].max = value.value[2]);
+          li.children[2].step = value.value[3];
+          li.children[2].dataset.default = value.value[0];
+          li.children[2].addEventListener('input',
+            e => li.children[1].textContent = e.target.value + (value.value[4] || ''));
+          break;
+
+        case 'select':
+        case 'dropdown':
+        case 'image':
+          li.children[1].remove();
+          li.appendChild(sel.cloneNode());
+           li.children[0].textContent = value.label;
+          li.children[1].dataset.id = key;
+          // add option
+          Array.isArray(value.value) ?
+            value.value.forEach(item => li.children[1].appendChild(new Option(item.replace(/\*$/, ''), item))) :
+             Object.entries(value.value).forEach(([k, v]) => li.children[1].appendChild(new Option(k.replace(/\*$/, ''), v)));
+          li.children[1].value = value.user;
+
+          li.children[1].dataset.default =
+            Array.isArray(value.value) ? value.value.find(item => item.endsWith('*')) || value.value[0] :
+              value.value[Object.keys(value.value).find(item => item.endsWith('*')) || Object.keys(value.value)[0]];
+          break;
+      }
+      this.docFrag.appendChild(li);
+    });
+    this.userVar.appendChild(this.docFrag);
+  }
+
+  resetUserVar() {
+    if(!this.userVar.children[0]) { return; }
+
+    this.userVar.dataset.default = 'true';
+    this.userVar.querySelectorAll('input, select').forEach(item => {
+      let val = item.type === 'checkbox' ? item.checked + '' : item.value;
+      if (val !== item.dataset.default) {
+        switch (item.type) {
+          case 'checkbox':
+            item.checked = item.dataset.default === '1';
+            break;
+
+          case 'range':
+            item.value = item.dataset.default;
+            item.dispatchEvent(new Event('input'));
+            break;
+
+          default:
+            item.value = item.dataset.default;
+        }
+        item.parentNode.classList.add('default');
+      }
+    });
   }
 
   noSpace(str) {
@@ -857,7 +1019,7 @@ class Script {
     if (!box.id) {                                          // new script
       this.addScript(data);
       const index = [...this.navUL.children].findIndex(item => Intl.Collator().compare(item.id, id) > 0);
-      index !== -1 ? this.navUL.insertBefore(this.docfrag, this.navUL.children[index]) : this.navUL.appendChild(this.docfrag);
+      index !== -1 ? this.navUL.insertBefore(this.docFrag, this.navUL.children[index]) : this.navUL.appendChild(this.docFrag);
       this.navUL.children[index !== -1 ? index : 0].classList.toggle('on', true);
     }
     else {                                                  // existing script
@@ -880,7 +1042,7 @@ class Script {
       data.storage = pref[id].storage;
 
       // --- check for Web Install, set install URL
-      if (!data.updateURL && App.allowedHost(pref[id].updateURL)) {
+      if (!data.updateURL && pref[id].updateURL) {
         data.updateURL = pref[id].updateURL;
         data.autoUpdate = true;
       }
@@ -893,13 +1055,18 @@ class Script {
     }
 
     // --- check storage JS only
-    if (data.js && this.storage.value.trim()) {
-      const storage = App.JSONparse(this.storage.value);
-      if (!storage) {
-        App.notify(browser.i18n.getMessage('storageError')) ;
-        return;
+    if (data.js) {
+      if (!this.storage.value.trim()) {
+        data.storage = {};                                  // clear storage
       }
-      data.storage = storage;
+      else {
+        const storage = App.JSONparse(this.storage.value);
+        if (!storage) {
+          App.notify(browser.i18n.getMessage('storageError')) ;
+          return;
+        }
+        data.storage = storage;
+      }
     }
 
     // --- update box & legend
@@ -909,8 +1076,11 @@ class Script {
     pref[id] = data;                                        // save to pref
     browser.storage.local.set({[id]: pref[id]});            // update saved pref
 
+    // --- userVar
+    this.showUserVar(id);
+
     // --- progress bar
-    options.progressBar();
+    ProgressBar.show();
   }
 
   // --- Remote Update
@@ -925,10 +1095,10 @@ class Script {
       return;
     }
 
-    RU.getUpdate(pref[id], true);                           // to class RemoteUpdate in common.js
+    RemoteUpdate.getUpdate(pref[id], true);                 // to class RemoteUpdate in app.js
   }
 
-  processResponse(text, name, updateURL) {                  // from class RemoteUpdate in common.js
+  processResponse(text, name, updateURL) {                  // from class RemoteUpdate in app.js
     const data = Meta.get(text);
     if (!data) { throw `${name}: Update Meta Data error`; }
 
@@ -936,7 +1106,7 @@ class Script {
     const oldId = `_${name}`;
 
     // --- check version
-    if (!RU.higherVersion(data.version, pref[id].version)) {
+    if (!RemoteUpdate.higherVersion(data.version, pref[id].version)) {
       App.notify(browser.i18n.getMessage('noNewUpdate'), name);
       return;
     }
@@ -1293,4 +1463,3 @@ App.getPref().then(() => {
   pref.customOptionsCSS && (document.querySelector('style').textContent = pref.customOptionsCSS);
 });
 // ----------------- /User Preference ----------------------
-

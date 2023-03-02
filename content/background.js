@@ -1,5 +1,6 @@
-﻿import {pref, App, Meta, RemoteUpdate, CheckMatches} from './app.js';
-const RU = new RemoteUpdate();
+import {pref, App, Meta} from './app.js';
+import {RemoteUpdate} from './remote-update.js';
+import {Match} from './match.js';
 
 // ----------------- Process Preference --------------------
 class ProcessPref {
@@ -97,19 +98,19 @@ class ProcessPref {
     browser.tabs.query({}).then(tabs => {
       tabs.forEach(async tab => {
         if (tab.discarded)  { return; }
-        if (!CheckMatches.supported(tab.url)) { return; }
+        if (!Match.supported(tab.url)) { return; }
 
         let urls;
         if (allFrames) {
           const frames = await browser.webNavigation.getAllFrames({tabId: tab.id});
-          urls = [...new Set(frames.map(CheckMatches.cleanUrl).filter(CheckMatches.supported))];
+          urls = [...new Set(frames.map(Match.cleanUrl).filter(Match.supported))];
         }
         else {
-          urls = [CheckMatches.cleanUrl(tab.url)];
+          urls = [Match.cleanUrl(tab.url)];
         }
 
         const containerId = tab.cookieStoreId.substring(8);
-        if (!CheckMatches.get(pref[id], tab.url, urls, gExclude, containerId)) { return; }
+        if (!Match.get(pref[id], tab.url, urls, gExclude, containerId)) { return; }
 
         oldCSS && browser.tabs.removeCSS(tab.id, {code: Meta.prepare(oldCSS), allFrames});
         enabled && browser.tabs.insertCSS(tab.id, {code: Meta.prepare(css), allFrames});
@@ -265,7 +266,7 @@ class Counter {
   process(tabId, changeInfo, tab) {
     if (changeInfo.status !== 'complete') { return; }
 
-    CheckMatches.process(tab, true)
+    Match.process(tab, App.getIds(), pref, true)
     .then(count => {
       browser.browserAction.setBadgeText({tabId, text: count[0] ? count.length + '' : ''});
       browser.browserAction.setTitle({tabId, title: count[0] ? count.join('\n') : ''});
@@ -326,7 +327,7 @@ class ScriptRegister {
     // --- stop if script is not enabled or no mandatory matches
     if (!script.enabled || (!script.matches[0] && !script.includes[0] && !script.includeGlobs[0] && !script.style[0])) { return; }
 
-    // --- preppare script options
+    // --- prepare script options
     const options = {
       matches: script.matches,
       excludeMatches: script.excludeMatches,
@@ -341,7 +342,7 @@ class ScriptRegister {
     script.js && pref.globalScriptExcludeMatches && options.excludeMatches.push(...pref.globalScriptExcludeMatches.split(/\s+/));
 
     // --- prepare for include/exclude
-    (script.includes[0] || script.excludes[0] || script.includeGlobs[0] || script.excludeGlobs[0]) &&
+    !script.matches[0] && (script.includes[0] || script.excludes[0] || script.includeGlobs[0] || script.excludeGlobs[0]) &&
         (options.matches = ['*://*/*', 'file:///*']);
     options.matches = [...new Set(options.matches)];        // remove duplicates
 
@@ -349,7 +350,7 @@ class ScriptRegister {
     ['excludeMatches', 'includeGlobs', 'excludeGlobs'].forEach(item => !options[item][0] && delete options[item]);
 
     // --- add CSS & JS
-    const {name, require, requireRemote} = script;
+    const {name, require, requireRemote, userVar = {}} = script;
     const target = script.js ? 'js' : 'css';
     const js = target === 'js';
     const page = js && script.injectInto === 'page';
@@ -363,6 +364,7 @@ class ScriptRegister {
         (options.cookieStoreId = script.container.map(item => `firefox-${item}`));
 
     // ----- CSS only
+    let userVarCode = '';                                   // for script.style
     if (!js) {
       // --- add @require
       require.forEach(item =>
@@ -370,11 +372,37 @@ class ScriptRegister {
       );
 
       // --- add @requireRemote
-      requireRemote[0] && options.css.push({code: requireRemote.map(item => `@import '${item}';`).join('\n')});
+      requireRemote[0] && options.css.push({code:
+        `/* --- ${name}.user.css --- */\n\n` + requireRemote.map(item => `@import '${item}';`).join('\n')});
+
+      // --- add @var
+      const uv = Object.entries(userVar).map(([key, value]) => {
+        let val = value.user;
+        ['number', 'range'].includes(value.type) && value.value[4] && (val + value.value[4]);
+        value.type === 'select' && Array.isArray(value.value) && (val = val.replace(/\*$/, ''));
+        return  `  --${key}: ${val};`;
+      }).join('\n');
+      if (uv) {
+        const code = `/* --- ${name}.user.css --- */\n/* --- User Variables --- */\n\n:root {\n${uv}\n}`;
+        script.style[0] ? userVarCode = code : options.css.push({code});
+      }
+
+      // --- add code
+      !script.style[0] && options.css.push({code: Meta.prepare(script.css)});
     }
 
     // ----- script only
     else if (js) {
+      const {includes, excludes, grant = []} = script;
+
+      // --- Regex include/exclude workaround
+      (includes[0] || excludes[0]) && options.js.push({code: `if (!matchURL()) { throw ''; }`});
+
+      // --- unsafeWindow implementation
+      // Mapping to window object as a temporary workaround for
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=1715249
+      !page && options.js.push({file: '/content/api-plus.js'});
+
       // --- add @require
       require.forEach(item => {
         const id = `_${item}`;
@@ -397,20 +425,34 @@ class ScriptRegister {
       // --- add @requireRemote
       if (requireRemote[0]) {
         // css @require injects via api
-        await Promise.all(requireRemote.map(url => !/^(http|\/\/).+(\.css\b|\/css\d*\?)/i.test(url) &&
+        const res = [];                                     // keep order of @require
+        await Promise.all(requireRemote.map((url, index) => !/^(http|\/\/).+(\.css\b|\/css\d*\?)/i.test(url) &&
           fetch(url)
           .then(response => response.text())
           .then(code => {
             url.startsWith('/lib/') && (url = url.slice(1, -1));
             code += sourceURL + encodeURI(url);
             page && (code = `GM.addScript(${JSON.stringify(code)})`);
-            options[target].push({code});
+            res[index] = {code};
           })
           .catch(() => {})
         ));
+        res.forEach(item => options.js.push(item));
       }
 
-      const {includes, excludes, grant = []} = script;
+      // --- add @var
+      const uv = Object.entries(userVar).map(([key, value]) => {
+        let val = value.user;
+        ['number', 'range'].includes(value.type) && value.value[4] && (val + value.value[4]);
+        value.type === 'select' && Array.isArray(value.value) && (val = val.replace(/\*$/, ''));
+        val = typeof val === 'string' ? JSON.stringify(val) : val;
+        return `const ${key} = ${val};`;
+      }).join('\n');
+      if (uv) {
+        let code = '/* --- User Variables --- */\n\n' + uv + sourceURL + encodeId + '.var.user.js';
+        page && (code = `GM.addScript(${JSON.stringify(code)})`);
+        options.js.push({code});
+      }
 
       // --- process grant
       const grantKeep = [];
@@ -456,35 +498,33 @@ class ScriptRegister {
         }
       };
 
-      // --- add debug
+      // --- add sourceURL
       script.js += sourceURL + encodeId + '.user.js';
 
       // --- process inject-into page context
       if (page) {
-        const str = `((unsafeWindow, GM, GM_info = GM.info) => {(() => { ${script.js}
+        const str =
+`((unsafeWindow, GM, GM_info = GM.info) => {(() => { ${script.js}
 })();})(window, ${JSON.stringify({info:options.scriptMetadata.info})});`;
+
         script.js = `GM.addScript(${JSON.stringify(str)});`;
       }
       else if (['GM_getValue', 'GM_setValue', 'GM_listValues', 'GM_deleteValue'].some(item => grantKeep.includes(item))) {
-        //script.js = `(async() => {await storageGet(); ${script.js}\n})();`;
-        script.js = `storageGet().then(() => { ${script.js}\n});`;
+        //script.js = `(async() => {await setStorage(); ${script.js}\n})();`;
+        script.js = `setStorage().then(() => { ${script.js}\n});`;
       }
 
-      // --- unsafeWindow implementation & Regex include/exclude workaround
-      const code = (includes[0] || excludes[0] ? `if (!matchURL()) { throw ''; } ` : '') +
-                    (page ? '' : 'const unsafeWindow = window.wrappedJSObject;');
-
-      code.trim() && options.js.push({code});
+      // --- add code
+      options.js.push({code: Meta.prepare(script.js)});
     }
 
-    // --- add code
-    options[target].push({code: Meta.prepare(script[target])});
-
+    // ---
     if (script.style[0]) {
       // --- UserStyle Multi-segment Process
       script.style.forEach((item, i) => {
         options.matches = item.matches;
-        options.css = [{code: item.css}];
+        userVarCode && options.css.push({code: userVarCode});
+        options.css.push({code: item.css});
         this.register(id + 'style' + i, options, id);
       });
     }
@@ -521,7 +561,7 @@ class Installer {
 
   constructor() {
     // class RemoteUpdate in app.js
-    RU.callback = this.processResponse.bind(this);
+    RemoteUpdate.callback = this.processResponse.bind(this);
 
     // --- Web/Direct Installer
     this.webInstall = this.webInstall.bind(this);
@@ -529,11 +569,11 @@ class Installer {
 
     browser.webRequest.onBeforeRequest.addListener(this.webInstall, {
         urls: [
-        'https://greasyfork.org/scripts/*.user.js',
-        'https://greasyfork.org/scripts/*.user.css',
-        'https://sleazyfork.org/scripts/*.user.js',
-        'https://sleazyfork.org/scripts/*.user.css',
-        'https://openuserjs.org/install/*.user.js',
+          'https://greasyfork.org/scripts/*.user.js',
+          'https://greasyfork.org/scripts/*.user.css',
+          'https://sleazyfork.org/scripts/*.user.js',
+          'https://sleazyfork.org/scripts/*.user.css',
+          'https://openuserjs.org/install/*.user.js',
         ],
         types: ['main_frame']
       },
@@ -584,7 +624,7 @@ class Installer {
     })();`;
 
     browser.tabs.executeScript({code})
-    .then((result = []) => result[0] && RU.getScript({updateURL: e.url, name: result[0]}))
+    .then((result = []) => result[0] && RemoteUpdate.getScript({updateURL: e.url, name: result[0]}))
     .catch(error => App.log('webInstall', `${e.url} ➜ ${error.message}`, 'error'));
 
     return {cancel: true};
@@ -711,13 +751,13 @@ class Installer {
     }
 
     // --- do 10 updates at a time & check if script wasn't deleted
-    this.cache.splice(0, 10).forEach(item => pref.hasOwnProperty(item) && RU.getUpdate(pref[item]));
+    this.cache.splice(0, 10).forEach(item => pref.hasOwnProperty(item) && RemoteUpdate.getUpdate(pref[item]));
 
     // --- set autoUpdateLast after updates are finished
     !this.cache[0] && browser.storage.local.set({autoUpdateLast: now}); // update saved pref
   }
 
-  processResponse(text, name, updateURL) {                  // from class RU.callback in app.js
+  processResponse(text, name, updateURL) {                  // from class RemoteUpdate.callback in app.js
 
     const data = Meta.get(text);
     if (!data) {
@@ -741,10 +781,10 @@ class Installer {
 
     // --- check version, if update existing, not for local files
     if (!updateURL.startsWith('file:///') && pref[id] &&
-          !RU.higherVersion(data.version, pref[id].version)) { return; }
+          !RemoteUpdate.higherVersion(data.version, pref[id].version)) { return; }
 
     // --- check for Web Install, set install URL
-    if (App.allowedHost(updateURL)) {
+    if (!data.updateURL && !updateURL.startsWith('file:///')) {
       data.updateURL = updateURL;
       data.autoUpdate = true;
     }
@@ -775,7 +815,7 @@ class API {
   }
 
   onBeforeSendHeaders(e) {
-    if(!e.originUrl || !e.originUrl.startsWith(this.FMUrl)) { return; } // not from FireMonkey
+    if(!e.originUrl?.startsWith(this.FMUrl)) { return; }    // not from FireMonkey
 
     const cookies = [];
     const idx = [];
@@ -811,9 +851,15 @@ class API {
     const storeId = sender.tab.cookieStoreId !== 'firefox-default' && sender.tab.cookieStoreId;
 
     switch (api) {
-      case 'log':                                           // internal use only (not GM API)
+      // --- internal use only (not GM API)
+      case 'log':
         return App.log(name, e.message, e.type);
 
+      case 'install':
+        RemoteUpdate.getScript({updateURL: e.updateURL, name});
+        return;
+
+      // --- from script api
       case 'getValue':
         return Promise.resolve(pref[id].storage.hasOwnProperty(e.key) ? pref[id].storage[e.key] : e.defaultValue);
 
@@ -880,7 +926,7 @@ class API {
         .catch(error => App.log(name, `${message.api} ➜ ${error.message}`, 'error'));  // failed notification
 
       case 'fetch':
-        return this.fetch(e, storeId);
+        return this.fetch(e, storeId, name);
 
       case 'xmlHttpRequest':
         return this.xmlHttpRequest(e, storeId);
@@ -888,7 +934,7 @@ class API {
   }
 
   async addCookie(url, headers, storeId) {
-    // add contexual cookies, only in container/incognito
+    // add contextual cookies, only in container/incognito
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1670278
     // if privacy.firstparty.isolate = true
     // Error: First-Party Isolation is enabled, but the required 'firstPartyDomain' attribute was not set.
@@ -897,12 +943,12 @@ class API {
     str && (headers['FM-Contextual-Cookie'] = str);
   }
 
-  async fetch(e, storeId) {
+  async fetch(e, storeId, name) {
     if (e.init.credentials !== 'omit' && storeId) {         // not anonymous AND in container/incognito
       e.init.credentials = 'omit';
       await this.addCookie(e.url, e.init.headers, storeId);
     }
-    Object.keys(e.init.headers)[0] || delete e.init.headers; // clean up
+    Object.keys(e.init.headers || {})[0] || delete e.init.headers; // clean up
 
     return fetch(e.url, e.init)
       .then(async response => {
@@ -911,18 +957,23 @@ class API {
         response.headers.forEach((value, name) => res.headers[name] = value);
         ['bodyUsed', 'ok', 'redirected', 'status', 'statusText', 'type', 'url'].forEach(item => res[item] = response[item]);
 
-        if (e.init.method === 'HEAD') { return res; }   // end here
+        if (e.init.method === 'HEAD') { return res; }       // end here
 
-        switch (e.init.responseType) {
-          case 'json': res['json'] = await response.json(); break;
-          case 'blob': res['blob'] = await response.blob(); break;
-          case 'arrayBuffer': res['arrayBuffer'] = await response.arrayBuffer(); break;
-          case 'formData': res['formData'] = await response.formData(); break;
-          default: res['text'] = await response.text();
+        try {
+          switch (e.init.responseType) {
+            case 'json': res['json'] = await response.json(); break;
+            case 'blob': res['blob'] = await response.blob(); break;
+            case 'arrayBuffer': res['arrayBuffer'] = await response.arrayBuffer(); break;
+            case 'formData': res['formData'] = await response.formData(); break;
+            default: res['text'] = await response.text();
+          }
+          return res;
+        } catch (error) {
+          App.log(name, `fetch ${e.url} ➜ ${error.message}`, 'error');
+          return error.message;
         }
-        return res;
       })
-      .catch(error => App.log(name, `${message.api} ${url} ➜ ${error.message}`, 'error'));
+      .catch(error => App.log(name, `fetch ${e.url} ➜ ${error.message}`, 'error'));
   }
 
   async xmlHttpRequest(e, storeId) {
@@ -957,12 +1008,12 @@ class API {
       response:         xhr.response,
       responseHeaders:  xhr.getAllResponseHeaders(),
       // responseText is only available if responseType is '' or 'text'.
-      responseText:     xhr.responseText || '',
+      responseText:     ['', 'text'].includes(xhr.responseType) ? xhr.responseText : null,
       responseType:     xhr.responseType,
       responseURL:      xhr.responseURL,
       // responseXML is only available if responseType is '' or 'document'.
       // cant pass XMLDocument ➜ Error: An unexpected apiScript error occurred
-      responseXML:      xhr.responseXML ? xhr.responseText : '',
+      responseXML:      ['', 'document'].includes(xhr.responseType) ? xhr.responseText : null,
       status:           xhr.status,
       statusText:       xhr.statusText,
       timeout:          xhr.timeout,
@@ -981,91 +1032,14 @@ class Migrate {
     const m = 2.42;
     if (localStorage.getItem('migrate')*1 >= m) { return; }
 
-    // --- v1.31 migrate 2020-03-13
-    if (pref.hasOwnProperty('disableHighlight')) {
-      delete pref.disableHighlight;
-      await browser.storage.local.remove('disableHighlight');
+    // --- 2.42 2022-02-02
+    if (pref.hasOwnProperty('customCSS')) {
+      pref.customOptionsCSS = pref.customCSS;
+      delete pref.customCSS;
+      await browser.storage.local.remove('customCSS');
     }
 
-    // --- v2.0 migrate 2020-12-08
-    !localStorage.getItem('theme') && localStorage.getItem('dark') === 'true' && localStorage.setItem('theme', 'darcula');
-    localStorage.removeItem('syntax');
-
-    // --- v2.25 migrate 2021-05-08
-    if (pref.hasOwnProperty('content')) {
-      localStorage.removeItem('pinMenu');
-
-      // --- combined migration
-      // --- v2.25  migrate 2021-05-08
-      // --- v2.5   migrate 2020-12-14
-      // --- v2.0   migrate 2020-12-08
-      // --- v1.36  migrate 2020-05-25
-      const data = {
-        // --- extension related data
-        name: '',
-        author: '',
-        description: '',
-        updateURL: '',
-        version: '',
-
-        enabled: true,
-        autoUpdate: false,
-        userMeta: '',
-        antifeatures: [],
-        injectInto: '',
-        require: [],
-        requireRemote: [],
-        resource: {},
-        i18n: {
-          name: {},
-          description: {}
-        },
-        error: '',
-        storage: {},
-        grant: [],
-
-        // --- API related data
-        allFrames: false,
-        js: '',
-        css: '',
-        style: [],
-        matches: [],
-        excludeMatches: [],
-        includeGlobs: [],
-        excludeGlobs: [],
-        includes: [],
-        excludes: [],
-        container: [],
-        matchAboutBlank: false,
-        runAt: 'document_idle'
-      };
-
-      Object.keys(pref.content).forEach(item => {
-        // add & set to default if missing
-        Object.keys(data).forEach(key => pref.content[item].hasOwnProperty(key) || (pref.content[item][key] = data[key]));
-
-        // --- v1.36 migrate 2020-05-25
-        pref.content[item].require.forEach((lib, i) => {
-          switch (lib) {
-            case 'lib/jquery-1.12.4.min.jsm':     pref.content[item].require[i] = 'lib/jquery-1.jsm'; break;
-            case 'lib/jquery-2.2.4.min.jsm':      pref.content[item].require[i] = 'lib/jquery-2.jsm'; break;
-            case 'lib/jquery-3.4.1.min.jsm':      pref.content[item].require[i] = 'lib/jquery-3.jsm'; break;
-            case 'lib/jquery-ui-1.12.1.min.jsm':  pref.content[item].require[i] = 'lib/jquery-ui-1.jsm'; break;
-            case 'lib/bootstrap-4.4.1.min.jsm':   pref.content[item].require[i] = 'lib/bootstrap-4.jsm'; break;
-            case 'lib/moment-2.24.0.min.jsm':     pref.content[item].require[i] = 'lib/moment-2.jsm'; break;
-            case 'lib/underscore-1.9.2.min.jsm':  pref.content[item].require[i] = 'lib/underscore-1.jsm'; break;
-          }
-        });
-
-        // --- v2.25 move script & storage
-        pref.content[item].storage = pref[`_${item}`] || {};  // combine with  script storage
-        pref[`_${item}`] = pref.content[item];                // move to pref from  pref.content
-      });
-      delete pref.content;
-      await browser.storage.local.remove('content');
-    }
-
-    // --- v2.35 migrate 2021-11-09
+    // --- 2.35 2021-11-09
     App.getIds().forEach(id => {
       const item = pref[id];
       const meta = [];
@@ -1091,13 +1065,6 @@ class Migrate {
       delete item.userExcludeMatches;
       delete item.userRunAt;
     });
-
-    // --- v2.42 migrate 2022-02-02
-    if (pref.hasOwnProperty('customCSS')) {
-      pref.customOptionsCSS = pref.customCSS;
-      delete pref.customCSS;
-      await browser.storage.local.remove('customCSS');
-    }
 
     // --- update database
     await browser.storage.local.set(pref);

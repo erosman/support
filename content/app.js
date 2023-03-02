@@ -1,4 +1,4 @@
-﻿export {pref, App, Meta, RemoteUpdate, CheckMatches};
+export {pref, App, Meta};
 
 // ----------------- Default Preference --------------------
 let pref = {
@@ -16,6 +16,8 @@ let pref = {
 
 // ----------------- App -----------------------------------
 class App {
+
+  static android = navigator.userAgent.includes('Android');
 
   // ----------------- User Preference -----------------------
   static getPref() {
@@ -95,23 +97,6 @@ class App {
     });
   }
 
-  // ----------------- Internationalization ----------------
-  static i18n() {
-    document.querySelectorAll('template').forEach(item => this.i18nSet(item.content));
-    this.i18nSet();
-
-    document.body.classList.toggle('dark', localStorage.getItem('dark') === 'true'); // light/dark theme
-    document.body.style.opacity = 1;                        // show after i18n
-  }
-
-  static i18nSet(target = document) {
-    target.querySelectorAll('[data-i18n]').forEach(node => {
-      let [text, attr] = node.dataset.i18n.split('|');
-      text = browser.i18n.getMessage(text);
-      attr ? node.setAttribute(attr, text) : node.append(text);
-    });
-  }
-
   // ----------------- Helper functions ----------------------
   static notify(message, title = browser.i18n.getMessage('extensionName'), id = '') {
     browser.notifications.create(id, {
@@ -130,26 +115,20 @@ class App {
   }
 
   static JSONparse(str) {
-    try { return JSON.parse(str); } catch (e) { return null; }
+    try { return JSON.parse(str); }
+    catch (e) { return null; }
   }
 
   static getIds() {
     return Object.keys(pref).filter(item => item.startsWith('_'));
   }
-
-  static allowedHost(url) {                                 // bg options
-    return  url.startsWith('https://greasyfork.org/scripts/') ||
-            url.startsWith('https://sleazyfork.org/scripts/') ||
-            url.startsWith('https://openuserjs.org/install/') ||
-            url.startsWith('https://userstyles.org/styles/') ||
-            url.startsWith('https://raw.githubusercontent.com/');
-  }
 }
-App.android = navigator.userAgent.includes('Android');
 // ----------------- /App ----------------------------------
 
 // ----------------- Parse Metadata Block ------------------
 class Meta {                                                // bg options
+
+  static regEx = /==(UserScript|UserCSS|UserStyle)==([\s\S]+)==\/\1==/i;
 
   static get(str) {
     // --- get all
@@ -177,33 +156,41 @@ class Meta {                                                // bg options
       require: [],
       requireRemote: [],
       resource: {},
-      i18n: {
-        name: {},
-        description: {}
-      },
       error: '',                                            // reset error on save
       storage: {},
       grant: [],
+      style: [],
+      includes: [],
+      excludes: [],
+      container: [],
+      userVar: {},
+      preprocessor: '',
+      i18n: { name: {}, description: {} },
 
       // --- API related data
       allFrames: false,
       js: js ? str : '',
       css: !js ? str.replace(/[\u200b-\u200d\ufeff]/g, '') : '', // avoid CSS parse error on invisible characters
-      style: [],
       matches: [],
       excludeMatches: [],
       includeGlobs: [],
       excludeGlobs: [],
-      includes: [],
-      excludes: [],
-      container: [],
       matchAboutBlank: false,
       runAt: !js ? 'document_start' : 'document_idle'  // "document_start" "document_end" "document_idle" (default)
     };
 
     const lineRegex = /^[\s\/]*@([\w:-]+)(?:\s+(.+))?/;
 
-    metaData[2].split(/[\r\n]+/).forEach(item => {          // lines
+    // convert @var select multiline to single line
+    let mData = metaData[2].replace(/(@var\s+select\s+[^\n]+)(\{[^}]+\})/g, this.prepareSelect);
+
+    // convert @advanced dropdown to select
+    mData = mData.replace(/(@advanced\s+dropdown\s+[^\n]+)(\{[^}]+\})/g, this.prepareDropdown);
+
+    // convert @advanced image to select
+    mData = mData.replace(/(@advanced\s+image\s+[^\n]+)(\{[^}]+\})/g, this.prepareImage);
+
+    mData.split(/[\r\n]+/).forEach(item => {          // lines
       let [,prop, value = ''] = item.trim().match(lineRegex) || [];
       if (!prop) { return; }                                // continue to next
       switch (prop) {
@@ -260,6 +247,29 @@ class Meta {                                                // bg options
           value = '';                                       // no more processing
           break;
 
+        // --- var
+        case 'preprocessor':                                // only for CSS
+          if (js || !['uso', 'less', 'stylus'].includes(value)) {
+            value = '';
+          }
+          break;
+
+        case 'var':
+        case 'advanced':
+          const [, type, name, label, valueString] = value.match(/^(\S+)\s+(\S+)+\s+('[^']+'|"[^"]+"|\S+)\s+(.+)$/) || [];
+          value = '';                                       // no more processing
+          if (!type || !valueString.trim()) { break; }
+
+          const [user, val] = this.getValue(type, valueString);
+          if (typeof user === 'undefined') { break; }
+
+          data.userVar[name] = {
+            type,
+            label: label.replace(/^('|")(.+)(\1)$/, '$2'),
+            value: val,
+            user,
+          }
+          break;
 
         // --- add @require
         case 'require':
@@ -365,7 +375,10 @@ class Meta {                                                // bg options
         if (st === -1 || end === -1) { return; }
 
         const rule = moz.substring(0, st).trim();
-        const css = moz.substring(st+1, end).trim();
+        let css = moz.substring(st+1, end).trim();
+
+        // process preprocessor
+        data.preprocessor && (css = this.preprocessor(css, data.preprocessor, data.userVar));
 
         const obj = {
           matches: [],
@@ -405,6 +418,10 @@ class Meta {                                                // bg options
     if (pref[id]) {
       ['enabled', 'autoUpdate', 'userMeta', 'storage'].forEach(item => data[item] = pref[id][item]);
       !data.updateURL && (data.updateURL = pref[id].updateURL);
+
+      // --- userVar
+      Object.keys(data.userVar).forEach(item =>
+        pref[id].userVar?.[item]?.hasOwnProperty('usr') && (data.userVar[item].usr = pref[id].userVar[item].usr));
     }
 
     // this.enable etc are defined in options.js but not from background.js
@@ -412,6 +429,19 @@ class Meta {                                                // bg options
       data.enabled = this.enable.checked;
       data.autoUpdate = this.autoUpdate.checked;
       data.userMeta = this.userMeta.value;
+
+      // --- userVar
+      !this.userVar.dataset.default && document.querySelectorAll('.userVar input, .userVar select').forEach(item => {
+        const id = item.dataset.id;
+        if (!data.userVar[id] || !item.value.trim()) { return; } // skip
+
+        // number | string
+        let val = item.type === 'checkbox' ? item.checked*1 : Number.isNaN(item.value*1) ? item.value : item.value*1;
+
+        // color may have opacity
+        item.dataset.opacity && console.log(val += item.dataset.opacity);
+        data.userVar[id].user = val;
+      });
     }
 
     // ------------- User Metadata -------------------------
@@ -499,6 +529,81 @@ class Meta {                                                // bg options
     Object.keys(data).forEach(item => Array.isArray(data[item]) && data[item].length > 1 && (data[item] = [...new Set(data[item])]));
 
     return data;
+  }
+
+  static getValue(type, str) {
+    let jp, def;
+    switch (type) {
+      case 'number':
+      case 'range':
+        jp = App.JSONparse(str) || App.JSONparse(str.replace(/'/g, '"')); // check if single quote object
+        if (!jp) { return []; }
+
+        // sort unit to the end
+        jp.sort((a, b) => typeof a === 'string' && typeof b !== 'string');
+        return [jp[0], jp];
+
+      case 'select':
+      case 'dropdown':
+        case 'image':
+        jp = App.JSONparse(str);
+        if (!jp) { return []; }
+
+        if (Array.isArray(jp)) {
+          def = jp.find(item => item.endsWith('*')) || jp[0];
+          return [def, jp];
+        }
+
+        const ky = Object.keys(jp);
+        def = ky.find(item => item.endsWith('*'));
+        return [def ? jp[def] : jp[ky[0]], jp];
+        break;
+
+      case 'checkbox':
+        return [['1', 'true'].includes(str), str];
+
+      default:
+        return [str, str];
+    }
+  }
+
+  static preprocessor(str, pp, userVar = {}) {
+    const re = {
+      less: (r) => new RegExp('@' + r + '\\b', 'g'),
+      stylus: (r) => new RegExp('\\b' + r + '\\b', 'g'),
+      uso: (r) => new RegExp('/\\*\\[\\[' + r + '\\]\\]\\*/', 'g'),
+    };
+
+    Object.keys(userVar).forEach(item => str = str.replace(re[pp](item), `var(--${item})`));
+    return str;
+  }
+
+  static prepareSelect(m, p1, p2) {
+    let jp = App.JSONparse(p2) || App.JSONparse(p2.replace(/'/g, '"')); // check if single quote object
+    return jp ? p1 + JSON.stringify(jp) : '';               // remove if not valid JSON
+  }
+
+  static prepareDropdown(m, p1, p2) {
+    const obj ={};
+    const opt = p2.slice(1, -1).trim().split(/\s+EOT;/);
+    opt.forEach(item => {
+      if (!item.trim()) { return; }
+      const [, id, label, valueString] = item.match(/(\S+)\s+"([^<]+)"\s+<<<EOT\s*([\S\s]+)/);
+      label && (obj[label] = valueString);
+    });
+    return Object.keys(obj)[0] ? p1 + JSON.stringify(obj) : '';
+  }
+
+  static prepareImage(m, p1, p2) {
+    const obj ={};
+    const opt = p2.slice(1, -1).trim().split(/[\r\n]+/);
+    opt.forEach(item => {
+      item = item.trim();
+      if (!item) { return; }
+      const [, id, label, valueString] = item.match(/(\S+)\s+"(.+)"\s+"(.+)"/);
+      label && (obj[label] = valueString);
+    });
+    return Object.keys(obj)[0] ? p1 + JSON.stringify(obj) : '';
   }
 
   static convert(inc, mtch, glob, js) {
@@ -606,15 +711,12 @@ class Meta {                                                // bg options
     );
   }
 }
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
-// Static (class-side) data properties and prototype data properties must be defined outside of the ClassBody declaration
-Meta.regEx = /==(UserScript|UserCSS|UserStyle)==([\s\S]+)==\/\1==/i;
 // ----------------- /Parse Metadata Block -----------------
 
 // ----------------- Remote Update -------------------------
-class RemoteUpdate {                                        // bg options
+class RemoteUpdate1 {                                        // bg options
 
-  getUpdate(item, manual) {                                 // bg 1 opt 1
+  static getUpdate(item, manual) {                          // bg 1 opt 1
     switch (true) {
       // --- get meta.js
       case item.updateURL.startsWith('https://greasyfork.org/scripts/'):
@@ -633,7 +735,7 @@ class RemoteUpdate {                                        // bg options
     }
   }
 
-  getMeta(item, manual) {                                   // here
+  static getMeta(item, manual) {                                   // here
     const url = item.updateURL.replace(/\.user\.(js|css)/i, '.meta.$1');
     fetch(url)
     .then(response => response.text())
@@ -642,7 +744,7 @@ class RemoteUpdate {                                        // bg options
     .catch(error => App.log(item.name, `getMeta ${url} ➜ ${error.message}`, 'error'));
   }
 
-  getStlylishVersion(item, manual) {
+  static getStlylishVersion(item, manual) {
     const url = item.updateURL.replace(/(\d+\/.+)css/i, 'userjs/$1user.js');
     fetch(url)
     .then(response => response.text())
@@ -655,7 +757,7 @@ class RemoteUpdate {                                        // bg options
   }
 
 
-  getStylish(item, version) {
+  static getStylish(item, version) {
     const metaData =
 `/*
 ==UserStyle==
@@ -673,132 +775,20 @@ class RemoteUpdate {                                        // bg options
     .catch(error => App.log(item.name, `getStylish ${item.updateURL} ➜ ${error.message}`, 'error'));
   }
 
-  needUpdate(text, item) {                                  // here
+  static needUpdate(text, item) {                                  // here
     const version = text.match(/@version\s+(\S+)/);         // check version
     return version && this.higherVersion(version[1], item.version);
   }
 
-  getScript(item) {                                         // here & bg
+  static getScript(item) {                                         // here & bg
     fetch(item.updateURL)
     .then(response => response.text())
     .then(text => this.callback(text, item.name, item.updateURL))
     .catch(error => App.log(item.name, `getScript ${item.updateURL} ➜ ${error.message}`, 'error'));
   }
 
-  higherVersion(a, b) {                                     // here & bg & opt
+  static higherVersion(a, b) {                                     // here & bg & opt
     return a.localeCompare(b, undefined, {numeric: true, sensitivity: 'base'}) > 0;
   }
 }
 // ----------------- /Remote Update ------------------------
-
-// ----------------- Match Pattern Check -------------------
-class CheckMatches {                                        // bg & popup
-
-  static async process(tab, bg) {
-    const supported = this.supported(tab.url);
-    if (bg && !supported) { return []; }                    // Unsupported scheme
-
-    const frames = await browser.webNavigation.getAllFrames({tabId: tab.id});
-    if (!supported) {                                       // Unsupported scheme
-      return [[], App.getIds().sort(Intl.Collator().compare), frames.length];
-    }
-
-    const urls = [...new Set(frames.map(this.cleanUrl).filter(this.supported))];
-    const gExclude = pref.globalScriptExcludeMatches ? pref.globalScriptExcludeMatches.split(/\s+/) : [];
-    const containerId = tab.cookieStoreId.substring(8);
-
-    // --- background
-    if (bg) {
-      return App.getIds().filter(item => pref[item].enabled && this.get(pref[item], tab.url, urls, gExclude, containerId))
-          .map(item => (pref[item].js ? '\u{1f539} ' :  '\u{1f538} ') + item.substring(1));
-    }
-
-    // --- popup
-    const Tab = [], Other = [];
-    App.getIds().sort(Intl.Collator().compare).forEach(item =>
-        (this.get(pref[item], tab.url, urls, gExclude, containerId) ? Tab : Other).push(item));
-    return [Tab, Other, frames.length];
-  }
-
-  static supported(url) {
-    return /^(https?:|file:|about:blank)/i.test(url);
-  }
-
-  static cleanUrl(url) {
-    return (url.url || url).replace(/#.*/, '').replace(/(:\/\/[^:/]+):\d+/, '$1');
-  }
-
-  static get(item, tabUrl, urls, gExclude = [], containerId) {
-    if (item.container?.[0] && !item.container.includes(containerId)) { return false; } // check container
-
-    !item.allFrames && (urls = [tabUrl]);                   // only check main frame
-    const styleMatches = item.style && item.style[0] ? item.style.flatMap(i => i.matches) : [];
-
-    switch (true) {
-      case urls.includes('about:blank') && item.matchAboutBlank: // about:blank
-        return true;
-
-      case gExclude[0] && this.isMatch(urls, gExclude):     // Global Script Exclude Matches
-      case !item.matches[0] && !item.includes[0] && !item.includeGlobs[0] && !styleMatches[0]: // scripts/css without matches/includes/includeGlobs/style
-
-      // includes & matches & globs
-      case !item.includes[0] && !this.isMatch(urls, [...item.matches, ...styleMatches]):
-      case item.includeGlobs[0] && !this.isMatch(urls, item.includeGlobs, true):
-      case item.includes[0] && !this.isMatch(urls, item.includes, false, true):
-
-      case item.excludeMatches[0] && this.isMatch(urls, item.excludeMatches):
-      case item.excludeGlobs[0] && this.isMatch(urls, item.excludeGlobs, true):
-      case item.excludes[0] && this.isMatch(urls, item.excludes, false, true):
-        return false;
-
-      default:
-        return true;
-    }
-  }
-
-  static isMatch(urls, arr, glob, regex) {
-    switch (true) {
-      case regex:
-        return urls.some(u => new RegExp(this.prepareRegEx(arr), 'i').test(u));
-
-      case glob:
-        return urls.some(u => new RegExp(this.prepareGlob(arr), 'i').test(u));
-
-      // catch all checks
-      case arr.includes('<all_urls>'):
-      case arr.includes('*://*/*') && urls.some(item => item.startsWith('http')):
-      case arr.includes('file:///*') && urls.some(item => item.startsWith('file:///')):
-        return true;
-
-      default:
-        return urls.some(u => new RegExp(this.prepareMatch(arr), 'i').test(u));
-    }
-  }
-
-  static prepareMatch(arr) {
-    const regexSpChar = /[-\/\\^$+?.()|[\]{}]/g;            // Regular Expression Special Characters
-    return arr.map(item => '(^' +
-        item.replace(regexSpChar, '\\$&')
-            .replace(/^\*:/g, 'https?:')
-            .replace(/\*/g, '.*')
-            .replace('/.*\\.', '/(.*\\.)?')
-            + '$)')
-            .join('|');
-  }
-
-  static prepareGlob(arr) {
-    const regexSpChar = /[-\/\\^$+.()|[\]{}]/g;             // Regular Expression Special Characters minus * ?
-    return arr.map(item => '(^' +
-        item.replace(regexSpChar, '\\$&')
-            .replace(/^\*:/g, 'http(|s):')
-            .replace(/\*/g, '.*')
-            + '$)')
-            .join('|')
-            .replace(/\?/g, '.');
-  }
-
-  static prepareRegEx(arr) {
-    return arr.map(item => `(${item.slice(1, -1)})`).join('|');
-  }
-}
-// ----------------- /Match Pattern Check ------------------

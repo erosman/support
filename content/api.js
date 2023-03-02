@@ -1,8 +1,7 @@
-﻿browser.userScripts.onBeforeScript.addListener(script => {
+browser.userScripts.onBeforeScript.addListener(script => {
   // --- globals
   const {name, resource, info, id = `_${name}`, injectInto, grantRemove,
-    registerMenuCommand, requireRemote} = script.metadata; // set id as _name
-  const cache = {};
+    registerMenuCommand, requireRemote} = script.metadata;  // set id as _name
   const valueChange = {};
   const scriptCommand = {};
   let {storage} = script.metadata;                          // storage at the time of registration
@@ -30,18 +29,18 @@
     }
 
     // ----- Script Storage
-    storageGet() {
-      return browser.storage.local.get(id).then((result = {}) => { storage = result[id].storage; });
+    async setStorage() {
+      await browser.storage.local.get(id).then(result => storage = result[id].storage); // result always an object
     }
 
-    storageChange(changes) {
+    onChanged(changes) {
       if (!changes[id]) { return; }                         // not this userscript
       const oldValue = changes[id].oldValue.storage;
       const newValue = changes[id].newValue.storage;
       // process addValueChangeListener (only for remote) (key, oldValue, newValue, remote)
       Object.keys(valueChange).forEach(item =>
          !api.equal(oldValue[item], newValue[item]) &&
-          (valueChange[item])(item, oldValue[item], newValue[item], !api.equal(newValue[item], cache[item]))
+          (valueChange[item])(item, oldValue[item], newValue[item], !api.equal(newValue[item], storage[item]))
       );
     }
 
@@ -51,13 +50,12 @@
 
     // ----- synch APIs
     GM_getValue(key, defaultValue) {
-      const response = cache.hasOwnProperty(key) ? cache[key] :
-                          storage.hasOwnProperty(key) ? storage[key] : defaultValue;
+      const response = storage.hasOwnProperty(key) ? storage[key] : defaultValue;
       return api.prepare(response);
     }
 
     GM_listValues() {
-      return script.export([...new Set([...Object.keys(storage), ...Object.keys(cache)])]);
+      return script.export(Object.keys(storage));
     }
 
     GM_getResourceText(resourceName) {
@@ -129,7 +127,7 @@
     }
 
     // --- prepare request headers
-    async prepareInit(url, init) {
+    prepareInit(init) {
       // --- remove forbidden headers (Attempt to set a forbidden header was denied: Referer), allow specialHeader
       const specialHeader = ['cookie', 'host', 'origin', 'referer'];
       const forbiddenHeader = ['accept-charset', 'accept-encoding', 'access-control-request-headers',
@@ -188,8 +186,8 @@
       return script.export(response);
     },
 
-    setValue(key, value) {
-      cache[key] = value;
+    async setValue(key, value) {
+      storage[key] = value;
       return browser.runtime.sendMessage({
         name,
         api: 'setValue',
@@ -197,9 +195,9 @@
       });
     },
 
-    deleteValue(key) {
-      delete cache[key];
-      return browser.runtime.sendMessage({
+    async deleteValue(key) {
+      delete storage[key];
+       return browser.runtime.sendMessage({
         name,
         api: 'deleteValue',
         data: {key}
@@ -207,7 +205,7 @@
     },
 
     addValueChangeListener(key, callback) {
-      browser.storage.onChanged.hasListener(api.storageChange) || browser.storage.onChanged.addListener(api.storageChange)
+      browser.storage.onChanged.addListener(api.onChanged);
       valueChange[key] = callback;
       return key;
     },
@@ -267,7 +265,7 @@
       // exclude credentials in request, ignore credentials sent back in response (e.g. Set-Cookie header)
       init.anonymous && (data.init.credentials = 'omit');
 
-      await api.prepareInit(url, data.init);
+      api.prepareInit(data.init);
 
       const response = await browser.runtime.sendMessage({
         name,
@@ -298,7 +296,7 @@
       ['method', 'headers', 'data', 'overrideMimeType', 'user', 'password', 'timeout',
         'responseType'].forEach(item => init.hasOwnProperty(item) && (data[item] = init[item]));
 
-      await api.prepareInit(url, data);
+      api.prepareInit(data);
 
       const response = await browser.runtime.sendMessage({
         name,
@@ -598,7 +596,7 @@
     GM_unregisterMenuCommand:     GM.unregisterMenuCommand,
     GM_xmlhttpRequest:            GM.xmlHttpRequest,
 
-    storageGet:                   api.storageGet,
+    setStorage:                   api.setStorage,
     cloneInto:                    api.cloneIntoFM,
     exportFunction,
     matchURL:                     api.matchURL,

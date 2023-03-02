@@ -1,14 +1,13 @@
-﻿import {pref, App, Meta, CheckMatches} from './app.js';
-
-// ----------------- Internationalization ------------------
-App.i18n();
+import {pref, App, Meta} from './app.js';
+import {Match} from './match.js';
+import './i18n.js';
 
 // ----------------- Popup ---------------------------------
 class Popup {
 
   constructor() {
     document.querySelectorAll('button').forEach(item => item.addEventListener('click', this.processButtons));
-    this.docfrag = document.createDocumentFragment();
+    this.docFrag = document.createDocumentFragment();
 
     // ----- Scripts
     this.liTemplate = document.querySelector('template').content.firstElementChild;
@@ -63,6 +62,9 @@ class Popup {
       }
     });
 
+    // ----- Theme
+    document.body.classList.toggle('dark', localStorage.getItem('dark') === 'true'); // defaults to false
+
     // --- i18n
     this.lang = navigator.language;
   }
@@ -90,17 +92,17 @@ class Popup {
     const tabId = tabs[0].id;                                 // active tab id
     this.url = tabs[0].url;                                   // used in find scripts
 
-    const [Tab, Other, frames] = await CheckMatches.process(tabs[0]);
+    const [Tab, Other, frames] = await Match.process(tabs[0], App.getIds(), pref);
     document.querySelector('h3 span.frame').textContent = frames; // display frame count
 
-    Tab.forEach(item => this.docfrag.appendChild(this.addScript(pref[item])));
-    this.ulTab.appendChild(this.docfrag);
-    Other.forEach(item => this.docfrag.appendChild(this.addScript(pref[item])));
-    this.ulOther.appendChild(this.docfrag);
+    Tab.forEach(item => this.docFrag.appendChild(this.addScript(pref[item])));
+    this.ulTab.appendChild(this.docFrag);
+    Other.forEach(item => this.docFrag.appendChild(this.addScript(pref[item])));
+    this.ulOther.appendChild(this.docFrag);
 
     // --- check commands if there are active scripts in tab & has registerMenuCommand v2.45
     if(Tab.some(item => pref[item].enabled &&
-      ['GM_registerMenuCommand', 'GM.registerMenuCommand'].some(i => pref[item].grant.includes(i)))) {
+      ['GM_registerMenuCommand', 'GM.registerMenuCommand'].some(i => pref[item].grant?.includes(i)))) {
       browser.runtime.onMessage.addListener((message, sender) =>
           sender.tab.id === tabId && this.addCommand(tabId, message));
       browser.tabs.sendMessage(tabId, {listCommand: []});
@@ -209,17 +211,17 @@ class Popup {
       const dt = this.dtTemp.cloneNode();
       item === 'error' && dt.classList.add('error');
       dt.textContent = item;
-      this.docfrag.appendChild(dt);
+      this.docFrag.appendChild(dt);
 
       arr.forEach(item => {
         const dd = this.ddTemp.cloneNode();
         dd.append(item);
         dd.children[0] && (dd.style.opacity = 0.8);
-        this.docfrag.appendChild(dd);
+        this.docFrag.appendChild(dd);
       });
     });
 
-    this.infoListDL.appendChild(this.docfrag);
+    this.infoListDL.appendChild(this.docFrag);
     const edit = document.querySelector('div.edit');
     edit.id = id;
     const active = e.target.parentNode.parentNode.classList.contains('tab') && script.enabled;
@@ -276,7 +278,7 @@ class Popup {
     const dl = this.commandList;
     const dt = this.dtTemp.cloneNode();
     dt.textContent = message.name;
-    this.docfrag.appendChild(dt);
+    this.docFrag.appendChild(dt);
 
     message.command.forEach(item => {
       const dd = this.ddTemp.cloneNode();
@@ -285,9 +287,9 @@ class Popup {
         browser.tabs.sendMessage(tabId, {name: message.name, command: item});
         window.close();
       });
-      this.docfrag.appendChild(dd);
+      this.docFrag.appendChild(dd);
     });
-    dl.appendChild(this.docfrag);
+    dl.appendChild(this.docFrag);
   }
 
   // ----------------- Info Run/Undo -----------------------
