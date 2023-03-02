@@ -1,0 +1,236 @@
+{
+  "extensionName": {
+    "message": "FireMonkey"
+  },
+  "extensionDescription": {
+    "message": "Superkevyt käyttäjäkomentosarjojen ja -tyylien hallinta"
+  },
+  "tabScript": {
+    "message": "Välilehden komentosarjat & CSS-tyylit"
+  },
+  "otherScript": {
+    "message": "Muut komentosarjat & CSS-tyylit"
+  },
+  "scriptCommands": {
+    "message": "Komentosarjan komennot"
+  },
+  "back": {
+    "message": "takaisin"
+  },
+  "edit": {
+    "message": "Muokkaa"
+  },
+  "autoUpdateInterval": {
+    "message": "Automaattisen päivityksen aikaväli"
+  },
+  "autoUpdateIntervalDescription": {
+    "message": "Päiviä päivitysten välissä (0 = ei päivitystä)"
+  },
+  "enableSync": {
+    "message": "Ota tallennustilan synkronointi käyttöön"
+  },
+  "syncError": {
+    "message": "Ei voitu synkronoida\nTallennustila ($1kt) on suurempi kuin 100kt. Synkronointi kytketään pois päältä."
+  },
+  "counter": {
+    "message": "Laskuri"
+  },
+  "globalScriptExcludeMatches": {
+    "message": "Yleiset komentosarjojen estosäännöt"
+  },
+  "globalScriptExcludeMatchesDescription": {
+    "message": "Estosääntömallit (yksi per rivi) estämään kaikkien komentosarjojen ajaminen vastaavilla sivustoilla"
+  },
+  "userVar": {
+    "message": "Käyttäjän muuttujat"
+  },
+  "reset": {
+    "message": "Nollaa"
+  },
+  "userMeta": {
+    "message": "Käyttäjän metatiedot"
+  },
+  "storage": {
+    "message": "Tallennustila"
+  },
+  "storageError": {
+    "message": "Tallennustila-arvon tulee olla oikeaoppista JSON:ia"
+  },
+  "sidebar": {
+    "message": "Sivupalkki"
+  },
+  "script": {
+    "message": "Komentosarjat & CSS"
+  },
+  "saveScript": {
+    "message": "Tallenna"
+  },
+  "enable": {
+    "message": "Ota käyttöön"
+  },
+  "update": {
+    "message": "Päivitä"
+  },
+  "autoUpdate": {
+    "message": "Päivitä automaattisesti"
+  },
+  "theme": {
+    "message": "Teema"
+  },
+  "light": {
+    "message": "Vaalea"
+  },
+  "dark": {
+    "message": "Tumma"
+  },
+  "newJS": {
+    "message": "Uusi UserScript"
+  },
+  "newCSS": {
+    "message": "Uusi UserCSS"
+  },
+  "saveTemplate": {
+    "message": "Tallenna malliksi"
+  },
+  "tabToSpaces": {
+    "message": "Sarkaimet välilyönneiksi"
+  },
+  "toUpperCase": {
+    "message": "Valinta isoiksi kirjaimiksi"
+  },
+  "toLowerCase": {
+    "message": "Valinta pieniksi kirjaimiksi"
+  },
+  "wrapIIFE": {
+    "message": "Sulje koodi IIFE:n sisälle"
+  },
+  "stylish": {
+    "message": "Asenna Stylish-tyyli"
+  },
+  "beautify": {
+    "message": "Kaunista"
+  },
+  "report": {
+    "message": "Raportoi"
+  },
+  "discardConfirm": {
+    "message": "Haluatko hylätä muutokset tallentamatta?"
+  },
+  "delete": {
+    "message": "Poista"
+  },
+  "deleteConfirm": {
+    "message": "Haluatko poistaa kohteen  \n'$1'\n ja kaikki sen tallennetut tiedot?"
+  },
+  "deleteMultiConfirm": {
+    "message": "Haluatko poistaa $1 valittua komentosarjaa/CSS-tyyliä ja niiden tallennetut tiedot?"
+  },
+  "installConfirm": {
+    "message": "Haluatko asentaa kohteen '$1'?\n Saman niminen komentosarja/CSS-tyyli korvataan jos sen versionumero on pienempi."
+  },
+  "metaError": {
+    "message": "Metatietovirhe"
+  },
+  "noNameError": {
+    "message": "Komentosarjalla/CSS-tyylillä täytyy olla nimi."
+  },
+  "nameError": {
+    "message": "Saman niminen komentosarja/CSS-tyyli on jo olemassa.\n Haluatko korvata olemassa olevan?"
+  },
+  "updateUrlError": {
+    "message": "Kometosarjalla/CSS-tyylillä ei ole updateURL-asetusta tai versiota."
+  },
+  "noNewUpdate": {
+    "message": "Uutta päivitystä ei ole."
+  },
+  "scriptUpdated": {
+    "message": "Komentosarja/CSS-tyyli päivitetty versioon $1"
+  },
+  "exportAll": {
+    "message": "Vie"
+  },
+  "log": {
+    "message": "Loki"
+  },
+  "time": {
+    "message": "Aika"
+  },
+  "reference": {
+    "message": "Viittaus"
+  },
+  "message": {
+    "message": "Viesti"
+  },
+  "scratchpad": {
+    "message": "Luonnoslehtiö"
+  },
+  "run": {
+    "message": "Aja"
+  },
+  "undo": {
+    "message": "Peru"
+  },
+  "undoDisabled": {
+    "message": "Vain CSS-tyyleille"
+  },
+  "insertError": {
+    "message": "Liittäminen epäonnistui"
+  },
+  "findScript": {
+    "message": "Etsi komentosarjoja tälle sivustolle"
+  },
+  "advanced": {
+    "message": "Lisäasetukset"
+  },
+  "customOptionsCSS": {
+    "message": "Mukautettu asetussivun CSS-tyyli"
+  },
+  "customOptionsCSSDescription": {
+    "message": "Mukauta asetussivua & CodeMirrorin tyyliasetuksia"
+  },
+  "customPopupCSS": {
+    "message": "Mukautettu ponnahdusikkunan CSS-tyyli"
+  },
+  "customPopupCSSDescription": {
+    "message": "Mukauta työkalupalkin ponnahdusikkunan asetuksia"
+  },
+  "cmOptionsDescription": {
+    "message": "Mukauta CodeMirroria, lisäosia & JavaScript lint -asetuksia"
+  },
+  "about": {
+    "message": "Tietoja"
+  },
+  "error": {
+    "message": "Virhe toiminnossa"
+  },
+  "export": {
+    "message": "Vie"
+  },
+  "fileParseError": {
+    "message": "Virhe tulkitessa tiedostoa"
+  },
+  "fileReadError": {
+    "message": "Virhe lukiessa tiedostoa"
+  },
+  "fileSizeError": {
+    "message": "Tiedostokoko on sallittua ($1kt) suurempi"
+  },
+  "fileTypeError": {
+    "message": "Tiedostomuotoa ei tueta"
+  },
+  "help": {
+    "message": "Apua"
+  },
+  "import": {
+    "message": "Tuo"
+  },
+  "jsonError": {
+    "message": "Virheellinen JSON"
+  },
+  "options": {
+    "message": "Asetukset"
+  },
+  "saveOptions": {
+    "message": "Tallenna"
+  }
+}

@@ -41,6 +41,12 @@
   "globalScriptExcludeMatchesDescription": {
     "message": "Шаблоните (по един на ред) за изключване чрез съвпадение предотвратяват изпълнение на скриптовете."
   },
+  "userVar": {
+    "message": "Потребителски променливи"
+  },
+  "reset": {
+    "message": "Reset"
+  },
   "userMeta": {
     "message": "Описателни данни"
   },
@@ -89,17 +95,20 @@
   "tabToSpaces": {
     "message": "Табулатори в интервали"
   },
-  "trimTrailingSpaces": {
-    "message": "Изчистване на висящи интервали"
-  },
   "toUpperCase": {
     "message": "Избраното в главни букви"
   },
   "toLowerCase": {
     "message": "Избраното в малки букви"
   },
+  "wrapIIFE": {
+    "message": "Обграждане на кода в IIFE"
+  },
   "stylish": {
     "message": "Инсталиране на стил на Stylish"
+  },
+  "beautify": {
+    "message": "Подреждане на кода"
   },
   "report": {
     "message": "Доклад"
@@ -162,7 +171,7 @@
     "message": "Отменяне"
   },
   "undoDisabled": {
-    "message": "Only for CSS"
+    "message": "Само за CSS"
   },
   "insertError": {
     "message": "Грешка при вмъкване"
@@ -186,7 +195,7 @@
     "message": "Настройка на външния вид на изскачащия прозорец"
   },
   "cmOptionsDescription": {
-    "message": "Настройка на CodeMirror, добавките и проверките на кода на JavaScript."
+    "message": "Настройки на CodeMirror, добавките и проверките на кода на JavaScript"
   },
   "about": {
     "message": "Относно"
@@ -216,15 +225,12 @@
     "message": "Внасяне"
   },
   "jsonError": {
-    "message": "Invalid JSON"
+    "message": "Недопустим JSON"
   },
   "options": {
     "message": "Настройки"
   },
   "saveOptions": {
     "message": "Запазване"
-  },
-  "cmOptionsError": {
-    "message": "Грешен JSON на CodeMirror"
   }
 }

@@ -41,6 +41,12 @@
   "globalScriptExcludeMatchesDescription": {
     "message": "Исключить совпадающие паттерны (по одному в строке), чтобы предотвратить выполнение всех скриптов на них"
   },
+  "userVar": {
+    "message": "User Variables"
+  },
+  "reset": {
+    "message": "Reset"
+  },
   "userMeta": {
     "message": "Метаданные пользователя"
   },
@@ -89,17 +95,20 @@
   "tabToSpaces": {
     "message": "Табуляция в пробелы"
   },
-  "trimTrailingSpaces": {
-    "message": "Обрезать конечные пробелы"
-  },
   "toUpperCase": {
     "message": "Выбранное в верхний регистр"
   },
   "toLowerCase": {
     "message": "Выбранное в нижний регистр"
   },
+  "wrapIIFE": {
+    "message": "Wrap code in IIFE"
+  },
   "stylish": {
     "message": "Установить стиль Stylish"
+  },
+  "beautify": {
+    "message": "Beautify"
   },
   "report": {
     "message": "Сообщить"
@@ -223,6 +232,9 @@
   },
   "saveOptions": {
     "message": "Сохранить"
+  },
+  "trimTrailingSpaces": {
+    "message": "Обрезать конечные пробелы"
   },
   "cmOptionsError": {
     "message": "Недопустимый JSON CodeMirror"

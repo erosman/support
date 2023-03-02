@@ -41,6 +41,12 @@
   "globalScriptExcludeMatchesDescription": {
     "message": "Uitsluitpatronen (één per regel). Scripts worden niet uitgevoerd als ze hiermee overeenkomen."
   },
+  "userVar": {
+    "message": "User Variables"
+  },
+  "reset": {
+    "message": "Reset"
+  },
   "userMeta": {
     "message": "User Metadata"
   },
@@ -89,17 +95,20 @@
   "tabToSpaces": {
     "message": "Tabs omzetten in spaties"
   },
-  "trimTrailingSpaces": {
-    "message": "Witruimtes aan einde inkorten"
-  },
   "toUpperCase": {
     "message": "Selectie omzetten naar hoofdletters"
   },
   "toLowerCase": {
     "message": "Selectie omzetten naar kleine letters"
   },
+  "wrapIIFE": {
+    "message": "Wrap code in IIFE"
+  },
   "stylish": {
     "message": "Stylish-stijl installeren"
+  },
+  "beautify": {
+    "message": "Beautify"
   },
   "report": {
     "message": "Melden"
@@ -223,6 +232,9 @@
   },
   "saveOptions": {
     "message": "Opslaan"
+  },
+  "trimTrailingSpaces": {
+    "message": "Witruimtes aan einde inkorten"
   },
   "cmOptionsError": {
     "message": "Ongeldige CodeMirror-json"

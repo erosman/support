@@ -41,6 +41,12 @@
   "globalScriptExcludeMatchesDescription": {
     "message": "Exclude Match pattens (one per line) to prevent all scripts from running on them."
   },
+  "userVar": {
+    "message": "User Variables"
+  },
+  "reset": {
+    "message": "Reset"
+  },
   "userMeta": {
     "message": "User Metadata"
   },
@@ -89,17 +95,20 @@
   "tabToSpaces": {
     "message": "Tabs to Spaces"
   },
-  "trimTrailingSpaces": {
-    "message": "Trim Trailing Spaces"
-  },
   "toUpperCase": {
     "message": "Selection to Uppercase"
   },
   "toLowerCase": {
     "message": "Selection to Lowercase"
   },
+  "wrapIIFE": {
+    "message": "Wrap code in IIFE"
+  },
   "stylish": {
     "message": "Install Stylish Style"
+  },
+  "beautify": {
+    "message": "Beautify"
   },
   "report": {
     "message": "Report"
@@ -223,6 +232,9 @@
   },
   "saveOptions": {
     "message": "儲存"
+  },
+  "trimTrailingSpaces": {
+    "message": "Trim Trailing Spaces"
   },
   "cmOptionsError": {
     "message": "Invalid CodeMirror JSON"

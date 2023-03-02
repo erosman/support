@@ -41,6 +41,12 @@
   "globalScriptExcludeMatchesDescription": {
     "message": "排除匹配模式（每行一个）阻止所有脚本在其上运行。"
   },
+  "userVar": {
+    "message": "User Variables"
+  },
+  "reset": {
+    "message": "Reset"
+  },
   "userMeta": {
     "message": "User Metadata"
   },
@@ -89,17 +95,20 @@
   "tabToSpaces": {
     "message": "制表符转换为空格"
   },
-  "trimTrailingSpaces": {
-    "message": "去除行尾空格"
-  },
   "toUpperCase": {
     "message": "选中部分大写"
   },
   "toLowerCase": {
     "message": "选中部分小写"
   },
+  "wrapIIFE": {
+    "message": "Wrap code in IIFE"
+  },
   "stylish": {
     "message": "安装 Stylish 样式"
+  },
+  "beautify": {
+    "message": "Beautify"
   },
   "report": {
     "message": "报告"
@@ -223,6 +232,9 @@
   },
   "saveOptions": {
     "message": "保存"
+  },
+  "trimTrailingSpaces": {
+    "message": "去除行尾空格"
   },
   "cmOptionsError": {
     "message": "无效 CodeMirror JSON"

@@ -1,4 +1,4 @@
-﻿{
+{
   "extensionName": { "message": "FireMonkey" },
   "extensionDescription": { "message": "Super Lightweight User Script and Style Manager" },
 
@@ -20,6 +20,8 @@
   "globalScriptExcludeMatches": { "message": "Global Script Exclude Matches" },
   "globalScriptExcludeMatchesDescription": { "message": "Exclude Match pattens (one per line) to prevent all scripts from running on them" },
 
+  "userVar": { "message": "User Variables" },
+  "reset": { "message": "Reset" },
   "userMeta": { "message": "User Metadata" },
   "storage": { "message": "Storage" },
   "storageError": { "message": "Storage value must be a valid JSON" },
@@ -41,11 +43,12 @@
   "saveTemplate": { "message": "Save as Template" },
 
   "tabToSpaces": { "message": "Tabs to Spaces" },
-  "trimTrailingSpaces": { "message": "Trim Trailing Spaces" },
   "toUpperCase": { "message": "Selection to Uppercase" },
   "toLowerCase": { "message": "Selection to Lowercase" },
+  "wrapIIFE": { "message": "Wrap code in IIFE" },
 
   "stylish": { "message": "Install Stylish Style" },
+  "beautify": { "message": "Beautify" },
   "report": { "message": "Report" },
 
   "discardConfirm": { "message": "Do you want to discard the changes without saving?" },

@@ -3,58 +3,64 @@
     "message": "FireMonkey"
   },
   "extensionDescription": {
-    "message": "Um levíssimo gerenciador de UserScripts e Estilos de Usuário"
+    "message": "Um levíssimo gerenciador de UserScripts e estilos de usuário"
   },
   "tabScript": {
-    "message": "Scripts & CSS para a Aba atual"
+    "message": "Scripts e CSS para a aba atual"
   },
   "otherScript": {
-    "message": "Outros Scripts & CSS"
+    "message": "Outros scripts e CSS"
   },
   "scriptCommands": {
-    "message": "Comandos de Scripts"
+    "message": "Comandos de scripts"
   },
   "back": {
-    "message": "voltar"
+    "message": "Voltar"
   },
   "edit": {
     "message": "Editar"
   },
   "autoUpdateInterval": {
-    "message": "Intervalo de Atualização Automática"
+    "message": "Intervalo de atualização automática"
   },
   "autoUpdateIntervalDescription": {
-    "message": "Número de dias entre Atualizações (0 = sem atualizações)"
+    "message": "Número de dias entre atualizações (0 = sem atualizações)"
   },
   "enableSync": {
-    "message": "Habilitar Sincronizar Dados"
+    "message": "Habilitar sincronização de dados"
   },
   "syncError": {
     "message": "Não foi possível sincronizar\nTotal de dados ($1KB) é maior do que 100KB. Sincronização será desativada."
   },
   "counter": {
-    "message": "Exibir Contador no Botão"
+    "message": "Exibir contador no botão"
   },
   "globalScriptExcludeMatches": {
-    "message": "Padrões Globais de Exclusão"
+    "message": "Padrões globais de exclusão"
   },
   "globalScriptExcludeMatchesDescription": {
     "message": "Padrões de exclusão (um por linha) em que todos os scripts serão desativados"
   },
+  "userVar": {
+    "message": "Variáveis do usuário"
+  },
+  "reset": {
+    "message": "Reset"
+  },
   "userMeta": {
-    "message": "Metadados do Usuário"
+    "message": "Metadados do usuário"
   },
   "storage": {
-    "message": "Storage"
+    "message": "Armazenamento"
   },
   "storageError": {
-    "message": "Storage value must be a valid JSON"
+    "message": "Valor do armazenamento precisa ser um JSON válido"
   },
   "sidebar": {
-    "message": "Barra Lateral"
+    "message": "Barra lateral"
   },
   "script": {
-    "message": "Script & CSS"
+    "message": "Scripts e CSS"
   },
   "saveScript": {
     "message": "Salvar"
@@ -66,7 +72,7 @@
     "message": "Atualizar"
   },
   "autoUpdate": {
-    "message": "Atualização Automátiac"
+    "message": "Atualizar automaticamente"
   },
   "theme": {
     "message": "Tema"
@@ -84,22 +90,25 @@
     "message": "Novo UserCSS"
   },
   "saveTemplate": {
-    "message": "Salvar como Template"
+    "message": "Salvar como template"
   },
   "tabToSpaces": {
-    "message": "Tabs para Espaços"
-  },
-  "trimTrailingSpaces": {
-    "message": "Remover Espaços Extras"
+    "message": "Tabs para espaços"
   },
   "toUpperCase": {
-    "message": "Seleção em Maiúsculas"
+    "message": "Seleção em maiúsculas"
   },
   "toLowerCase": {
-    "message": "Seleção em Minúsculas"
+    "message": "Seleção em minúsculas"
+  },
+  "wrapIIFE": {
+    "message": "Envolver código em uma IIFE"
   },
   "stylish": {
-    "message": "Instalar Estilo"
+    "message": "Instalar estilo do Stylish"
+  },
+  "beautify": {
+    "message": "Formatar"
   },
   "report": {
     "message": "Relatório"
@@ -114,22 +123,22 @@
     "message": "Deseja excluir \n'$1'\n e seus dados armazenados?"
   },
   "deleteMultiConfirm": {
-    "message": "Deseja deletar os $1 Scripts/CSS selecionados e seus dados armazenados?"
+    "message": "Deseja deletar os $1 scripts/CSS selecionados e seus dados armazenados?"
   },
   "installConfirm": {
-    "message": "Deseja instalar '$1'?\nScript/CSS com o mesmo nome será substituído se tiver versão menor"
+    "message": "Deseja instalar '$1'?\nScripts/CSS com o mesmo nome serão substituídos se tiverem versão menor."
   },
   "metaError": {
-    "message": "Erro de Meta Data"
+    "message": "Erro de metadados"
   },
   "noNameError": {
-    "message": "Script/CSS precisa ter um nome."
+    "message": "O script/CSS precisa ter um nome."
   },
   "nameError": {
-    "message": "Já há um Script/CSS com este nome.\nDeseja substituir o existente?"
+    "message": "Já há um script/CSS com este nome.\nDeseja substituir o existente?"
   },
   "updateUrlError": {
-    "message": "O Script/CSS não possui updateURL ou version."
+    "message": "O script/CSS não possui updateURL ou version."
   },
   "noNewUpdate": {
     "message": "Não há atualização disponível."
@@ -162,7 +171,7 @@
     "message": "Desfazer"
   },
   "undoDisabled": {
-    "message": "Only for CSS"
+    "message": "Somente para CSS"
   },
   "insertError": {
     "message": "A execução falhou"
@@ -174,19 +183,19 @@
     "message": "Avançado"
   },
   "customOptionsCSS": {
-    "message": "Custom Options CSS"
+    "message": "CSS personalizado das opções"
   },
   "customOptionsCSSDescription": {
-    "message": "Customize Options page & CodeMirror style configuration."
+    "message": "Personalizar estilo da página de opções e do CodeMirror"
   },
   "customPopupCSS": {
-    "message": "Custom Popup CSS"
+    "message": "CSS personalizado do popup"
   },
   "customPopupCSSDescription": {
-    "message": "Customize toolbar popup style configuration."
+    "message": "Personalizar estilo do popup da barra de ferramentas"
   },
   "cmOptionsDescription": {
-    "message": "Personalizar configuração do CodeMirror, addons & JavaScript lint"
+    "message": "Personalizar configuração do CodeMirror, addons e lint do JavaScript"
   },
   "about": {
     "message": "Sobre"
@@ -216,15 +225,12 @@
     "message": "Importar"
   },
   "jsonError": {
-    "message": "Invalid JSON"
+    "message": "JSON inválido"
   },
   "options": {
     "message": "Opções"
   },
   "saveOptions": {
     "message": "Salvar"
-  },
-  "cmOptionsError": {
-    "message": "JSON inválido para o CodeMirror."
   }
 }
