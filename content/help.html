@@ -49,6 +49,7 @@
         <li class="arrow"><a href="#Script-API">Script API</a>
           <ul>
             <!-- <li><a href="#forbidden-header-name">Forbidden header name</a></li> -->
+            <li><a href="#storage">Script Storage</a></li>
             <li><a href="#addElement">addElement</a></li>
             <li><a href="#addScript">addScript</a></li>
             <li><a href="#addStyle">addStyle</a></li>
@@ -57,7 +58,6 @@
             <li><a href="#fetch">fetch</a></li>
             <li><a href="#getResourceText">getResourceText</a></li>
             <li><a href="#getResourceUrl">getResourceUrl</a></li>
-            <li><a href="#getValue">getValue, listValues, setValue, deleteValue</a></li>
             <li><a href="#info">info</a></li>
             <li><a href="#log">log</a></li>
             <li><a href="#notification">notification</a></li>
@@ -165,7 +165,7 @@
             <dt>range</dt>
             <dt>number</dt>
               <dd>The units value - framed in (double) quotes ...</dd>
-              <dd>&#x26a0;&#xfe0f; because we're parsing the meta data as JSON, all fractional values must include an integer value, e.g. [.5] will cause a parse error, so use [0.5]</dd>
+              <dd>⚠️ because we're parsing the meta data as JSON, all fractional values must include an integer value, e.g. [.5] will cause a parse error, so use [0.5]</dd>
 
             <dt>select</dt>
             <dd>Use a JSON format for the values set in the select's options.</dd>
@@ -351,16 +351,16 @@
 
     <dd>
         <dl>
-          <dt>&#x1f58c; Edit</dt>
+          <dt>🖌 Edit</dt>
         <dd>Button on Information page opens the Options Page and selects the current Script/CSS</dd>
 
-          <dt>&#x25b7; Run</dt>
+          <dt>▷ Run</dt>
           <dd>Inject the displayed userScript or userCSS (not userStyle) as long as it was not already injected in the tab</dd>
             <dd class="note">The userScript is injected as plain JavaScript. Its metadata block would not be processed and it has no access to GM API.</dd>
             <dd class="warning">UserScript is injected into <code>content</code> context which has more privilege than <code>userScript</code> context and untrusted code should not be used.</dd>
 
-          <dt style="color: #f00;">&#x25c1; Undo</dt>
-          <dd>Undo/Remove the displayed userCSS if it was injected temporarily by &#x25b7; Run</dd>
+          <dt style="color: #f00;">◁ Undo</dt>
+          <dd>Undo/Remove the displayed userCSS if it was injected temporarily by ▷ Run</dd>
         </dl>
       </dd>
 
@@ -375,10 +375,10 @@
 
     <dd>
         <dl>
-          <dt>&#x25b7; Run</dt>
+          <dt>▷ Run</dt>
           <dd>Insert the Scratchpad code (JavaScript or CSS)</dd>
 
-          <dt style="color: #f00;">&#x25c1; Undo</dt>
+          <dt style="color: #f00;">◁ Undo</dt>
           <dd>Undo/Remove the CSS Inserted by Scratchpad</dd>
 
           <dt><img src="../image/bin.svg" alt=""></dt>
@@ -392,10 +392,10 @@
     <dt style="margin-top: 2em;"><img src="../image/gear.svg" alt=""> Options</dt>
     <dd>Open the Options Page</dd>
 
-    <dt>&#x2795; <img src="../image/js.svg" alt=""></dt>
+    <dt>➕ <img src="../image/js.svg" alt=""></dt>
     <dd>Display a new Script Template that you can edit and Save</dd>
 
-    <dt>&#x2795; <img src="../image/css.svg" alt=""></dt>
+    <dt>➕ <img src="../image/css.svg" alt=""></dt>
     <dd>Display a new CSS Template that you can edit and Save</dd>
 
     <dt>Help</dt>
@@ -419,7 +419,7 @@
   <p>Scripts can be directly installed from any script ending in <code>.user.js/.user.css</code> (remote or local file system) if loaded into a tab (open or drag & drop). In case of HTTP/s links, the same link will be set for script update. (v2.57)</p>
   <p><del>Due to sandbox CSP header on <code>https://raw.githubusercontent.com/........uers.js</code> tab is forwarded to <code>cdn.jsdelivr.net</code> mirror.</del> (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1411641" title="CSP 'sandbox' directive prevents content scripts from matching, due to unique origin, breaking also browser features" target="_blank">Bug 1411641</a>).</p>
 
-  <h3 id="android" class="experimental">&#x1f4f1; Firefox on Android</h3>
+  <h3 id="android" class="experimental">📱 Firefox on Android</h3>
   <p>Support is experimental and based on user feedback.</p>
 
 
@@ -645,14 +645,14 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
     <dt>Counter</dt>
     <dd>The counter shows the number of Script & CSS at the bottom</dd>
 
-    <dt>&#x1f4e5; Import</dt>
+    <dt>📥 Import</dt>
     <dd>Import one or more Script/CSS from file, same name Script/CSS will be overwritten without warning</dd>
 
-    <dt>&#x1f4e4; Export</dt>
+    <dt>📤 Export</dt>
     <dd>Export all Script/CSS to <i>FireMonkey</i> folder in the download location set in <i>Firefox Options ➜ Downloads</i></dd>
-    <dd>&#x1f4f1; <i>Disabled on Android</i></dd>
+    <dd>📱 <i>Disabled on Android</i></dd>
 
-    <dt>&#x1f4e5; Import from Stylus</dt>
+    <dt>📥 Import from Stylus</dt>
     <dd>Export styles from <i>Stylus</i> and Import the JSON (on pop-up change the file type selection to <i>All Files</i>), same name Script/CSS will be overwritten without warning <i>(note: <a href="#UserStyle">UserStyle</a>)</i></dd>
 
   </dl>
@@ -672,7 +672,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <h4>Extra Keyboard Commands <span>(when editor is active)</span></h4>
   <ul style="columns: 2;">
     <li><kbd>Ctrl-S</kbd> Save</li>
-    <li><kbd>Ctrl-Q</kbd> Toggle comment</li>
+    <li><kbd>Ctrl-/</kbd> Toggle comment</li>
     <li><kbd>Ctrl-Space</kbd> Show hint</li>
     <li><kbd>F11</kbd> Toggle fullscreen</li>
     <li><kbd>Esc</kbd> Exit fullscreen</li>
@@ -681,31 +681,31 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <h4>Editor Area Buttons</h4>
 
   <dl>
-    <dt>&#x1f4be; Save</dt>
+    <dt>💾 Save</dt>
     <dd>Save the currently displaying Script/CSS</dd>
       <dd class="note">Trailing Spaces are removed automatically when saving</dd>
 
-    <dt>&#x1f504; Update</dt>
+    <dt>🔄 Update</dt>
     <dd>Update the currently displaying Script/CSS</dd>
 
-    <dt>&#x1f4e4; Export</dt>
+    <dt>📤 Export</dt>
     <dd>Export the currently displaying Script/CSS to file</dd>
 
-    <dt>&#x2611;&#xfe0f; Enable</dt>
+    <dt>☑️ Enable</dt>
     <dd>Enable/Disable the currently displaying Script/CSS</dd>
     <dd class="note">Changes apply immediately without the need to <b>Save</b>.</dd>
 
-    <dt>&#x2611;&#xfe0f; Auto-update</dt>
+    <dt>☑️ Auto-update</dt>
     <dd>Enable/Disable the Auto-Update of the currently displaying Script/CSS</dd>
     <dd class="note">Changes apply immediately without the need to <b>Save</b>.</dd>
 
     <dt><img src="../image/bin.svg" alt=""> Delete</dt>
     <dd>Delete the currently displaying Script/CSS after confirmation</dd>
 
-    <dt>&#x2795; <img src="../image/js.svg" alt=""></dt>
+    <dt>➕ <img src="../image/js.svg" alt=""></dt>
     <dd>Display a new Script Template that you can edit and Save</dd>
 
-    <dt>&#x2795; <img src="../image/css.svg" alt=""></dt>
+    <dt>➕ <img src="../image/css.svg" alt=""></dt>
     <dd>Display a new CSS Template that you can edit and Save</dd>
 
     <dt><img src="../lib/js-beautify/logo.svg" alt=""> Beautify</dt>
@@ -718,7 +718,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
     <dd class="note">Editing is non-destructive. Click <b>Save</b> to apply the changes.</dd>
 
 
-    <dt>&#x1f5d2; Report</dt>
+    <dt>🗒 Report</dt>
     <dd>Display Lint Report with click-able lines to go to the corresponding line in the Script/CSS</dd>
 
 
@@ -729,22 +729,22 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
           <dd>Select Light/Dark Theme for the editor</dd>
             <dd class="note">Default scheme is based on <a href="https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme" target="_blank">prefers-color-scheme</a> but also possible to set to dark on light schemes.</dd>
 
-          <dt>&#x1f4be; Save Template</dt>
+          <dt>💾 Save Template</dt>
           <dd>Save the currently displaying Script/CSS as a Template</dd>
 
           <dt>➜ Tabs to Spaces</dt>
           <dd>Convert Tabs to spaces (2 per tab)</dd>
 
-          <dt>&#x1f520; Selection to Uppercase</dt>
+          <dt>🔠 Selection to Uppercase</dt>
           <dd>Convert selection to uppercase characters</dd>
 
-          <dt>&#x1f521; Selection to Lowercase</dt>
+          <dt>🔡 Selection to Lowercase</dt>
           <dd>Convert selection to lowercase characters</dd>
 
-          <dt id="IIFE">&#x1f6e0; Wrap code in IIFE</dt>
+          <dt id="IIFE">🛠 Wrap code in IIFE</dt>
           <dd>Wrap code in IIFE (Immediately Invoked Function Expression) to fix <code>SyntaxError: return not in function</code>.</dd>
 
-          <dt id="User-Metadata">&#x1f464; User Metadata</dt>
+          <dt id="User-Metadata">👤 User Metadata</dt>
           <dd>Persistent user metadata rules to add/amend/disable original Script & CSS metadata rules</dd>
           <dd>You can use the select to quickly enter values.</dd>
           <dd><pre>
@@ -765,9 +765,10 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 @inject-into
 @run-at
 @container                    (Firefox 97-98)
+@updateURL
 </pre></dd>
 
-          <dt>&#x1f4bf; Storage</dt>
+          <dt>💿 Storage</dt>
           <dd>View/Edit userscript storage. Storage value must be a <b>valid JSON</b>.</dd>
         </dl>
       </dd>
@@ -981,7 +982,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
     <tr><th>@supportURL</th>        <td class="pass"></td><td class="fail"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@container</th>         <td class="pass">Firefox 97-98</td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
     <tr><th>@grant</th>             <td class="pass experimental">different</td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
-    <tr><th>@var</th>             <td class="pass experimental"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
+    <tr><th>@var</th>               <td class="pass experimental"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
 
 
     <tr><th>@namespace</th>         <td class="fail"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
@@ -1121,7 +1122,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-    <precaption>&#x1f6e1;&#xfe0f; Examples of Security Concerns</precaption>
+    <precaption>🛡️ Examples of Security Concerns</precaption>
 <pre><span class="comment">// @resource        remoteCode http://www.someSite.com/badJS.js
 // @resource        remoteDom http://www.someSite.com/htmlWithBadJS.html
 
@@ -1293,7 +1294,7 @@ element.<span class="property">innerHTML</span> = dom;
       <td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/997" title="[Firefox] Can't modify page properties on sites which use CSP" target="_blank">ⓘ</a> <a href="https://github.com/violentmonkey/violentmonkey/issues/1001" title="[Firefox] Can't modify page properties on sites which use CSP" target="_blank">ⓘ</a></td>
     </tr>
 
-    <tr><th colspan="5">&#x1f6e1;&#xfe0f; <b>Context Security Comparison</b></th></tr>
+    <tr><th colspan="5">🛡️ <b>Context Security Comparison</b></th></tr>
     <tr><th>context</th><td>userScript</td><td>content</td><td>content</td><td>content</td></tr>
     <tr style="font-style: italic;"><th>typeof browser<br>typeof chrome</th><td>undefined</td><td>object</td><td>undefined</td><td>undefined</td></tr>
     <tr style="font-style: italic;"><th>browser<br>chrome</th><td class="small">ReferenceError: browser(chrome) is not defined</td><td class="small">Object { menus: Getter & Setter, manifest: Getter & Setter, normandyAddonStudy: Getter & Setter, extension: Getter & Setter, i18n: Getter & Setter, storage: Getter & Setter, test: Getter & Setter, userScripts: Getter & Setter, runtime: {…} }</td><td class="small">ReferenceError: browser(chrome) is not defined</td><td class="small">ReferenceError: browser(chrome) is not defined</td></tr>
@@ -1460,7 +1461,7 @@ body {
 
 
 
-  <h4>&#x1f4ca; URL Matching Performance</h4>
+  <h4>📊 URL Matching Performance</h4>
   <p>From best (top) to worst:</p>
 
   <ol>
@@ -1825,7 +1826,12 @@ body {
 */</pre>
 
 
+<h4>📌 Bundled Libraries are removed in v2.68</h4>
+
+<del>
   <h4>@require <span style="font-size: inherit; margin-left: 4em;">specific-library</span></h4>
+
+
   <p>Few libraries have been packed with <i>FireMonkey</i> which will be injected for user-scripts using <code>@require</code>. A shorthand (case-insensitive) can also be used.</p>
   <p>Based on data provided by <i>GreasyFork</i> (2020-02-09), 8,011/31,170 (26%) use <code>@require</code> and from those 7,082/11,236 (63%) entries relate to these libraries (& <i>gm4-polyfill</i>).</p>
 
@@ -1860,17 +1866,15 @@ body {
   </thead>
   <tbody class="slim">
     <tr><td>bootstrap 4</td>    <td>bootstrap-4</td>    <td>4.6.1</td></tr>
-    <tr><td>bootstrap 5</td>    <td>bootstrap-5</td>    <td>5.1.3</td></tr>
+    <tr><td>bootstrap 5</td>    <td>bootstrap-5</td>    <td>5.1.3 <a href="https://getbootstrap.com/docs/4.6/getting-started/introduction/" target="_blank">ⓘ</a></td></tr>
     <tr><td>jquery 1</td>       <td>jquery-1</td>       <td>1.12.4</td></tr>
     <tr><td>jquery 2</td>       <td>jquery-2</td>       <td>2.2.4</td></tr>
-    <tr><td>jquery 3</td>       <td>jquery-3</td>       <td>3.6.0</td></tr>
+    <tr><td>jquery 3</td>       <td>jquery-3</td>       <td>3.6.0 <a href="https://releases.jquery.com/jquery/" target="_blank">ⓘ</a></td></tr>
     <tr><td>jquery-ui 1</td>    <td>jquery-ui-1</td>    <td>1.13.1</td></tr>
-    <tr><td>moment</td>         <td>moment-2</td>       <td>2.29.1</td></tr>
-    <tr><td>underscore</td>     <td>underscore-1</td>   <td>1.13.1</td></tr>
+    <tr><td>moment</td>         <td>moment-2</td>       <td>2.29.1 <a href="https://momentjs.com/" target="_blank">ⓘ</a></td></tr>
+    <tr><td>underscore</td>     <td>underscore-1</td>   <td>1.13.1 <a href="https://underscorejs.org/" target="_blank">ⓘ</a></td></tr>
   </tbody>
 </table>
-
-
 
     <precaption>Example</precaption>
 <pre class="comment">
@@ -1890,7 +1894,9 @@ body {
 
   <p>On popular demand, more libraries may be added in future.</p>
 
-  <h4>@require <span style="font-size: inherit; margin-left: 4em;">other-URL &#x26a0;&#xfe0f;</span></h4>
+</del>
+
+  <h4>@require <span style="font-size: inherit; margin-left: 4em;">other-URL ⚠️</span></h4>
 
   <p>The API is added for convenience and compatibility but it works differently in comparison to other script managers as the target is not not stored. It uses <code>fetch()</code> to get the target the first time but on subsequently <a href="https://developer.mozilla.org/docs/Web/API/Request/cache" target="_blank">Request.cache</a> will be used by the browser. Please note:</p>
   <ul>
@@ -1921,7 +1927,7 @@ body {
   <span class="property">font-size</span>: <span class="value">48px</span>;
 }</pre>
 
-  <h4 id="Storing-require">&#x2139;&#xfe0f; Storing require & resource Targets</h4>
+  <h4 id="Storing-require">ℹ️ Storing require & resource Targets</h4>
   <p>In legacy Firefox, extensions were able to save files to their folder in Firefox profile. Script managers would download <code>@require</code> & <code>@resource</code> targets, save it to users' HD and inject it when called.</p>
 
   <p>Firefox Quantum no longer allows extension to save files to Firefox profile folder. Script managers will have to use the storage assigned to the extension to save <code>@require</code> & <code>@resource</code> files in form of data.</p>
@@ -1949,21 +1955,32 @@ body {
   </tr>
   </thead>
   <tbody class="slim">
+    <tr><th><b>Storage</b></th><td colspan="5"></td></tr>
+    <tr><th>GM.getValue</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"> <a href="https://violentmonkey.github.io/api/gm/" title="GM.* Greasemonkey v4-compatible aliases were added in VM2.12.0." target="_blank">ⓘ</a></td><td>739</td></tr>
+    <tr><th>GM.setValue</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>727</td></tr>
+    <tr><th>GM.deleteValue</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>208</td></tr>
+    <tr><th>GM.listValues</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>77</td></tr>
+
+    <tr><th>GM.getValues <span>(v2.68)</span></th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
+    <tr><th>GM.setValues <span>(v2.68)</span></th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
+    <tr><th>GM.deleteValues <span>(v2.68)</span></th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
+
+
+    <tr><th>&nbsp;</th><td colspan="5"></td></tr>
+
     <tr><th>GM.addElement</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync">v4.12</td><td class="pass sync">v2.13.1</td><td>4</td></tr>
     <tr><th>GM.addScript</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
     <tr><th>GM.addStyle</th><td class="pass sync"></td><td class="fail"><a href="https://wiki.greasespot.net/GM_addStyle" title="As of Greasemonkey 4.0, this method has been removed. " target="_blank">ⓘ</a></td><td class="pass sync"></td><td class="pass sync"></td><td>102</td></tr>
     <tr><th>GM.addValueChangeListener</th><td class="pass callback"></td><td class="fail"></td><td class="pass callback"></td><td class="fail"></td><td>10</td></tr>
     <tr><th>GM.cookie</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>9</td></tr>
-    <tr><th>GM.deleteValue</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>208</td></tr>
     <tr><th>GM.download</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="fail"></td><td>18</td></tr>
     <tr><th>GM.fetch</th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
     <tr><th>GM.getResourceText</th><td class="pass async"></td><td class="fail"><a href="https://github.com/greasemonkey/greasemonkey/issues/2548" title="Add or replace GM.getResourceText" target="_blank">ⓘ</a></td><td class="pass async"></td><td class="fail"></td><td>11</td></tr>
     <tr><th>GM.getResourceUrl</th><td class="pass async"><a href="#getResourceUrl">ⓘ</a> different</td><td class="pass async"><a href="https://wiki.greasespot.net/GM.getResourceUrl" target="_blank">ⓘ</a></td><td class="pass async"></td><td class="pass async">v2.13.1</td><td>30</td></tr>
     <tr><th>GM.getTab</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>3</td></tr>
     <tr><th>GM.getTabs</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>0</td></tr>
-    <tr><th>GM.getValue</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"> <a href="https://violentmonkey.github.io/api/gm/" title="GM.* Greasemonkey v4-compatible aliases were added in VM2.12.0." target="_blank">ⓘ</a></td><td>739</td></tr>
     <tr><th>GM.info</th><td class="pass sync"></td><td class="pass sync"></td><td class="pass sync"></td><td class="pass sync"></td><td>69</td></tr>
-    <tr><th>GM.listValues</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>77</td></tr>
+
     <tr><th>GM.log</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>7</td></tr>
     <tr><th>GM.notification</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>42</td></tr>
     <tr><th>GM.openInTab</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass sync"></td><td>178</td></tr>
@@ -1971,9 +1988,16 @@ body {
     <tr><th>GM.registerMenuCommand</th><td class="pass callback"></td><td class="pass callback">v4.11 <a href="https://wiki.greasespot.net/Version_history" target="_blank">ⓘ</a></td><td class="pass callback"></td><td class="pass callback">v2.12.10</td><td>131</td></tr>
     <tr><th>GM.removeValueChangeListener</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>1</td></tr>
     <tr><th>GM.setClipboard</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"> <a href="https://github.com/Tampermonkey/tampermonkey/issues/918" title="setClipboard API sets the clipboard to 'undefined'" target="_blank">ⓘ</a></td><td class="pass async"></td><td>77</td></tr>
-    <tr><th>GM.setValue</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>727</td></tr>
     <tr><th>GM.unregisterMenuCommand</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>6</td></tr>
     <tr><th>GM.xmlHttpRequest</th><td class="pass callback"></td><td class="pass callback"></td><td class="pass callback"></td><td class="pass callback"></td><td>699</td></tr>
+
+    <tr><th>&nbsp;</th><td colspan="5"></td></tr>
+
+    <tr><th><b>Storage</b></th><td colspan="5"></td></tr>
+    <tr><th>GM_getValue</th><td class="pass sync"><a href="#getValue">ⓘ</a></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>5,837</td></tr>
+    <tr><th>GM_setValue</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>3,782</td></tr>
+    <tr><th>GM_deleteValue</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>1,577</td></tr>
+    <tr><th>GM_listValues</th><td class="pass sync"><a href="#getValue">ⓘ</a></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>711</td></tr>
 
     <tr><th>&nbsp;</th><td colspan="5"></td></tr>
 
@@ -1982,16 +2006,13 @@ body {
     <tr><th>GM_addStyle</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>5,452</td></tr>
     <tr><th>GM_addValueChangeListener</th><td class="pass callback"></td><td class="fail"></td><td class="pass callback"></td><td class="pass callback"></td><td>209</td></tr>
     <tr><th>GM_cookie</th><td class="fail"></td><td class="fail"></td><td class="pass sync"><a href="https://github.com/Tampermonkey/tampermonkey/issues/465" title="GM_cookie - HttpOnly Cookie" target="_blank">ⓘ</a></td><td class="fail"></td><td>49</td></tr>
-    <tr><th>GM_deleteValue</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>1,577</td></tr>
     <tr><th>GM_download</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>478</td></tr>
     <tr><th>GM_fetch</th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>3</td></tr>
     <tr><th>GM_getResourceText</th><td class="pass sync alt"><a href="#getResourceText">ⓘ</a> different</td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>954</td></tr>
     <tr><th>GM_getResourceURL</th><td class="pass sync"><a href="#getResourceUrl">ⓘ</a> different</td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>355</td></tr>
     <tr><th>GM_getTab</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>43</td></tr>
     <tr><th>GM_getTabs</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>39</td></tr>
-    <tr><th>GM_getValue</th><td class="pass sync"><a href="#getValue">ⓘ</a></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>5,837</td></tr>
     <tr><th>GM_info</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>731</td></tr>
-    <tr><th>GM_listValues</th><td class="pass sync"><a href="#getValue">ⓘ</a></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>711</td></tr>
     <tr><th>GM_log</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>865</td></tr>
     <tr><th>GM_notification</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>617</td></tr>
     <tr><th>GM_openInTab</th><td class="pass async"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>1,326</td></tr>
@@ -2000,7 +2021,6 @@ body {
     <tr><th>GM_removeValueChangeListener</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>77</td></tr>
     <tr><th>GM_saveTab</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>37</td></tr>
     <tr><th>GM_setClipboard</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>1,556</td></tr>
-    <tr><th>GM_setValue</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>3,782</td></tr>
     <tr><th>GM_unregisterMenuCommand</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>220</td></tr>
     <tr><th>GM_xmlhttpRequest</th><td class="pass callback"></td><td class="fail"></td><td class="pass callback"></td><td class="pass callback"></td><td>5,436</td></tr>
 
@@ -2030,7 +2050,7 @@ body {
 
     <tr><th>&nbsp;</th><td colspan="5"></td></tr>
     <tr>
-      <th>&#x1f4e5; Injected Scripts
+      <th>📥 Injected Scripts
           <br><span>✔ every page</span>
           <br><span>✔ every frame</span>
           <br><span>✔ when no active userscript</span>
@@ -2083,7 +2103,7 @@ body {
 
     <tr>
       <th>👥 Firefox Users</th>
-      <td>1200</td>
+      <td>1300</td>
       <td>217k</td>
       <td>560k</td>
       <td>69k</td>
@@ -2148,7 +2168,7 @@ body {
     <tr><th>&nbsp;</th><td colspan="4"></td></tr>
 
     <tr>
-      <th>&#x1f4e5; Injected Scripts
+      <th>📥 Injected Scripts
           <br><span>✔ every page</span>
           <br><span>✔ every frame</span>
           <br><span>✔ when no active userstyle</span>
@@ -2180,7 +2200,7 @@ body {
 
     <tr>
       <th>👥 Firefox Users</th>
-      <td>1200</td>
+      <td>1300</td>
       <td>74k</td>
       <td>51k</td>
       <td>310</td>
@@ -2198,17 +2218,75 @@ body {
   </tbody>
 </table>
 
+<h3 id="storage">Script Storage</h3>
+
+<h4>ℹ️ Asynchronous & Synchronous Storage</h4>
+<p>There are 2 types storage systems available to extensions:</p>
+<dl>
+  <dt>Extension Storage</dt>
+  <dd>Asynchronous private permanent storage accessible to the extension only</dd>
+  <dd>Synchronous private Web API storage accessible only to the extension domain's privileged pages (background, options, popup etc, but not contentScript or userscript)  e.g. <i>sessionStorage</i> | <i>localStorage</i> | <i>IndexedDB</i></dd>
+  <dt>Web Storage</dt>
+  <dd>Synchronous public storage which is also accessible to web pages to read/write/delete e.g. <i>sessionStorage</i> | <i>localStorage</i> | <i>IndexedDB</i></dd>
+</dl>
+
+<p class="note">Experimental sync storage feature was added in v2.43 which can improve compatibility for most userscripts. It delays userscript execution until sync storage is available (<i>~5-10ms</i>), for userscripts that use sync <code>GM_getValue/GM_setValue/GM_listValues/GM_deleteValue</code> AND NOT their async <code>GM.*</code> counterparts.</p>
+
+<p>The async <code>GM.getValue</code> & <code>GM.listValues</code> will get the most up-to-date values at that moment.</p>
 
 
-  <h4>&#x2139;&#xfe0f; Asynchronous & Synchronous Storage</h4>
-  <p>There are 2 types storage systems available to extensions:</p>
-  <dl>
-    <dt>Extension Storage</dt>
-    <dd>Asynchronous private permanent storage accessible to the extension only</dd>
-    <dd>Synchronous private Web API storage accessible only to the extension domain's privileged pages (background, options, popup etc, but not contentScript or userscript)  e.g. <i>sessionStorage</i> | <i>localStorage</i> | <i>IndexedDB</i></dd>
-    <dt>Web Storage</dt>
-    <dd>Synchronous public storage which is also accessible to web pages to read/write/delete e.g. <i>sessionStorage</i> | <i>localStorage</i> | <i>IndexedDB</i></dd>
-  </dl>
+<h4>New APIs: getValues, setValues, deleteValue <span>(v2.68)</span></h4>
+<p>Userscripts often need to get/set multiple values. Each storage operation result in costly asynchronous read/write which means resources, time, and hard disk wear (especially for SDDs). These new APIs aim to alleviate the aforementioned.</p>
+
+
+
+<p><b>Return value:</b> GM.* Promise | GM_* synch return</p>
+<ul>
+  <li>getValue: value || default</li>
+  <li>setValue: <code>undefined</code></li>
+  <li>deleteValue: <code>undefined</code></li>
+  <li>listValues: <code>array</code></li>
+
+  <li>getValues: <code>object</code></li>
+  <li>setValues: <code>undefined</code></li>
+  <li>deleteValue: <code>undefined</code></li>
+</ul>
+
+
+<pre>
+<span class="comment">// stored value for key OR default</span>
+<span class="keyword">const</span> <span class="property">value</span> = <span class="keyword">await</span> <span class="gm">GM.getValue</span>(key, default);
+<span class="keyword">const</span> <span class="property">value</span> = <span class="gm">GM_getValue</span>(key, default);
+
+<span class="comment">// an array of keys set by script OR []</span>
+<span class="keyword">const</span> <span class="method">keys</span> = <span class="keyword">await</span> <span class="gm">GM.listValues</span>();
+<span class="keyword">const</span> <span class="method">keys</span> = <span class="gm">GM_listValues</span>();
+
+<span class="comment">// value can be string, number, boolean, or object</span>
+<span class="keyword">await</span> <span class="gm">GM.setValue</span>(key, value);
+<span class="gm">GM_setValue</span>(key, value);
+
+<span class="keyword">await</span> <span class="gm">GM.deleteValue</span>(key);
+<span class="gm">GM_deleteValue</span>(key)
+
+<span class="comment">// new multi-operation</span>
+<span class="keyword">const</span> <span class="property">values</span> = <span class="keyword">await</span> <span class="gm">GM.getValues</span>([key, key2, ...]);
+<span class="keyword">await</span> <span class="gm">GM.setValue</span>({key: value, key2: value2, ...});
+<span class="keyword">await</span> <span class="gm">GM.deleteValues</span>([key, key2, ...]);
+</pre>
+
+<!--
+<p class="dim" style="text-decoration: line-through;">Partial compatibility has been implemented. Please note:</p>
+<ul class="dim" style="text-decoration: line-through;">
+  <li>Scripts that run <code>GM_getValue</code> & <code>GM_listValues</code> immediately will get the values at the start of the session which is the browser start-up time or script enabled time, whichever later</li>
+  <li>Scripts that run <code>GM_getValue</code> & <code>GM_listValues</code> on an <code>event</code> will get the values at page load time</li>
+</ul>
+-->
+
+
+
+
+
 
 
 
@@ -2303,62 +2381,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 </pre>
 
 
-
-
-
-
-
-
-  <h3 id="getValue">getValue, listValues, setValue, deleteValue</h3>
-
-  <p class="note">Experimental sync storage feature was added in v2.43 which can improve compatibility for most userscripts. It delays userscript execution until sync storage is available (<i>~5-10ms</i>), for userscripts that use sync <code>GM_getValue/GM_setValue/GM_listValues/GM_deleteValue</code> AND NOT their async <code>GM.*</code> counterparts.</p>
-
-  <p>The async <code>GM.getValue</code> & <code>GM.listValues</code> will get the most up-to-date values at that moment.</p>
-
-  <p><b>Return value:</b> GM.* Promise | GM_* synch return</p>
-    <ul>
-      <li>getValue: value || default</li>
-      <li>listValues: <code>array</code></li>
-      <li>setValue: <code>undefined</code></li>
-      <li>deleteValue: <code>undefined</code></li>
-    </ul>
-
-
-<pre>
-<span class="comment">// stored value for key OR default</span>
-<span class="keyword">const</span> <span class="property">value</span> = <span class="keyword">await</span> <span class="gm">GM.getValue</span>(key, default);
-<span class="keyword">const</span> <span class="property">value</span> = <span class="gm">GM_getValue</span>(key, default);
-
-<span class="comment">// an array of keys set by script OR []</span>
-<span class="keyword">const</span> <span class="method">keys</span> = <span class="keyword">await</span> <span class="gm">GM.listValues</span>();
-<span class="keyword">const</span> <span class="method">keys</span> = <span class="gm">GM_listValues</span>();
-
-<span class="comment">// value can be string, number, boolean, or object</span>
-<span class="keyword">await</span> <span class="gm">GM.setValue</span>(key, <span class="property">value</span>)
-<span class="gm">GM_setValue</span>(key, <span class="property">value</span>)
-
-<span class="keyword">await</span> <span class="gm">GM.deleteValue</span>(key)
-<span class="gm">GM_deleteValue</span>(key)
-</pre>
-
-<!--
-  <p class="dim" style="text-decoration: line-through;">Partial compatibility has been implemented. Please note:</p>
-  <ul class="dim" style="text-decoration: line-through;">
-    <li>Scripts that run <code>GM_getValue</code> & <code>GM_listValues</code> immediately will get the values at the start of the session which is the browser start-up time or script enabled time, whichever later</li>
-    <li>Scripts that run <code>GM_getValue</code> & <code>GM_listValues</code> on an <code>event</code> will get the values at page load time</li>
-  </ul>
- -->
-
-
-
-
-
-
-
-
-
-
-  <h3 id="fetch">fetch <span>(&#x26a0;&#xfe0f; breaking changes in v2.33)</span></h3>
+  <h3 id="fetch">fetch <span>(⚠️ breaking changes in v2.33)</span></h3>
 
   <p><i>FireMonkey</i> <code>fetch</code> API is based on the JavaScript <a href="https://developer.mozilla.org/docs/Web/API/WindowOrWorkerGlobalScope/fetch" target="_blank">Fetch API</a> which provides the new Promise based interface for fetching resources (including across the network). It will seem familiar to anyone who has used <code>XMLHttpRequest</code>, but it provides a more powerful and flexible feature set.</p>
   <p>For simplicity and compatibility, the same GM style naming is kept for <code>fetch</code> API although it is not available in <i>Greasemonkey</i>.</p>
@@ -2604,7 +2627,7 @@ xhr.send(<span class="keyword">null</span>);
 </pre>
 
 
-  <h4 id="JavaScript-xmlHttpRequest-fetch">&#x2139;&#xfe0f; JavaScript xmlHttpRequest & fetch</h4>
+  <h4 id="JavaScript-xmlHttpRequest-fetch">ℹ️ JavaScript xmlHttpRequest & fetch</h4>
 
   <p class="note">Mapped <code>fetch</code> & <code>XMLHttpRequest</code> to page <code>window</code> as a workaround in v2.53</p>
 
@@ -2624,7 +2647,7 @@ xhr.send(<span class="keyword">null</span>);
  <p class="warning">Userscripts injected in <code>content</code> context (as in GM|TM|VM), or in <i>FireMonkey</i> Scratchpad & temporary script injection, carry certain security concerns. Changes are planned as part of <a href="https://blog.mozilla.org/addons/2021/05/27/manifest-v3-update/" target="_blank">Manifest v3 update</a>.</p>
 
 
-  <h4 id="forbidden-header-name">&#x2139;&#xfe0f; Forbidden header name</h4>
+  <h4 id="forbidden-header-name">ℹ️ Forbidden header name</h4>
   <p>All Forbidden header names will be removed from the request by <i>FireMonkey</i> before sending to prevent error.</p>
 
 <blockquote>
@@ -3258,7 +3281,7 @@ popup.addStyle(css);
 <span class="gm">GM_log</span>(<span class="gm">GM_info</span>);
 </pre>
 
-  <h3 id="unsafeWindow">unsafeWindow &#x26a0;&#xfe0f;</h3>
+  <h3 id="unsafeWindow">unsafeWindow ⚠️</h3>
   <p><code>unsafeWindow</code> in <i>FireMonkey</i> is an alias for <code>window.wrappedJSObject</code>. You can also use <code>window.wrappedJSObject</code> or <code>window.eval()</code> to access page JavaScript <b>globals</b> or to create function & objects in `page` context.</p>
 
   <p><b>Return value:</b> <code>window.wrappedJSObjec</code></p>
@@ -3511,7 +3534,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
 
 
 
-  <h3 id="Detecting_JavaScript_Navigation">&#x2139;&#xfe0f; Detecting JavaScript Navigation</h3>
+  <h3 id="Detecting_JavaScript_Navigation">ℹ️ Detecting JavaScript Navigation</h3>
   <p>When sites use JavaScript to navigate, Firefox API does not detect the navigation and does not re-inject the userScript/userCSS. In case of userCSS it does not matter since the rules will continue to apply nonetheless, but in case of userScript, it needs to re-run. One way to detect JavaScript navigation is to use <a href="https://developer.mozilla.org/docs/Web/API/MutationObserver" target="_blank">MutationObserver</a> with appropriate <a href="https://developer.mozilla.org/docs/Web/API/MutationObserverInit" target="_blank">MutationObserverInit</a>.</p>
 
 
@@ -3530,7 +3553,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
 
 
 
-  <h3 id="xray-vision">&#x2139;&#xfe0f; <a href="https://developer.mozilla.org/docs/Mozilla/Tech/Xray_vision" target="_blank">Xray Vision</a> & Sharing objects with page scripts</h3>
+  <h3 id="xray-vision">ℹ️ <a href="https://developer.mozilla.org/docs/Mozilla/Tech/Xray_vision" target="_blank">Xray Vision</a> & Sharing objects with page scripts</h3>
 
   <h4>Extension JavaScript Context (Scope)</h4>
   <p>Contexts are sandboxed layers of JavaScript in an extension to ensure security.</p>
@@ -3705,7 +3728,7 @@ script.<span class="method">remove</span>();
 
   <ul>
     <li>Permanent CSS injected by Firefox API when tab is loading</li>
-    <li>Temporary CSS injected into tabs from Scratchpad, Popup ➜ CSS ➜ Info ➜ &#x25b7; Run, or Live userCSS update</li>
+    <li>Temporary CSS injected into tabs from Scratchpad, Popup ➜ CSS ➜ Info ➜ ▷ Run, or Live userCSS update</li>
   </ul>
 
   <p>Live userCSS update is applied to the relevant tabs under the following circumstances:</p>
@@ -3833,7 +3856,7 @@ script.<span class="method">remove</span>();
   <p class="note"><i>userstyles.org</i> is sometimes slow and may time out.</p>
 
 
-  <h4>&#x2139;&#xFE0F; Stylish/Stylus/xStyle Type UserStyle</h4>
+  <h4>ℹ️ Stylish/Stylus/xStyle Type UserStyle</h4>
 
   <p>Since Firefox 61, extensions can not use <a href="https://developer.mozilla.org/docs/Web/CSS/@document" target="_blank">@-moz-document</a> (never supported on Chrome & other browsers) and therefore extensions would have to:</p>
 
@@ -3921,7 +3944,7 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
 </pre></dd>
 
     <dt>View Inserted UserScript</dt>
-    <dd>You can see the actual blob JavaScript in <a href="https://developer.mozilla.org/docs/Tools" target="_blank">Developer Tools</a> (<kbd>F12</kbd>) <b>Debugger</b> tab under <b>user-script://</b> (you may have to refresh the page)</dd>
+    <dd>You can see the actual blob JavaScript in <a href="https://developer.mozilla.org/docs/Tools" target="_blank">Developer Tools</a> (<kbd>F12</kbd>) <b>Debugger</b> tab under <code>FireMonkey/userscript/</code> (v2.68) (<code>user-script://FireMonkey/</code> pre-2.68) (you may have to refresh the page)</dd>
 
     <dt>CSS Errors</dt>
     <dd>The CSS error can be checked in <b>Developer Tools</b> (<kbd>F12</kbd>) for the page that the CSS is injected into.</dd>
@@ -3974,7 +3997,7 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
 
   </ul>
 
-  <h3 id="ftp">&#x26a0;&#xfe0f; FTP <span>(removed in Firefox 90)</span></h3>
+  <h3 id="ftp">⚠️ FTP <span>(removed in Firefox 90)</span></h3>
 
   <blockquote>
     <p>Aligning with our <a href="https://blog.mozilla.org/security/2015/04/30/deprecating-non-secure-http/" target="_blank">intent to deprecate non-secure HTTP</a> and increase the percentage of secure connections, we, as well as other major web browsers, decided to discontinue support of the FTP protocol.</p>
