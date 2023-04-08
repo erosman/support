@@ -85,7 +85,11 @@ button > * {
   font-style: italic;
 }
 
-.flex, .flex-display {
+/* .grid {
+  display: grid;
+} */
+/*
+.flex {
   display: flex;
 }
 
@@ -95,8 +99,14 @@ button > * {
 
 .spacer {
   flex-grow: 1;
-}
+} */
 
 .invalid, input:invalid {
   box-shadow: 1px 1px 4px #f20, -1px -1px 4px #f20;
+}
+
+/* ----- Navigation ----- */
+input[name="nav"],
+input[type="checkbox"].control {
+  display: none;
 }
