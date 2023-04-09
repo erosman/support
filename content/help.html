@@ -157,9 +157,9 @@
   <dl>
     <dt>SyntaxError: return not in function</dt>
     <dd>💡 Use Wrap code in <a href="#IIFE">IIFE</a></dd>
-    <dd><i>Greasemonkey</i>, <i>Tampermonkey</i> & <i>Violentmonkey</i> (as well as <i>Node.js</i>), wrap the userscripts in an anonymous IIFE (Immediately Invoked Function Expression) in order to limit its exposure to the page JavaScript. As a result, such JavaScript parse errors do not cause a problem but that created a situation where developers write JavaScript with syntax errors.</dd>
-    <dd><a href="https://eslint.org/demo" target="_blank">ESLint</a> already displays the parse error for above.</dd>
-    <dd><a href="https://jshint.com/" target="_blank">JSHint</a> currently doesn't display the error, as posted to <a href="https://github.com/jshint/jshint/issues/3612" target="_blank">JavaScript: Mark return out of function</a>.</dd>
+    <dd><i>Greasemonkey</i>, <i>Tampermonkey</i> & <i>Violentmonkey</i> (as well as <i>Node.js</i>), wrap the userscripts in an anonymous IIFE (Immediately Invoked Function Expression) in order to limit its exposure to the page JavaScript. As a result, such JavaScript parse errors do not cause a problem, however that created a situation where developers write JavaScript with syntax errors.</dd>
+    <dd><a href="https://eslint.org/demo" target="_blank">ESLint</a> already displays the parse error for above</dd>
+    <dd><a href="https://jshint.com/" target="_blank">JSHint</a> currently doesn't display the error (<a href="https://github.com/jshint/jshint/issues/3612" target="_blank">JavaScript: Mark return out of function</a>)</dd>
 
 
     <dt><code>@grant none</code> & works in TM|VM</dt>
@@ -204,7 +204,7 @@
     <cite><a href="https://developer.chrome.com/docs/extensions/mv3/known-issues/#userscript-managers-support" target="_blank">Known issues when migrating to Manifest V3</a></cite>
   </blockquote>
 
-  <h4>See Also</h4>
+  <h4>See also</h4>
   <ul>
     <li><a href="https://github.com/w3c/webextensions/issues/279" target="_blank">User scripts in Manifest V3</a></li>
     <li><a href="https://github.com/w3c/webextensions/issues/284" target="_blank">Main world User Script shared params</a></li>
@@ -247,7 +247,7 @@
   </blockquote>
 
 
-  <h4>See Also</h4>
+  <h4>See also</h4>
   <ul>
     <li><a href="https://www.techrepublic.com/article/google-makes-the-perfect-case-for-why-you-shouldnt-use-chrome/" target="_blank">Google makes the perfect case for why you shouldn’t use Chrome</a></li>
     <li><a href="https://www.eff.org/deeplinks/2021/12/chrome-users-beware-manifest-v3-deceitful-and-threatening" target="_blank">Chrome Users Beware: Manifest V3 is Deceitful and Threatening</a></li>
@@ -304,8 +304,7 @@
   <p>Displays the active Script/CSS on mouse-over</p>
 
   <h3>Toolbar Icon Pop-up</h3>
-  <p>The pop-up displays the installed Scripts/CSS. "Tab Scripts & CSS" shows the ones running on the active Tab.</p>
-  <p>The number in the "Tab Scripts & CSS" shows the number of frames of the page. The minimum is 1 which is the main/top frame.</p>
+  <p>The pop-up displays the installed Scripts/CSS. "Tab Scripts & CSS" shows the ones running on the active Tab. The number in the "Tab Scripts & CSS" shows the number of frames of the page. The minimum is 1 which is the main/top frame.</p>
 
   <dl>
     <dt style="color: var(--link);">✔</dt>
@@ -423,11 +422,9 @@
       <li>Maximum number of items 512</li>
     </ul>
 
-  <p>Each script will have a single entry in FireMonkey which is the script itself plus all its associated data (around 1-2KB more).</p>
+  <p>Each script will have a single entry in FireMonkey which is the script itself plus all its associated data (around 1-2KB more). The maximum allowed by Firefox Sync is 8KB for each item. Therefore, each script should be smaller than 6-7KB in order to Sync. Firefox Sync is impractical for user script/style managers unless user has a few small scripts/styles.</p>
 
-  <p>The maximum allowed by Firefox Sync is 8KB for each item. Therefore, each script should be smaller than 6-7KB in order to Sync.</p>
-
-  <p>Firefox Sync is impractical for user script/style managers unless user has a few small scripts/styles.</p>
+  <p>There is a discussion to increase the storage sync quota to 1MB (<a href="https://github.com/w3c/webextensions/issues/351" target="_blank">Discuss limits applied to storage.local and storage.sync API</a>).</p>
 
 
   <h2 id="counter">Counter</h2>
@@ -435,9 +432,8 @@
 
 
   <h2 id="global-script-exclude">Global Script Exclude Matches</h2>
-  <p>Exclude Match pattens (one per line) to prevent all scripts (not CSS) from running on them.</p>
-  <p>Changes to Global Script Exclude Matches will unregister all running script. Once tab is reloaded or on new tab, new settings will take effect.</p>
-  <p>Note: Invalid match pattern will cause all scripts to fail.</p>
+  <p>Exclude Match pattens (one per line) to prevent all scripts (not CSS) from running on them. Changes to Global Script Exclude Matches will unregister all running script. Once tab is reloaded or on new tab, new settings will take effect.</p>
+  <p class="note">Invalid match pattern will cause all scripts to fail.</p>
 
   <h2 id="Custom-Options-CSS">Custom Options CSS <span>(advanced users)</span></h2>
   <p>Customize Options page style and/or CodeMirror style/theme with valid CSS.</p>
@@ -447,7 +443,7 @@
   <p>You can create your own custom theme by overriding a theme like the <i>default</i> theme.</p>
 
 
-<precaption>Theme Example</precaption>
+<p class="caption">Theme Example</p>
 <pre class="scroll">
 <span class="comment">/* DEFAULT THEME */</span>
 
@@ -525,7 +521,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   </dl>
 
 
-<precaption>Example</precaption>
+<p class="caption">Example</p>
 <pre>
 {
   <span class="comment">// CodeMirror Options</span>
@@ -583,57 +579,34 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
   <h2 id="Sidebar"><img src="../image/sidebars.svg" alt=""> Sidebar</h2>
 
-  <p>List of both UserScript and UserCSS</p>
-  <p>Scripts and CSS have different icons and the icon for disabled ones are grey.</p>
-  <p>Click on the Script/CSS to view/edit/enable/disable/delete or start a new Script/CSS.</p>
-  <p><span class="fail"></span>shows that there was an error when registering the script. <s>Scripts with errors get disabled automatically.</s></p>
-<!--
-  <table>
-    <caption>Hide & Show</caption>
-    <thead>
-      <tr>
-        <th><img src="../image/js.svg" alt=""><img src="../image/css.svg" alt=""></th>
-        <th><img src="../image/js.svg" style="filter: grayscale(1);" alt=""><img src="../image/css.svg" style="filter: grayscale(1);" alt=""></th>
-        <th><img src="../image/js.svg" alt=""></th>
-        <th><img src="../image/css.svg" alt=""></th>
-      </tr>
-    </thead>
-    <tbody class="slim">
-    <tr>
-      <td>enabled</td>
-      <td>disabled</td>
-      <td>Scripts</td>
-      <td>CSS</td>
-    </tr>
-    </tbody>
-  </table>
- -->
-
   <dl>
-    <dt><img src="../image/js.svg" alt=""><img src="../image/css.svg" alt=""></dt>
+    <dt>Script List</dt>
+    <dd>Lists both UserScript and UserCSS</dd>
+    <dd>Scripts and CSS have different icons, and the icon for disabled ones are grey</dd>
+    <dd>Click on the Script/CSS to view/edit/enable/disable/delete</dd>
+    <dd><span class="fail"></span>shows that there was an error when registering the script (<s>Scripts with errors get disabled automatically</s>)</dd>
+
+
+    <dt><img src="../image/js.svg" alt=""><img src="../image/css.svg" alt=""> <img src="../image/js.svg" style="filter: grayscale(1);" alt=""><img src="../image/css.svg" style="filter: grayscale(1);" alt=""> <img src="../image/js.svg" alt=""> <img src="../image/css.svg" alt=""></dt>
     <dd>Click to hide/show all enabled Script & CSS</dd>
-
-    <dt><img src="../image/js.svg" style="filter: grayscale(1);" alt=""><img src="../image/css.svg" style="filter: grayscale(1);" alt=""></dt>
     <dd>Click to hide/show all disabled Script & CSS</dd>
-
-    <dt><img src="../image/js.svg" alt=""></dt>
     <dd>Click to hide/show all Scripts</dd>
-
-    <dt><img src="../image/css.svg" alt=""></dt>
     <dd>Click to hide/show all CSS</dd>
 
     <dt>Counter</dt>
     <dd>The counter shows the number of Script & CSS at the bottom</dd>
 
     <dt>📥 Import</dt>
-    <dd>Import one or more Script/CSS from file, same name Script/CSS will be overwritten without warning</dd>
+    <dd>Import one or more Script/CSS from file</dd>
+    <dd>Script/CSS with the same name will be overwritten without warning</dd>
 
     <dt>📤 Export</dt>
     <dd>Export all Script/CSS to <i>FireMonkey</i> folder in the download location set in <i>Firefox Options ➜ Downloads</i></dd>
     <dd>📱 <i>Disabled on Android</i></dd>
 
     <dt>📥 Import from Stylus</dt>
-    <dd>Export styles from <i>Stylus</i> and Import the JSON (on pop-up change the file type selection to <i>All Files</i>), same name Script/CSS will be overwritten without warning <i>(note: <a href="#UserStyle">UserStyle</a>)</i></dd>
+    <dd>Export styles from <i>Stylus</i> and Import the JSON (on pop-up change the file type selection to <i>All Files</i>)</dd>
+    <dd>Script/CSS with the same name will be overwritten without warning <i>(note: <a href="#UserStyle">UserStyle</a>)</i></dd>
 
   </dl>
 
@@ -749,10 +722,10 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 </pre></dd>
 
           <dt>💿 Storage</dt>
-          <dd>View/Edit userscript storage. Storage value must be a <b>valid JSON</b>.</dd>
+          <dd>View/Edit userscript storage</dd>
+          <dd>Storage value must be a <b>valid JSON</b></dd>
         </dl>
       </dd>
-
 
 
     <dt>Multiple Enable/Disable, Delete & Export</dt>
@@ -779,7 +752,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <p>Update will fail if the new version has a different name which already exists among user's installed Scripts/CSS.</p>
   <p>Auto-update will only update enabled Scripts/CSS but manual update can update both enabled and disabled ones.</p>
   <p><code>@downloadURL/@installURL</code>, if present, is set for script update.</p>
-  <p  class="note">Install URL will be set as update URL if there is no <code>@updateURL/@downloadURL</code> in the metadata block. (v2.57)</p>
+  <p class="note">Install URL will be set as update URL if there is no <code>@updateURL/@downloadURL</code> in the metadata block. (v2.57)</p>
 
 
 <table>
@@ -826,7 +799,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <p class="note">Read <a href="#UserStyle">UserStyle</a> for <code>==UserStyle== ... ==/UserStyle==</code></p>
 
 
-    <precaption>JS Single-line Comment <span>(better compatibility)</span></precaption>
+    <p class="caption">JS Single-line Comment <span>(better compatibility)</span></p>
 <pre class="comment">
 // ==UserScript==
 // @name            My Script
@@ -839,7 +812,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-    <precaption>JS Multi-line Comment</precaption>
+    <p class="caption">JS Multi-line Comment</p>
 <pre class="comment">
 /*
 ==UserScript==
@@ -854,7 +827,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-    <precaption>CSS Multi-line Comment</precaption>
+    <p class="caption">CSS Multi-line Comment</p>
 <pre class="comment">
 /*
 ==UserCSS==
@@ -876,7 +849,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-    <precaption>Metadata Block</precaption>
+    <p class="caption">Metadata Block</p>
 <pre class="comment">
 @name
 @author
@@ -1062,7 +1035,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 <table>
-  <caption>grant Comparison</caption>
+  <caption>@grant Comparison</caption>
   <thead>
     <tr>
       <th>Script A</th>
@@ -1104,7 +1077,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-    <precaption>🛡️ Examples of Security Concerns</precaption>
+    <p class="caption">🛡️ Examples of Security Concerns</p>
 <pre><span class="comment">// @resource        remoteCode http://www.someSite.com/badJS.js
 // @resource        remoteDom http://www.someSite.com/htmlWithBadJS.html
 
@@ -1276,7 +1249,8 @@ element.<span class="property">innerHTML</span> = dom;
       <td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/997" title="[Firefox] Can't modify page properties on sites which use CSP" target="_blank">ⓘ</a> <a href="https://github.com/violentmonkey/violentmonkey/issues/1001" title="[Firefox] Can't modify page properties on sites which use CSP" target="_blank">ⓘ</a></td>
     </tr>
 
-    <tr><th colspan="5">🛡️ <b>Context Security Comparison</b></th></tr>
+    <tr><th>🛡️ <b>Context Security</b></th><td colspan="4"></td></tr>
+
     <tr><th>context</th><td>userScript</td><td>content</td><td>content</td><td>content</td></tr>
     <tr style="font-style: italic;"><th>typeof browser<br>typeof chrome</th><td>undefined</td><td>object</td><td>undefined</td><td>undefined</td></tr>
     <tr style="font-style: italic;"><th>browser<br>chrome</th><td class="small">ReferenceError: browser(chrome) is not defined</td><td class="small">Object { menus: Getter & Setter, manifest: Getter & Setter, normandyAddonStudy: Getter & Setter, extension: Getter & Setter, i18n: Getter & Setter, storage: Getter & Setter, test: Getter & Setter, userScripts: Getter & Setter, runtime: {…} }</td><td class="small">ReferenceError: browser(chrome) is not defined</td><td class="small">ReferenceError: browser(chrome) is not defined</td></tr>
@@ -1285,6 +1259,10 @@ element.<span class="property">innerHTML</span> = dom;
 
   </tbody>
 </table>
+
+
+
+
 
 
   <p><sup>1</sup> Userscripts in <i>FireMonkey</i> are by default injected into a separate isolated <code>userScript</code> contexts, and therefore there is no interaction between the userscripts. In <code>content</code> or <code>page</code> context, the userscripts will share the same context which can result in unexpected behaviour e.g.</p>
@@ -1300,6 +1278,36 @@ element.<span class="property">innerHTML</span> = dom;
       <li><a href="https://github.com/Tampermonkey/tampermonkey/issues/1489" target="_blank">Tampermonkey should not modify CSP on websites where it is disabled</a></li>
     </ul>
 
+
+  <table>
+    <caption>Context Comparison: MV3</caption>
+    <colgroup>
+      <col style="width: 12em;">
+      <col style="width: auto;">
+      <col style="width: auto;">
+      <col style="width: auto;">
+      <col style="width: auto;">
+    </colgroup>
+    <thead>
+      <tr>
+        <th></th>
+        <th>FireMonkey</th>
+        <th>Greasemonkey</th>
+        <th>Tampermonkey</th>
+        <th>Violentmonkey</th>
+      </tr>
+    </thead>
+    <tbody class="slim">
+      <tr>
+        <th>default</th>
+        <td>USER_SCRIPT</td>
+        <td>USER_SCRIPT</td>
+        <td>USER_SCRIPT</td>
+        <td>USER_SCRIPT</td>
+      </tr>
+
+    </tbody>
+  </table>
 
   <h3 id="var" class="experimental">@var</h3>
   <p>Configurable User variables for userScript & userCSS (one per line)</p>
@@ -1389,7 +1397,7 @@ body {
 @var      select    headerBg    "Header Background Color"   {"Orange": "#ffa500", "Skyblue*": "#87ceeb"}
 </pre>
 
-  <h4>See Also</h4>
+  <h4>See also</h4>
   <ul>
     <li><a href="https://developer.mozilla.org/docs/Web/CSS/Using_CSS_custom_properties" target="_blank">Using CSS custom properties (variables)</a></li>
   </ul>
@@ -1514,7 +1522,7 @@ body {
     <li>Regular Expression <a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes" target="_blank">Character classes</a> should be escaped e.g. <code>\.</code> <code>\\d</code> <code>\\s</code> <code>\\w</code></li>
   </ul>
 
-  <p>Further information:</p>
+  <h4>See also</h4>
   <ul>
     <li><a href="https://wiki.greasespot.net/Include_and_exclude_rules" target="_blank">Greasemonkey Include and exclude rules</a></li>
     <li><a href="https://www.tampermonkey.net/documentation.php#_include" target="_blank">Tampermonkey @include</a></li>
@@ -1539,7 +1547,7 @@ body {
   </blockquote>
 
 
-    <precaption>Example</precaption>
+    <p class="caption">Example</p>
 <pre><span class="comment">/*
 ==UserCSS==
 @name               My CSS
@@ -1758,7 +1766,7 @@ body {
   <p><code>@require</code> can be used to pre-include other existing scripts into a script (or other existing CSS into a CSS). For example, user/developer can save some code as a script and name it <code>HelperSet</code>. It does not need to have <code>match/matches/include/includeGlobs</code> etc. It is best to have the script disabled.</p>
 
 
-    <precaption>Script Example</precaption>
+    <p class="caption">Script Example</p>
 <pre><span class="comment">// ==UserScript==
 // @name            HelperSet
 // @description     A set of helper functions
@@ -1776,7 +1784,7 @@ body {
 
 
 
-    <precaption>Include in Other Scripts</precaption>
+    <p class="caption">Include in Other Scripts</p>
 <pre class="comment">// ==UserScript==
 // @name            My Script
 // @description     Scripting is fun
@@ -1791,16 +1799,16 @@ body {
 
 
 
-    <precaption>Multiple require <span>(injected in order)</span></precaption>
+    <p class="caption">Multiple require <span>(injected in order)</span></p>
 <pre class="comment">
-// @require         jquery-3
+<del>// @require         jquery-3</del>
 // @require         HelperSet
 // @require         https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/fontawesome.min.css
 </pre>
 
 
 
-    <precaption>CSS require</precaption>
+    <p class="caption">CSS require</p>
 <pre class="comment">/*
 ==UserCSS==
 @name               My CSS
@@ -1813,11 +1821,42 @@ body {
 ==/UserCSS==
 */</pre>
 
+  <h3>@require <span style="font-size: inherit; margin-left: 4em;">other-URL ⚠️</span></h3>
 
-<h2 class="note">Bundled Libraries are removed in v2.68</h2>
+  <p>The API is added for convenience and compatibility but it works differently in comparison to other script managers as the target is not not stored. It uses <code>fetch()</code> to get the target the first time but on subsequently <a href="https://developer.mozilla.org/docs/Web/API/Request/cache" target="_blank">Request.cache</a> will be used by the browser. Please note:</p>
+  <ul>
+    <li>Processing many scripts with many <code>@require</code> can take time when registering scripts (i.e. browser start-up, disabling & re-enabling <i>FireMonkey</i>)</li>
+    <li><i>gm4-polyfill</i> is not applicable (and may cause conflict) and therefore is not processed</li>
+  </ul>
+
+  <p>You can also use <a href="https://developer.mozilla.org/docs/Web/CSS/@import" target="_blank">@import</a> in userCSS for remote CSS.</p>
+
+    <p class="caption">CSS require Alternative</p>
+
+<pre><span class="comment">/*
+==UserCSS==
+@name               My CSS
+@description        CSS is fun
+@match              http://www.example.com/*
+@match              http://www.example.org/*
+@version            1.0
+==/UserCSS==
+*/</span>
+
+<span class="property">@import</span> <span class="string">'https://fonts.googleapis.com/css?family=Tangerine'</span>;
+<span class="comment">/* --- or --- */</span>
+<span class="property">@import</span> <span class="value">url</span>(<span class="string">'https://fonts.googleapis.com/css?family=Tangerine'</span>);
+
+<span class="html">body</span> {
+  <span class="property">font-family</span>: <span class="string">'Tangerine'</span>, <span class="font">serif</span>;
+  <span class="property">font-size</span>: <span class="value">48px</span>;
+}</pre>
+
+
+<h3 class="warning" style="margin-top: 2em;">Bundled Libraries are removed in v2.68</h3>
 <p>The removal should only affect userscripts that used library shorthand.</p>
 
-<del style="font-size: 0.7em;">
+<del style="font-size: 0.7em; display: block;">
   <h3>@require <span style="font-size: inherit; margin-left: 4em;">specific-library</span></h3>
 
 
@@ -1865,7 +1904,7 @@ body {
   </tbody>
 </table>
 
-    <precaption>Example</precaption>
+    <p class="caption">Example</p>
 <pre class="comment">
 // @require         jquery-3
 // @require         https://code.jquery.com/jquery-3.5.1.js
@@ -1885,36 +1924,6 @@ body {
 
 </del>
 
-  <h3>@require <span style="font-size: inherit; margin-left: 4em;">other-URL ⚠️</span></h3>
-
-  <p>The API is added for convenience and compatibility but it works differently in comparison to other script managers as the target is not not stored. It uses <code>fetch()</code> to get the target the first time but on subsequently <a href="https://developer.mozilla.org/docs/Web/API/Request/cache" target="_blank">Request.cache</a> will be used by the browser. Please note:</p>
-  <ul>
-    <li>Processing many scripts with many <code>@require</code> can take time when registering scripts (i.e. browser start-up, disabling & re-enabling <i>FireMonkey</i>)</li>
-    <li><i>gm4-polyfill</i> is not applicable (and may cause conflict) and therefore is not processed</li>
-  </ul>
-
-  <p>You can also use <a href="https://developer.mozilla.org/docs/Web/CSS/@import" target="_blank">@import</a> in userCSS for remote CSS.</p>
-
-    <precaption>CSS require Alternative</precaption>
-
-<pre><span class="comment">/*
-==UserCSS==
-@name               My CSS
-@description        CSS is fun
-@match              http://www.example.com/*
-@match              http://www.example.org/*
-@version            1.0
-==/UserCSS==
-*/</span>
-
-<span class="property">@import</span> <span class="string">'https://fonts.googleapis.com/css?family=Tangerine'</span>;
-<span class="comment">/* --- or --- */</span>
-<span class="property">@import</span> <span class="value">url</span>(<span class="string">'https://fonts.googleapis.com/css?family=Tangerine'</span>);
-
-<span class="html">body</span> {
-  <span class="property">font-family</span>: <span class="string">'Tangerine'</span>, <span class="font">serif</span>;
-  <span class="property">font-size</span>: <span class="value">48px</span>;
-}</pre>
 
   <h3 id="Storing-require">ℹ️ Storing require & resource Targets</h3>
   <p>In legacy Firefox, extensions were able to save files to their folder in Firefox profile. Script managers would download <code>@require</code> & <code>@resource</code> targets, save it to users' HD and inject it when called.</p>
@@ -2312,7 +2321,7 @@ body {
   </dl>
 
 
-    <precaption>Example</precaption>
+    <p class="caption">Example</p>
 <pre>
 <span class="comment">// loading an external script</span>
 <span class="keyword">const</span> elem = <span class="gm">GM.addElement</span>(<span class="string">'script'</span>, {src: <span class="string">'https://....'</span>});
@@ -2331,7 +2340,7 @@ elem.<span class="property">onload</span> = () =&gt; <span class="property">cons
     <p><i>FireMonkey</i> only utility function to inject script element (code runs in page context).</p>
     <p><b>Return value:</b> <code>undefined</code></p>
 
-    <precaption>Example</precaption>
+    <p class="caption">Example</p>
 <pre>
 <span class="comment">// standard DOM method</span>
 <span class="keyword">const</span> script = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'script'</span>);
@@ -2360,7 +2369,7 @@ script.<span class="method">remove</span>();
   <p>Utility function to inject style element</p>
   <p><b>Return value:</b> <code>undefined</code></p>
 
-    <precaption>Example</precaption>
+    <p class="caption">Example</p>
 <pre>
 <span class="comment">// standard DOM method</span>
 <span class="keyword">const</span> style = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'style'</span>);
@@ -2428,7 +2437,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
 
 
-<precaption>Response <span>returns response object</span></precaption>
+<p class="caption">Response <span>returns response object</span></p>
 <pre>
 {
   <span class="property">headers</span>: {
@@ -2457,7 +2466,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 }
 </pre>
 
-<precaption>Example</precaption>
+<p class="caption">Example</p>
 <pre>
 <span class="comment">// HEAD request</span>
 <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM</span>.<span class="method">fetch</span>(<span class="string">'https://example.com/etc'</span>, {method: <span class="string">'HEAD'</span>});
@@ -2505,7 +2514,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
   <p class="note">All requests are <code>asynchronous</code>, therefore <code>synchronous</code> is not supported.</p>
 
 
-    <precaption>Request</precaption>
+    <p class="caption">Request</p>
 <pre><span class="gm">GM.xmlHttpRequest</span>({
   url,                      <span class="comment">// http, https, <s>ftp, ftps</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">ⓘ</a>, (file not allowed), can be relative to the web page</span>
 
@@ -2538,7 +2547,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
 
 
-    <precaption>Response <span>returns response object</span></precaption>
+    <p class="caption">Response <span>returns response object</span></p>
 <pre>onload, onerror, ontimeout, onabort
 {
   readyState
@@ -2557,7 +2566,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
 
 
-    <precaption>Example</precaption>
+    <p class="caption">Example</p>
   <pre><span class="comment">// simplest</span>
 <span class="gm">GM.xmlHttpRequest</span>({
   url: <span class="string">'https://example.com/etc'</span>,
@@ -2599,7 +2608,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
   <p><code>GM.xmlHttpRequest/GM_xmlhttpRequest</code> are sent from background script where credentials are not available. Sometimes it is necessary to send <code>xmlHttpRequest</code> from the page context.</p>
 
 
-    <precaption>xmlHttpRequest from Page Context</precaption>
+    <p class="caption">xmlHttpRequest from Page Context</p>
 <pre>
 <span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="object">window</span>.XMLHttpRequest();
 xhr.<span class="method">open</span>(<span class="string">'GET'</span>, <span class="string">'https://example.com/'</span>);
@@ -2636,7 +2645,7 @@ xhr.send(<span class="keyword">null</span>);
     <cite>Luca Greco <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1715249#c6" title="scripts running using userScripts API seem to block all cross-origin requests" target="_blank">Bug 1715249</a></cite>
   </blockquote>
 
-  <h4>See Also</h4>
+  <h4>See also</h4>
   <ul>
     <li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1605197" target="_blank">Cannot send request with CORS from content scripts</a></li>
   </ul>
@@ -2682,7 +2691,7 @@ xhr.send(<span class="keyword">null</span>);
   <cite><a href="https://developer.mozilla.org/docs/Glossary/Forbidden_header_name" target="_blank">Forbidden header name</a></cite>
 </blockquote>
 
-  <h4>See Also</h4>
+  <h4>See also</h4>
   <ul>
     <li><a href="https://fetch.spec.whatwg.org/#forbidden-header-name" target="_blank">forbidden header name</a></li>
   </ul>
@@ -2841,7 +2850,7 @@ true/false  <span class="experimental">v2.48</span>
 
 
 
-<precaption>Example</precaption>
+<p class="caption">Example</p>
 <pre><code class="deprecated"><span class="comment">// direct method ➜ error: alert runs immediately</span>
 <span class="gm">GM_registerMenuCommand</span>(<span class="string">'Hello, world (direct)'</span>, <span class="method">alert</span>(<span class="string">'Hello, world! (direct)'</span>));</code>
 <span class="comment">// anonymous function</span>
@@ -2863,7 +2872,7 @@ true/false  <span class="experimental">v2.48</span>
 <span class="gm">GM_unregisterMenuCommand</span>(name);
 </pre>
 
-<precaption>Example</precaption>
+<p class="caption">Example</p>
 <pre>
 <span class="gm">GM.unregisterMenuCommand</span>(<span class="string">'Hello, world (named)'</span>);
 </pre>
@@ -2910,7 +2919,7 @@ true/false  <span class="experimental">v2.48</span>
 
 
 
-    <precaption>getResourceUrl Alternative</precaption>
+    <p class="caption">getResourceUrl Alternative</p>
 <pre>
 <span class="comment">// ==UserScript==
 // @name            GM.getResourceUrl test
@@ -2968,7 +2977,7 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
     <li><b>remote</b>: <code>true</code> if change came from another tab or <code>false</code> if from the same tab</li>
   </ul>
 
-  <precaption>Example</precaption>
+  <p class="caption">Example</p>
 <pre>
 <span class="comment">// anonymous function</span>
 <span class="gm">GM_addValueChangeListener</span>(<span class="string">'test-key'</span>, <span class="keyword">function</span>(...arg) { <span class="property">console</span>.<span class="method">log</span>(...arg); });
@@ -2989,7 +2998,7 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 <span class="gm">GM_removeValueChangeListener</span>(key);
 </pre>
 
-  <precaption>Example</precaption>
+  <p class="caption">Example</p>
 <pre>
 <span class="gm">GM_removeValueChangeListener</span>(<span class="string">'test-key'</span>);
 </pre>
@@ -3008,7 +3017,7 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 <span class="gm">GM_download</span>(url, filename);
 </pre>
 
-  <precaption>Example</precaption>
+  <p class="caption">Example</p>
 <pre>
 <span class="gm">GM_download</span>(<span class="string">'https;//www.example.com/icon.jpg'</span>);
 <span class="gm">GM_download</span>(<span class="string">'https;//www.example.com/icon.jpg'</span>, <span class="string">'new-name.jpg'</span>);
@@ -3036,7 +3045,7 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
     <code>GM_popup()</code>, <code><i>NAME</i>.addStyle()</code>, <code><i>NAME</i>.append()</code>, <code><i>NAME</i>.show()</code>, <code><i>NAME</i>.hide()</code>, and <code><i>NAME</i>.remove()</code></p>
 
 
-    <precaption>Example</precaption>
+    <p class="caption">Example</p>
 <pre>
 <span class="comment">// create a new popup (multiple different popups can be created)</span>
 <span class="comment">// the name used (e.g. popup here) can be anything</span>
@@ -3103,7 +3112,7 @@ popup.remove();
   <p>Initial DOM elements of the popup can be accessed directly e.g. <code><i>NAME</i>.host</code>, <code><i>NAME</i>.style</code>, <code><i>NAME</i>.content</code> & <code><i>NAME</i>.close</code>.</p>
 
 
-    <precaption>Example</precaption>
+    <p class="caption">Example</p>
 <pre>
 popup.content.<span class="method">querySelector</span>(<span class="string">'button'</span>).<span class="method">addEventListener</span>(<span class="string">'click'</span>, someFunc);
 
@@ -3131,7 +3140,7 @@ popup.content.<span class="method">appendChild</span>(button);
   <p>The default 'full-page' popup background cover the full page.</p>
   <p>CSS selector <code>.close</code> can be used to style the close button <code>✖</code>.</p>
 
-    <precaption>Example</precaption>
+    <p class="caption">Example</p>
 <pre>
 <span class="comment">// styling background with :host</span>
 <span class="keyword">const</span> css = <span class="string">`:host {
@@ -3187,7 +3196,7 @@ popup.addStyle(css);
 <span class="keyword">const</span> info = <span class="gm">GM.info</span>;
 <span class="keyword">const</span> info = <span class="gm">GM_info</span>;
 </pre>
-<precaption>Return Object</precaption>
+<p class="caption">Return Object</p>
 <pre>{
   <span class="property">scriptHandler</span>:    <span class="string">'FireMonkey'</span>,
   <span class="property">version</span>:          <span class="string">'e.g. 2.45'</span>,
@@ -3274,7 +3283,7 @@ popup.addStyle(css);
 <span class="gm">GM_log</span>(text [, text2, ..., textN])
 </pre>
 
-<precaption>Example</precaption>
+<p class="caption">Example</p>
 <pre>
 <span class="gm">GM_log</span>(<span class="string">'one'</span>);
 <span class="gm">GM.log</span>(<span class="string">'one'</span>, <span class="string">'two'</span>, <span class="string">'three'</span>);
@@ -3289,7 +3298,7 @@ popup.addStyle(css);
   <p class="warning"><code>window.eval()</code> makes the object available to the page script as well while <code>unsafeWindow</code>, <code>window.wrappedJSObject</code> does not.</p>
 
 
-    <precaption>Example</precaption>
+    <p class="caption">Example</p>
 <pre>
 <span class="comment">// page-script.js</span>
 <span class="keyword">var</span> foo = <span class="string">"I'm defined in a page script!"</span>;
@@ -3340,7 +3349,7 @@ popup.addStyle(css);
   <h3>exportFunction() & cloneInto()</h3>
   <p>Support for <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts#exportfunction" target="_blank">exportFunction</a> & <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts#cloneinto" target="_blank">cloneinto</a> was added in v2.19.</p>
 
-  <precaption>Example</precaption>
+  <p class="caption">Example</p>
 <pre>
 <span class="gm">unsafeWindow</span>.setTimeout = exportFunction(<span class="property">setTimeout</span>, <span class="gm">unsafeWindow</span>);
 
@@ -3521,7 +3530,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
   </tbody>
 </table>
 
-  <p>Further information:</p>
+  <h4>See also</h4>
   <ul>
     <li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1670278" target="_blank">Enable extensions to send network requests (fetch) with a specific cookieStoreId (container tab context)</a></li>
     <li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1738567" target="_blank">Support cookieStoreId option in userScripts.register</a></li>
@@ -3538,7 +3547,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
   <p>When sites use JavaScript to navigate, Firefox API does not detect the navigation and does not re-inject the userScript/userCSS. In case of userCSS it does not matter since the rules will continue to apply nonetheless, but in case of userScript, it needs to re-run. One way to detect JavaScript navigation is to use <a href="https://developer.mozilla.org/docs/Web/API/MutationObserver" target="_blank">MutationObserver</a> with appropriate <a href="https://developer.mozilla.org/docs/Web/API/MutationObserverInit" target="_blank">MutationObserverInit</a>.</p>
 
 
-    <precaption>Example</precaption>
+    <p class="caption">Example</p>
 <pre>
 <span class="comment">// select a simple node that changes in navigation to attach a MutationObserver e.g. &lt;title&gt;
 // For better performance avoid using a node with a lot of children like &lt;body&gt; when childList: true  </span>
@@ -3633,7 +3642,8 @@ script.<span class="property">textContent</span> = <span class="string">`... cod
 <span class="property">document</span>.<span class="property">body</span>.<span class="method">appendChild</span>(script);
 script.<span class="method">remove</span>();
 </pre>
-  <p>Further information:</p>
+
+  <h4>See also</h4>
   <ul>
     <li><a href="https://stackoverflow.com/questions/9515704/insert-code-into-the-page-context-using-a-content-script/9517879#9517879" target="_blank">Insert code into the page context using a content script</a> by Rob W</li>
     <li><a href="https://stackoverflow.com/questions/10314534/how-can-i-prevent-a-webpage-from-detecting-i-am-running-a-script" target="_blank">How can I prevent a webpage from detecting I am running a script?</a> by Brock Adams</li>
@@ -3644,7 +3654,7 @@ script.<span class="method">remove</span>();
   <p><a href="https://developer.mozilla.org/docs/Web/API/CustomEvent" target="_blank">CustomEvent</a> can be used send data from a page script.</p>
 
 
-    <precaption>Example with &lt;script&gt;</precaption>
+    <p class="caption">Example with &lt;script&gt;</p>
 <pre>
 <span class="comment">// inject a function that generates & dispatches a CustomEvent</span>
 <span class="keyword">const</span> script = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'script'</span>);
@@ -3671,7 +3681,7 @@ script.<span class="method">remove</span>();
   <p>In Firefox, <code>window.eval()</code> can also be used to inject code into a page context.</p>
 
 
-    <precaption>Example with window.eval()</precaption>
+    <p class="caption">Example with window.eval()</p>
 <pre>
 <span class="comment">// inject a function that generates &amp; dispatches a CustomEvent</span>
 <span class="object">window</span>.<span class="method">eval</span>(`function sendMessage(message) =&gt; {
@@ -3701,7 +3711,7 @@ script.<span class="method">remove</span>();
 
   <p>Here is an example of simple UserCSS that I use to mark watched/visited videos on YouTube.</p>
 
-    <precaption>Example</precaption>
+    <p class="caption">Example</p>
 <pre>
 <span class="comment">/*
 ==UserCSS==
@@ -3761,7 +3771,7 @@ script.<span class="method">remove</span>();
   </ul>
 
 
-    <precaption>3rd Party userCSS Example</precaption>
+    <p class="caption">3rd Party userCSS Example</p>
 <pre>
 <span class="comment">/*
 ==UserCSS==
@@ -3778,7 +3788,7 @@ script.<span class="method">remove</span>();
 
 
 
-    <precaption>3rd Party userCSS Custom Example</precaption>
+    <p class="caption">3rd Party userCSS Custom Example</p>
 <pre>
 <span class="comment">/*
 ==UserCSS==
@@ -3797,7 +3807,7 @@ script.<span class="method">remove</span>();
   <p>If the 3rd Party userCSS uses CSS custom properties (variables) e.g <code>color: var(--main-color)</code>, you can also override them.</p>
 
 
-    <precaption>3rd Party userCSS Custom Example</precaption>
+    <p class="caption">3rd Party userCSS Custom Example</p>
 <pre>
 <span class="comment">/*
 ==UserCSS==
@@ -3817,7 +3827,7 @@ script.<span class="method">remove</span>();
   <h3>Character Escaping in CSS</h3>
   <p>CSS Escaping in userScript requires double escaping.</p>
 
-<precaption>Example</precaption>
+<p class="caption">Example</p>
 <pre>
 <span class="comment">// target element</span>
 &lt;div class="RichText RichText--sans lg:mb-32"&gt; ... &lt;/div&gt;
@@ -3845,7 +3855,7 @@ script.<span class="method">remove</span>();
 
   <p>The default <code>'run-at'</code> is set to <code>'document-start'</code> for UserStyles.</p>
 
-  <h4>See Also</h4>
+  <h4>See also</h4>
   <ul>
     <li><a href="https://github.com/erosman/support/issues/111" target="_blank">Implement Stylus style Compatibility</a></li>
     <li><a href="https://github.com/JasonBarnabe/greasyfork/issues/656" target="_blank">Support FireMonkey's UserCSS spec</a></li>

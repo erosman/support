@@ -3,42 +3,26 @@
 /* ----- Dark Theme ----- */
 :root, body.dark {
   --border: #444;
-
-  --dim: #ccc;
-  --nav: #444;
-  --shadow: #fff8;
   --h1: #0cf;
   --dt: #abc;
-  --code: #555;
   --pre: #cdf;
-  --table: #345;
   --quote: #400;
-  --note: #335;
-  --warn: #422;
   --pass: #0c0;
-  --img-filter: invert(1) grayscale(1);
+  --th: #333;
+  --td: #444;
 }
 
 /* ----- Light Theme ----- */
 @media screen and (prefers-color-scheme: light) {
   :root {
     --border: #ddd;
-    --dim: #777;
-    --nav: #fff;
-    --shadow: #0004;
     --h1: #066;
     --dt: #345;
-    --code: #f1f1f1;
     --pre: #f9f9fb;
-    --caption:#08c;
-    --table: #abc;
+    --quote: #f4f6fa;
+    --pass: #080;
     --th: #f9f9fb;
     --td: #fbfbfd;
-    --quote: #f4f6fa;
-    --warn: #fee;
-    --note: #e5f3fe;
-    --pass: #080;
-    --img-filter: none;
   }
 }
 
@@ -129,9 +113,8 @@ dd sup, p sup {
 }
 
 del {
-  text-decoration: line-through wavy #f50;
+  text-decoration: line-through wavy #f75;
 }
-
 
 article li::marker { /* FF68 */
   color: var(--dim);
@@ -187,7 +170,6 @@ a[href^="https://codemirror.net/"]::before {
 a[href^="https://developer.chrome.com/"]::before {
   background-image: url('../image/chrome.svg');
 }
-
 
 /* ----- Navigation ----- */
 nav  {
@@ -311,7 +293,6 @@ strong {
 pre {
   color: #000;
   background-color: var(--pre);
-  border-left: 4px solid var(--caption);
   padding: 1em;
   font-size: 1.2em;
 }
@@ -351,21 +332,6 @@ pre.error {
   display: table;
 }
 
-precaption {
-  display: table;
-}
-
-precaption + pre {
-  margin-top: 0;
-}
-
-precaption span {
-  margin-left: 0.5em;
-  color: #eee;
-  font-style: italic;
-  font-weight: normal;
-}
-
 .scroll {
   max-height: 25em;
   overflow: auto;
@@ -377,15 +343,12 @@ q {
 }
 
 blockquote {
-  color: var(--color);
-  padding: 0.5em 3.5em 1em;
-  font-style: italic;
-  font-size: 0.9em;
   background-color: var(--quote);
+  font-size: 0.9em;
+  font-style: italic;
+  padding: 0.5em 3.5em 1em;
   mask: url('../image/blob.svg') 0 0/100% 100%;
-  /* border: 4px solid #def; */
 }
-
 
 td blockquote {
   margin: 0.5em;
@@ -407,7 +370,6 @@ code {
   background-color: var(--code);
 }
 
-
 kbd {
   color: #333;
   padding: 0.1em 0.4em;
@@ -419,25 +381,20 @@ kbd {
   font-family: monospace;
 }
 
-
 .note, .footnote, .warning  {
-  /* color: var(--color); */
-  /* background-color: var(--note); */
   border: 1px solid var(--border);
   border-left: 4px solid #17f;
-  padding: 0.5em;
+  padding: 0.3em 0.5em 0.3em 2em;
   margin-top: 0.5em;
   border-radius: 4px;
   display: table;
-  padding-left: 2em;
   position: relative;
 }
 
 .note::before, .footnote::before, .warning::before {
   content: '📌';
-  /*margin-right: 0.5em;*/
   position: absolute;
-  top: 0.5em;
+  top: 0.3em;
   left: 0.8em;
 }
 
@@ -448,7 +405,6 @@ kbd {
 
 .warning {
   border-left-color: #f30;
-  /* background-color: var(--warn); */
 }
 
 .warning::before {
@@ -466,6 +422,29 @@ kbd {
 }
 
 /* ----- Table ----- */
+caption, .caption {
+  padding: 0.5em 0;
+  font-weight: bold;
+  text-align: left;
+  letter-spacing: 0.3em;
+}
+
+.caption {
+  margin-bottom: 0;
+}
+
+.caption + pre {
+  margin-top: 0;
+}
+
+.caption span {
+  margin-left: 0.5em;
+  color: var(--dim);
+  font-style: italic;
+  font-weight: normal;
+  letter-spacing: normal;
+}
+
 table, th, td {
   border: 1px solid var(--border);
 }
@@ -475,36 +454,10 @@ table {
   /* border: 1px solid var(--border); */
   margin-bottom: 1em;
   min-width: 70%;
-  border-left: 4px solid var(--caption);
+  /* border-left: 4px solid var(--caption); */
 }
-
-
-
-caption, precaption {
-  color: #fff;
-  background-color: var(--caption);
-  padding: 0.3em 1em;
-  font-weight: bold;
-  width: 30em;
-  clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
-  border-radius: 0.5em 0 0 0;
-  text-align: left;
-}
-
-caption, precaption {
-  text-align: left;
-}
-
-/* caption ~ thead, caption ~ tbody {
-  border-left: 4px solid var(--th);
-} */
-
-/* thead {
-  border-top: 1px solid var(--th);
-} */
 
 th {
-  /* background-color: var(--table5); */
   background-color: var(--th);
   text-align: left;
   padding: 0.5em;
@@ -514,14 +467,6 @@ tbody th {
   font-weight: normal;
   min-width: 10em;
 }
-
-/* thead tr, tbody tr:not(:last-of-type) {
-  border-bottom: 1px solid var(--table-border);
-} */
-
-/* tr:nth-child(odd) td {
-  background-color: var(--td);
-} */
 
 tr:nth-child(even) td {
   background-color: var(--td);

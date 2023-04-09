@@ -7,6 +7,14 @@
   --border: #777;
   --option-bg: #444;
   --link: #0ef;
+
+  --dim: #ccc;
+
+  /* --- about/help --- */
+  --nav: #444;
+  --shadow: #fff8;
+  --img-filter: invert(1) grayscale(1);
+  --code: #555;
 }
 
 /* ----- Light Theme ----- */
@@ -19,6 +27,14 @@
     --border: #ddd;
     --option-bg: #f5f5f5;
     --link: #08f;
+
+    --dim: #777;
+
+    /* --- about/help --- */
+    --nav: #fff;
+    --shadow: #0004;
+    --img-filter: none;
+    --code: #f1f1f1;
   }
 }
 
