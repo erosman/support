@@ -469,6 +469,21 @@ tbody th {
   min-width: 10em;
 }
 
+th span, .small {
+  color: var(--dim);
+  font-style: italic;
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+th sup {
+  color: var(--dim);
+}
+
+th img {
+  width: 1em;
+}
+
 tr:nth-child(even) td {
   background-color: var(--td);
 }
@@ -504,19 +519,8 @@ td.top {
   vertical-align: top;
 }
 
-th span, .small {
-  color: var(--dim);
-  font-style: italic;
-  font-weight: normal;
-  font-size: 0.9em;
-}
-
 code.small {
   font-size: initial;
-}
-
-th sup {
-  color: var(--dim);
 }
 
 .slim th:first-of-type, .slim td {
