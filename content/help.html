@@ -88,7 +88,7 @@
   <article>
 
   <h1 id="Preamble">Preamble</h1>
-  <p><i>FireMonkey</i> is a totally new combined user-script and user-style manager. While it has similar functions to other user-Script managers like <i>Greasemonkey/Tampermonkey/Violentmonkey</i>, and user-style managers like <i>Stylish/Stylus/xStyle</i>, there are also differences. Similar to other userscript managers, scripts (or CSS) are injected in tabs when tab is reloading. <del>The behaviour differs from <i>Stylus</i> which can inject CSS into a tab and remove it without having to reload the tab.</del> <a href="#Live-update">ⓘ</a> To make permanent changes without reloading the tab is not possible with the current API but changes are planned as part of <a href="https://blog.mozilla.org/addons/2021/05/27/manifest-v3-update/" target="_blank">Manifest v3 update</a>.</p>
+  <p><i>FireMonkey</i> is a totally new combined user-script and user-style manager. While it has similar functions to other user-Script managers like <i>Greasemonkey/Tampermonkey/Violentmonkey</i>, and user-style managers like <i>Stylish/Stylus/xStyle</i>, there are also differences. Similar to other userscript managers, scripts (or CSS) are injected in tabs when tab is reloading. <s>The behaviour differs from <i>Stylus</i> which can inject CSS into a tab and remove it without having to reload the tab.</s> <a href="#Live-update">ⓘ</a> To make permanent changes without reloading the tab is not possible with the current API but changes are planned as part of <a href="https://blog.mozilla.org/addons/2021/05/27/manifest-v3-update/" target="_blank">Manifest v3 update</a>.</p>
 
   <p class="note">Injection into <code>page</code> context are prevented by Firefox on sites with restrictive Content Security Policy (CSP) e.g. github.com, gitee.com, twitter.com, mail.google.com (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1411641" title="CSP 'sandbox' directive prevents content scripts from matching, due to unique origin, breaking also browser features" target="_blank">Bug 1411641</a>), as well as certain <a href="#blocked">domains</a>.</p>
 
@@ -200,7 +200,7 @@
   <blockquote>
     <p><b>Summary:</b> Userscript managers cannot inject scripts that are not included in the extension's package due to platform and policy changes that prevent arbitrary code execution. To address this, the Manifest V3 platform will be expanded to specifically support user-authored scripts and styles.</p>
 
-    <p><b>Estimated timeline:</b> <del>Canary support around October, 2022.</del> Targeting Canary support in the first quarter of 2023.</p>
+    <p><b>Estimated timeline:</b> <s>Canary support around October, 2022.</s> Targeting Canary support in the first quarter of 2023.</p>
     <cite><a href="https://developer.chrome.com/docs/extensions/mv3/known-issues/#userscript-managers-support" target="_blank">Known issues when migrating to Manifest V3</a></cite>
   </blockquote>
 
@@ -249,21 +249,23 @@
 
   <h4>See also</h4>
   <ul>
-    <li><a href="https://www.techrepublic.com/article/google-makes-the-perfect-case-for-why-you-shouldnt-use-chrome/" target="_blank">Google makes the perfect case for why you shouldn’t use Chrome</a></li>
-    <li><a href="https://www.eff.org/deeplinks/2021/12/chrome-users-beware-manifest-v3-deceitful-and-threatening" target="_blank">Chrome Users Beware: Manifest V3 is Deceitful and Threatening</a></li>
-    <li><a href="https://www.eff.org/deeplinks/2021/12/googles-manifest-v3-still-hurts-privacy-security-innovation" target="_blank">Google’s Manifest V3 Still Hurts Privacy, Security, and Innovation</a></li>
     <li><a href="https://blog.mozilla.org/addons/2022/05/18/manifest-v3-in-firefox-recap-next-steps/" target="_blank">Manifest v3 in Firefox: Recap & Next Steps</a></li>
-    <li><a href="https://groups.google.com/a/chromium.org/g/chromium-extensions/c/q9H8KwFLkMs" target="_blank">Background user scripts in Manifest V3? - Google Groups</a></li>
-    <li><a href="https://9to5google.com/2019/01/29/chrome-manifest-v3-tampermonkey/" target="_blank">Chrome's Manifest V3 proposal would break Tampermonkey</a></li>
-    <li><a href="https://github.com/w3c/webextensions/issues/51" target="_blank">Requiring Service Workers for extensions fundamentally user hostile</a></li>
-    <li><a href="https://www.ghostery.com/blog/manifest-v3-the-ghostery-perspective" target="_blank">Manifest V3: The Ghostery perspective</a></li>
     <li><a href="https://github.com/Tampermonkey/tampermonkey/issues/644" target="_blank">[Chrome] Manifest V3: examine the effects</a></li>
-    <li><a href="https://www.theregister.com/2022/05/20/mozilla_opens_testing_for_manifest/" target="_blank">Mozilla opens testing for Manifest v3 extensions in Firefox</a></li>
-    <li><a href="https://adguard.com/en/blog/manifestv3-timeline.html" target="_blank">Objects in Manifest V3 are closer than they appear — and it's not good news</a></li>
-    <li><a href="https://www.neowin.net/news/the-eff-will-fight-google-chrome-manifest-v3-which-kills-extensions-that-reliably-block-ads/" target="_blank">The EFF will fight Google Chrome Manifest v3 which kills extensions that reliably block ads</a></li>
-    <li><a href="https://www.forbes.com/sites/kateoflahertyuk/2022/06/13/firefox-just-gave-3-billion-google-chrome-users-a-reason-to-switch/?sh=7e0de5921a3f" target="_blank">Firefox Just Gave 3 Billion Google Chrome Users A Reason To Switch</a></li>
+    <li><a href="https://github.com/w3c/webextensions/issues/51" target="_blank">Requiring Service Workers for extensions fundamentally user hostile</a></li>
+
     <li><a href="https://bugs.chromium.org/p/chromium/issues/detail?id=1054624" target="_blank">Issue 1054624: Dynamic content script support</a></li>
+    <li><a href="https://9to5google.com/2019/01/29/chrome-manifest-v3-tampermonkey/" target="_blank">Chrome's Manifest V3 proposal would break Tampermonkey</a></li>
+    <li><a href="https://groups.google.com/a/chromium.org/g/chromium-extensions/c/q9H8KwFLkMs" target="_blank">Background user scripts in Manifest V3? - Google Groups</a></li>
+    <li><a href="https://www.ghostery.com/blog/manifest-v3-the-ghostery-perspective" target="_blank">Manifest V3: The Ghostery perspective</a></li>
+    <li><a href="https://www.theregister.com/2022/05/20/mozilla_opens_testing_for_manifest/" target="_blank">Mozilla opens testing for Manifest v3 extensions in Firefox</a></li>
+
+    <li><a href="https://adguard.com/en/blog/manifestv3-timeline.html" target="_blank">Objects in Manifest V3 are closer than they appear — and it's not good news</a></li>
+    <li><a href="https://www.eff.org/deeplinks/2021/12/chrome-users-beware-manifest-v3-deceitful-and-threatening" target="_blank">Chrome Users Beware: Manifest V3 is Deceitful and Threatening</a></li>
+    <li><a href="https://www.eff.org/deeplinks/2021/12/googles-manifest-v3-still-hurts-privacy-security-innovation" target="_blank">Google's Manifest V3 Still Hurts Privacy, Security, and Innovation</a></li>
+    <li><a href="https://www.forbes.com/sites/kateoflahertyuk/2022/06/13/firefox-just-gave-3-billion-google-chrome-users-a-reason-to-switch/?sh=7e0de5921a3f" target="_blank">Firefox Just Gave 3 Billion Google Chrome Users A Reason To Switch</a></li>
     <li><a href="https://www.ghacks.net/2022/09/09/opinion-it-is-time-to-switch-from-chrome-to-another-browser/" target="_blank">Opinion: it is time to switch from Chrome to another browser</a></li>
+    <li><a href="https://www.neowin.net/news/the-eff-will-fight-google-chrome-manifest-v3-which-kills-extensions-that-reliably-block-ads/" target="_blank">The EFF will fight Google Chrome Manifest v3 which kills extensions that reliably block ads</a></li>
+    <li><a href="https://www.techrepublic.com/article/google-makes-the-perfect-case-for-why-you-shouldnt-use-chrome/" target="_blank">Google makes the perfect case for why you shouldn’t use Chrome</a></li>
 
     <!-- <li><a href="" target="_blank"></a></li> -->
   </ul>
@@ -358,8 +360,8 @@
         </dl>
       </dd>
 
-    <dt style="margin-top: 1em;">Find scripts for this site</dt>
-    <dd>Search <i>greasyfork.org</i> for scripts for this site</dd>
+    <dt style="margin-top: 1em;">Find scripts for this site  <img src="../image/next.svg" style="margin-left: 2em;" alt=""></dt>
+    <dd>Search for scripts for this site</dd>
 
     <dt style="margin-top: 2em;"><img src="../image/gear.svg" alt=""> Options</dt>
     <dd>Open the Options Page</dd>
@@ -389,7 +391,7 @@
 
   <h3>Direct Install</h3>
   <p>Scripts can be directly installed from any script ending in <code>.user.js/.user.css</code> (remote or local file system) if loaded into a tab (open or drag & drop). In case of HTTP/s links, the same link will be set for script update. (v2.57)</p>
-  <p><del>Due to sandbox CSP header on <code>https://raw.githubusercontent.com/........uers.js</code> tab is forwarded to <code>cdn.jsdelivr.net</code> mirror.</del> (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1411641" title="CSP 'sandbox' directive prevents content scripts from matching, due to unique origin, breaking also browser features" target="_blank">Bug 1411641</a>).</p>
+  <p><s>Due to sandbox CSP header on <code>https://raw.githubusercontent.com/........uers.js</code> tab is forwarded to <code>cdn.jsdelivr.net</code> mirror.</s> (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1411641" title="CSP 'sandbox' directive prevents content scripts from matching, due to unique origin, breaking also browser features" target="_blank">Bug 1411641</a>).</p>
 
   <h2 id="android" class="experimental">📱 Firefox on Android</h2>
   <p>Support is experimental and based on user feedback.</p>
@@ -498,7 +500,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <p>Customize Toolbar Popup style/theme with valid CSS.</p>
   <p class="warning">Changes can break the layout.</p>
 
-  <h2 id="CodeMirror"><img src="../image/codemirror.png" alt=""> CodeMirror  <span>(advanced users)</span></h2>
+  <h2 id="CodeMirror"><img src="../image/codemirror.svg" alt=""> CodeMirror  <span>(advanced users)</span></h2>
   <p>Customize <a href="https://codemirror.net/doc/manual.html#config" target="_blank">CodeMirror Configuration</a> & <a href="https://jshint.com/docs/options/" target="_blank">JSHint Options</a> with a <b>valid JSON</b>. JSHint is set to ECMAScript 2020 ES11 & fairly strict guidelines for coding excellence.</p>
 
   <dl>
@@ -582,19 +584,19 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <dl>
     <dt>Script List</dt>
     <dd>Lists both UserScript and UserCSS</dd>
-    <dd>Scripts and CSS have different icons, and the icon for disabled ones are grey</dd>
+    <dd>Scripts and CSS have different icons, and disabled ones are grey</dd>
     <dd>Click on the Script/CSS to view/edit/enable/disable/delete</dd>
     <dd><span class="fail"></span>shows that there was an error when registering the script (<s>Scripts with errors get disabled automatically</s>)</dd>
 
 
-    <dt><img src="../image/js.svg" alt=""><img src="../image/css.svg" alt=""> <img src="../image/js.svg" style="filter: grayscale(1);" alt=""><img src="../image/css.svg" style="filter: grayscale(1);" alt=""> <img src="../image/js.svg" alt=""> <img src="../image/css.svg" alt=""></dt>
-    <dd>Click to hide/show all enabled Script & CSS</dd>
-    <dd>Click to hide/show all disabled Script & CSS</dd>
-    <dd>Click to hide/show all Scripts</dd>
-    <dd>Click to hide/show all CSS</dd>
+    <dt><img src="../image/js.svg" alt=""><img src="../image/css.svg" alt=""> <img src="../image/js.svg" class="gray" alt=""><img src="../image/css.svg" class="gray" alt=""> <img src="../image/js.svg" alt=""> <img src="../image/css.svg" alt=""></dt>
+    <dd><img src="../image/js.svg" alt=""><img src="../image/css.svg" alt=""> Click to hide/show all enabled Script & CSS</dd>
+    <dd><img src="../image/js.svg" class="gray" alt=""><img src="../image/css.svg" class="gray" alt=""> Click to hide/show all disabled Script & CSS</dd>
+    <dd><img src="../image/js.svg" alt=""><img src="../image/js.svg" class="hidden" alt=""> Click to hide/show all Scripts</dd>
+    <dd><img src="../image/css.svg" alt="""><img src="../image/css.svg" class="hidden" alt=""> Click to hide/show all CSS</dd>
 
     <dt>Counter</dt>
-    <dd>The counter shows the number of Script & CSS at the bottom</dd>
+    <dd>Shows the number of Script & CSS at the bottom</dd>
 
     <dt>📥 Import</dt>
     <dd>Import one or more Script/CSS from file</dd>
@@ -875,7 +877,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 @allFrames          <i>true/false (default)</i>
 
 
-<span style="color: #999;">
+<span class="dim">
 @matches            <i>browser API style same as @match</i>
 @excludeMatches     <i>browser API style same as @exclude-match</i>
 @includeGlobs       <i>browser API style same as @includeGlob</i>
@@ -1034,18 +1036,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <p><code>@grant</code> for GM APIs in <i>FireMonkey</i> in <code>userScripts</code> context, are inconsequential security-wise. Even in the disputed case of <code>GM.xmlHttpRequest</code>, the following scripts work the same way in <i>FireMonkey</i> and there is no difference in their security i.e. script A is not more secure than script B, and vice versa.</p>
 
 
-<table>
-  <caption>@grant Comparison</caption>
-  <thead>
-    <tr>
-      <th>Script A</th>
-      <th>Script B</th>
-    </tr>
-  </thead>
-  <tbody class="slim">
-    <tr>
-      <td>
-<pre style="border: none;"><span class="comment">// ==UserScript==
+<div style="display: grid; grid-template-columns: max-content max-content; column-gap: 1em;">
+  <pre><span class="comment">// ==UserScript==
 // @name            Script A
 // @match           http://www.example.com/*
 // @grant           GM.xmlHttpRequest
@@ -1056,24 +1048,21 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <span class="property">onload</span>: response =&gt; {
     <span class="property">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
   }
-});</pre></td>
-      <td>
-<pre style="border: none;"><span class="comment">// ==UserScript==
-// @name            Script B
-// @match           http://www.example.com/*
-// ==/UserScript==</span>
-
-
-<span class="gm">GM.xmlHttpRequest</span>({
-  url: <span class="string">'https://abcd.com/'</span>,
-  <span class="property">onload</span>: response =&gt; {
-    <span class="property">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
-  }
 });</pre>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+    <pre><span class="comment">// ==UserScript==
+  // @name            Script B
+  // @match           http://www.example.com/*
+  // ==/UserScript==</span>
+
+
+  <span class="gm">GM.xmlHttpRequest</span>({
+    url: <span class="string">'https://abcd.com/'</span>,
+    <span class="property">onload</span>: response =&gt; {
+      <span class="property">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
+    }
+  });</pre>
+</div>
 
 
 
@@ -1801,7 +1790,7 @@ body {
 
     <p class="caption">Multiple require <span>(injected in order)</span></p>
 <pre class="comment">
-<del>// @require         jquery-3</del>
+<s>// @require         jquery-3</s>
 // @require         HelperSet
 // @require         https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/fontawesome.min.css
 </pre>
@@ -1856,7 +1845,7 @@ body {
 <h3 class="warning" style="margin-top: 2em;">Bundled Libraries are removed in v2.68</h3>
 <p>The removal should only affect userscripts that used library shorthand.</p>
 
-<del style="font-size: 0.7em; display: block;">
+<s style="font-size: 0.7em;">
   <h3>@require <span style="font-size: inherit; margin-left: 4em;">specific-library</span></h3>
 
 
@@ -1922,7 +1911,7 @@ body {
 
   <p>On popular demand, more libraries may be added in future.</p>
 
-</del>
+</s>
 
 
   <h3 id="Storing-require">ℹ️ Storing require & resource Targets</h3>
@@ -1981,7 +1970,7 @@ body {
 
     <tr><th>GM.log</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>7</td></tr>
     <tr><th>GM.notification</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>42</td></tr>
-    <tr><th>GM.openInTab</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass sync"></td><td>178</td></tr>
+    <tr><th>GM.openInTab</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>178</td></tr>
     <tr><th>GM.popup</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
     <tr><th>GM.registerMenuCommand</th><td class="pass callback"></td><td class="pass callback">v4.11 <a href="https://wiki.greasespot.net/Version_history" target="_blank">ⓘ</a></td><td class="pass callback"></td><td class="pass callback">v2.12.10</td><td>131</td></tr>
     <tr><th>GM.setClipboard</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"> <a href="https://github.com/Tampermonkey/tampermonkey/issues/918" title="setClipboard API sets the clipboard to 'undefined'" target="_blank">ⓘ</a></td><td class="pass async"></td><td>77</td></tr>
@@ -2078,7 +2067,7 @@ body {
     <tr><th>&nbsp;</th><td colspan="5"></td></tr>
 
     <tr>
-      <th><img src="../image/osi.png" alt=""> Open Source <a href="https://opensource.org/licenses" title="Open Source Licenses" target="_blank">ⓘ</a></th>
+      <th><img src="../image/osi.svg" alt=""> Open Source <a href="https://opensource.org/licenses" title="Open Source Licenses" target="_blank">ⓘ</a></th>
       <td class="pass"></td>
       <td class="pass"></td>
       <td class="fail"><a href="https://github.com/Tampermonkey/tampermonkey" title="This repository contains the source of the Tampermonkey extension up to version 2.9. All newer versions are distributed under a proprietary license." target="_blank">Proprietary License</a> <a href="https://www.tampermonkey.net/eula.php" target="_blank">EULA</a></td>
@@ -2186,7 +2175,7 @@ body {
     <tr><th>&nbsp;</th><td colspan="4"></td></tr>
 
     <tr>
-      <th><img src="../image/osi.png" alt=""> Open Source</th>
+      <th><img src="../image/osi.svg" alt=""> Open Source</th>
       <td class="pass"></td>
       <td class="pass"></td>
       <td class="fail"><a href="https://userstyles.org/terms-of-use" target="_blank">Proprietary License</a></td>
@@ -2501,22 +2490,21 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
 
   <h2 id="xmlHttpRequest">xmlHttpRequest</h2>
-  <p>The xmlHttpRequest interface and mostly compatible with <i>Greasemonkey</i> API.</p>
+  <p>The <code>xmlHttpRequest</code> interface and mostly compatible with <i>Greasemonkey</i> API.</p>
 
   <p><b>Return value:</b> response <code>object</code></p>
 
 <pre>
 <span class="comment">// Response Object</span>
-<span class="keyword">await</span> <span class="gm">GM.xmlHttpRequest</span>({url, onload});
-<span class="keyword">await</span> <span class="gm">GM_xmlhttpRequest</span>({url, onload});
+<span class="gm">GM.xmlHttpRequest</span>({url, onload});
+<span class="gm">GM_xmlhttpRequest</span>({url, onload});
 </pre>
-
-  <p class="note">All requests are <code>asynchronous</code>, therefore <code>synchronous</code> is not supported.</p>
 
 
     <p class="caption">Request</p>
 <pre><span class="gm">GM.xmlHttpRequest</span>({
-  url,                      <span class="comment">// http, https, <s>ftp, ftps</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">ⓘ</a>, (file not allowed), can be relative to the web page</span>
+  url,                      <span class="comment">// http/https, <s>ftp/ftps</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">ⓘ</a>, (file not allowed)
+                               can be relative to the web page</span>
 
   method,                   <span class="comment">// Optional, defaults to 'GET' if omitted</span>
   headers,                  <span class="comment">// optional, header object to send with the request</span>
@@ -2896,8 +2884,6 @@ true/false  <span class="experimental">v2.48</span>
   <h3>GM_getResourceText</h3>
   <p>In case of synchronous <code>GM_getResourceText</code>, <i>Tampermonkey/ViolentMonkey</i> load & cache the remote resources, and then pass them to the userscript synchronously. Caching remote resources will increase the resources used by the extension, especially when the data is large. <a href="#Storing-require" title="Storing require & resource Targets">ⓘ</a></p>
 
-  <p><b>Return value:</b> empty space <code>string ' '</code></p>
-
   <p>Implementation of <code>GM_getResourceText</code> is different in FireMonkey.</p>
 
   <ul>
@@ -2905,6 +2891,8 @@ true/false  <span class="experimental">v2.48</span>
     <li>In case of JavaScript/JSON/HTML resources, it is not currently possible to dynamically load them into userScript context</li>
     <li>In all cases, <code>GM_getResourceText</code> returns an empty string (to prevent error)</li>
   </ul>
+
+  <p><b>Return value:</b> empty space <code>string ' '</code></p>
 
 
   <h2 id="getResourceUrl">getResourceUrl</h2>
@@ -4041,7 +4029,7 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
       </tr>
     </thead>
     <tbody class="slim">
-      <tr><th>2.68</th><td>75 <span class="dim">(2020-04-07)</span></td><td>to use static public class fields</td></tr>
+      <tr><th>2.68</th><td>75 <span class="dim">(2020-04-07)</span></td><td>to use static public class fields<br>Statistics: no <i>FireMonkey</i> users below Firefox 78</td></td></tr>
       <tr><th>2.42</th><td>74 <span class="dim">(2020-03-10)</span></td><td>To benefit from ECMAScript 2020 aka ES11<br>Statistics: no <i>FireMonkey</i> users below Firefox 77</td></tr>
       <tr><th>1.25</th><td>68 <span class="dim">(2019-07-09)</span></td><td>Official <i>userScripts</i> API release</td></tr>
       <tr><th>1.0 - 1.24</th><td>65 <span class="dim">(2019-01-29)</span></td><td>Initial <i>userScripts</i> API release<br>API was added in Firefox 65-67 but was disabled and had to be enabled via <code>about:config?filter=extensions.webextensions.userScripts.enabled</code></td></tr>

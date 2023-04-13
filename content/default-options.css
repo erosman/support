@@ -210,7 +210,7 @@ nav label a:hover {
 #nav7:checked ~ nav label[for="nav7"],
 #nav8:checked ~ nav label[for="nav8"] {
   background-color: var(--selected-bg);
-  border-bottom-color: #f84;
+  border-bottom-color: var(--highlight);
   opacity: 1;
 }
 

@@ -57,6 +57,14 @@ input[type="color"] {
   display: inline-block;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
+.gray {
+  filter: grayscale(1);
+}
+
 /* ----- popup ----- */
 .popup {
   display: grid;

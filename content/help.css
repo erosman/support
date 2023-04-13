@@ -18,7 +18,7 @@
     --border: #ddd;
     --h1: #066;
     --dt: #345;
-    --pre: #f9f9fb;
+    --pre: #f2f1f1;
     --quote: #f4f6fa;
     --pass: #080;
     --th: #f9f9fb;
@@ -36,7 +36,7 @@ body {
 }
 
 img {
-  vertical-align: text-bottom;
+  vertical-align: text-top;
 }
 
 img[src$=".svg"]:not([src$="js.svg"]):not([src$="css.svg"]) {
@@ -47,17 +47,17 @@ article {
   padding: 0.5em;
 }
 
-article > *:not(h1):not(h2) {
-  margin-left: 2rem;
+h1, h2, h3, h4, h5 {
+  font-family: serif;
 }
 
-article > h1 {
+h1 {
   color: var(--h1);
   font-size: 2em;
 }
 
-h3, h4 {
-  margin-bottom: 0;
+:not(h1) + h2 {
+  margin-top: 1.5em;
 }
 
 h1 img, h2 img, h3 img {
@@ -77,6 +77,10 @@ h3 sup {
   background-color: #cd853f;
   color: #fff;
   padding: 0.1em 0.4em;
+}
+
+strong {
+  color: #905;
 }
 
 dt {
@@ -112,8 +116,8 @@ dd sup, p sup {
   color: #05f;
 }
 
-del {
-  text-decoration: line-through wavy #f75;
+s {
+  text-decoration: line-through solid var(--highlight);
 }
 
 article li::marker { /* FF68 */
@@ -135,26 +139,30 @@ a[href^="https://bugzilla.mozilla.org/show_bug.cgi?id="]::before {
   margin-right: 0.3em;
 }
 
-a[href^="https://addons.mozilla.org/"]::before,
 a[href^="https://blog.mozilla.org/"]::before,
-a[href^="https://codemirror.net/"]::before,
 a[href^="https://developer.mozilla.org/"]::before,
-a[href^="https://developer.chrome.com/"]::before,
+a[href^="https://www.mozilla.org/"]::before,
+
+a[href^="https://addons.mozilla.org/"]::before,
 a[href^="https://extensionworkshop.com/"]::before,
-a[href^="https://github.com/"]::before,
 a[href^="https://support.mozilla.org/"]::before,
-a[href^="https://www.mozilla.org/"]::before {
+
+a[href^="https://codemirror.net/"]::before,
+a[href^="https://developer.chrome.com/"]::before,
+a[href^="https://github.com/"]::before {
   content: '';
   background: url('../image/dino.svg') no-repeat center / contain;
   display: inline-block;
   height: 1.1em;
   width: 1.1em;
   margin-right: 0.3em;
-  vertical-align: text-bottom;
+  vertical-align: text-top;
   filter: var(--img-filter);
 }
 
-a[href^="https://blog.mozilla.org/"]::before {
+a[href^="https://blog.mozilla.org/"]::before,
+a[href^="https://developer.mozilla.org/"]::before,
+a[href^="https://www.mozilla.org/"]::before {
   background-image: url('../image/moz.svg');
   border-radius: 1em;
 }
@@ -164,7 +172,7 @@ a[href^="https://github.com/"]::before {
 }
 
 a[href^="https://codemirror.net/"]::before {
-  background-image: url('../image/codemirror.png');
+  background-image: url('../image/codemirror.svg');
 }
 
 a[href^="https://developer.chrome.com/"]::before {
@@ -193,7 +201,7 @@ nav > a, nav div {
 }
 
 nav > a:hover, nav div:hover {
-  border-top-color: #f84;
+  border-top-color: var(--highlight);
 }
 
 nav a {
@@ -283,11 +291,6 @@ nav li:hover ul {
   100%  { opacity: 1; }
 }
 /* ----- /Navigation ----- */
-
-strong {
-  color: #905;
-}
-
 
 /* ----- Pre/figure ----- */
 pre {
@@ -418,7 +421,7 @@ kbd {
   width: 1.2em;
   height: 1.2em;
   margin-left: 0.5em;
-  vertical-align: text-bottom;
+  vertical-align: text-top;
 }
 
 /* ----- Table ----- */
@@ -426,7 +429,7 @@ caption, .caption {
   padding: 0.5em 0;
   font-weight: bold;
   text-align: left;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.2em;
 }
 
 .caption {
@@ -451,10 +454,8 @@ table, th, td {
 
 table {
   border-collapse: collapse;
-  /* border: 1px solid var(--border); */
   margin-bottom: 1em;
   min-width: 70%;
-  /* border-left: 4px solid var(--caption); */
 }
 
 th {

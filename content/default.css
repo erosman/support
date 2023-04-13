@@ -7,8 +7,9 @@
   --border: #777;
   --option-bg: #444;
   --link: #0ef;
-
   --dim: #ccc;
+
+  --highlight: #f84;
 
   /* --- about/help --- */
   --nav: #444;
@@ -27,7 +28,6 @@
     --border: #ddd;
     --option-bg: #f5f5f5;
     --link: #08f;
-
     --dim: #777;
 
     /* --- about/help --- */
