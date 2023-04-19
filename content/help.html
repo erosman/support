@@ -78,7 +78,7 @@
         <li><a href="#UserStyle">UserStyle</a></li>
         <li><a href="#debugging">Debugging Script & CSS</a></li>
         <li><a href="#Injection-Comparison">Injection Comparison</a></li>
-        <li><a href="#Performance-Test">Performance Test</a></li>
+        <!-- <li><a href="#Performance-Test">Performance Test</a></li> -->
         <li><a href="#JavaScript-Best-Practices">JavaScript Best Practices</a></li>
       </ul>
     </div>
@@ -155,28 +155,23 @@
 
   <h2>Quick Fixes</h2>
   <dl>
-    <dt>SyntaxError: return not in function</dt>
+    <dt>SyntaxError: <b>return</b> not in function</dt>
     <dd>💡 Use Wrap code in <a href="#IIFE">IIFE</a></dd>
     <dd><i>Greasemonkey</i>, <i>Tampermonkey</i> & <i>Violentmonkey</i> (as well as <i>Node.js</i>), wrap the userscripts in an anonymous IIFE (Immediately Invoked Function Expression) in order to limit its exposure to the page JavaScript. As a result, such JavaScript parse errors do not cause a problem, however that created a situation where developers write JavaScript with syntax errors.</dd>
-    <dd><a href="https://eslint.org/demo" target="_blank">ESLint</a> already displays the parse error for above</dd>
-    <dd><a href="https://jshint.com/" target="_blank">JSHint</a> currently doesn't display the error (<a href="https://github.com/jshint/jshint/issues/3612" target="_blank">JavaScript: Mark return out of function</a>)</dd>
-
+    <dd><a href="https://eslint.org/demo" target="_blank">ESLint</a> displays the parse error for above</dd>
+    <dd><a href="https://jshint.com/" target="_blank">JSHint</a> currently doesn't display the error</dd>
+    <dd>See also: <a href="https://github.com/jshint/jshint/issues/3612" target="_blank">JavaScript: Mark return out of function</a></dd>
 
     <dt><code>@grant none</code> & works in TM|VM</dt>
     <dd>💡 Try setting <code>@inject-into &nbsp;&nbsp;&nbsp; page</code> in <a href="#User-Metadata">User Metadata</a></dd>
 
-    <dt><a href="#defaults">defaults</a></dt>
-    <dd>
-      <dl>
-        <dt>Userscript needs to run in sub-frames</dt>
-        <dd>💡 Try setting <code>@allFrames &nbsp;&nbsp;&nbsp; true</code> in <a href="#User-Metadata">User Metadata</a></dd>
+    <dt>Userscript needs to run in sub-frames</dt>
+    <dd>💡 Try setting <code>@allFrames &nbsp;&nbsp;&nbsp; true</code> in <a href="#User-Metadata">User Metadata</a></dd>
+    <dd>See also: <a href="#defaults">defaults</a></dd>
 
-        <dt>No <code>@run-at</code> and script runs late</dt>
-        <dd>💡 Try setting <code>@run-at &nbsp;&nbsp;&nbsp; document-end</code> in <a href="#User-Metadata">User Metadata</a></dd>
-      </dl>
-
-    </dd>
-
+    <dt>No <code>@run-at</code> and script runs late</dt>
+    <dd>💡 Try setting <code>@run-at &nbsp;&nbsp;&nbsp; document-end</code> in <a href="#User-Metadata">User Metadata</a></dd>
+    <dd>See also: <a href="#defaults">defaults</a></dd
   </dl>
 
   <h2 id="manifest-v3">Manifest V3</h2>
@@ -281,23 +276,21 @@
     <dd>Open the Options page</dd>
 
     <dt><img src="../image/js.svg" alt=""> New UserScript</dt>
-    <dd>Open the Options page and display a new Script Template that you can edit and Save <sup>1</sup></dd>
+    <dd>Open the Options page and display a new Script Template that you can edit and Save</dd>
 
     <dt><img src="../image/css.svg" alt=""> New UserCSS</dt>
-    <dd>Open the Options page and display a new CSS Template that you can edit and Save <sup>1</sup></dd>
+    <dd>Open the Options page and display a new CSS Template that you can edit and Save</dd>
 
     <dt><img src="../image/help.svg" alt=""> Help</dt>
-    <dd>Display the Help document <sup>1</sup></dd>
+    <dd>Display the Help document</dd>
 
     <dt><img src="../image/document.svg" alt=""> Log</dt>
-    <dd>Display the latest (default 100) error and script-update messages when not in Private Window <sup>1</sup></dd>
-    <dd>Log data is not available in Container/Private mode</dd>
+    <dd>Display the latest (default 100) error and script-update messages</dd>
+    <dd>Log data is not available in Container/Private mode (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1659998" title="localStorage accessibility within extension privileged pages in Private Window" target="_blank">Bug 1659998</a>)</dd>
 
     <dt><img src="../locale-maker/locale-maker.svg" alt=""> Locale Maker</dt>
     <dd>Open the Locale Maker stand-alone module to create & share locale translations</dd>
   </dl>
-
-  <p><sup>1</sup><i> In Private Window opens the Options page (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1659998" title="localStorage accessibility within extension privileged pages in Private Window" target="_blank">Bug 1659998</a>).</i></p>
 
   <h3>Toolbar Icon Badge <sup>5</sup></h3>
   <p>Badge indicates the number of Script/CSS that are active in the tab (and all its iframes)</p>
@@ -338,10 +331,10 @@
         </dl>
       </dd>
 
-    <dt style="margin-top: 2em;">Script Commands <img src="../image/next.svg" style="margin-left: 2em;" alt=""></dt>
+    <dt>Script Commands <img src="../image/next.svg" style="margin-left: 2em;" alt=""></dt>
     <dd>Shows available Script Commands, click on each to run</dd>
 
-    <dt style="margin-top: 2em;">Scratchpad <img src="../image/next.svg" style="margin-left: 2em;" alt=""></dt>
+    <dt>Scratchpad <img src="../image/next.svg" style="margin-left: 2em;" alt=""></dt>
     <dd>Insert CSS & JavaScript temporarily into the active tab</dd>
     <dd>Scratchpad recalls the last entries for repeated use</dd>
 
@@ -636,6 +629,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <h3>Editor Area Buttons</h3>
 
   <dl>
+    <dt>Multiple Enable/Disable, Delete & Export</dt>
+    <dd><kbd>Ctrl</kbd> or <kbd>Shift</kbd> click to select multiple of items listed under Script & CSS</dd>
+
     <dt>💾 Save</dt>
     <dd>Save the currently displaying Script/CSS</dd>
       <dd class="note">Trailing Spaces are removed automatically when saving</dd>
@@ -672,10 +668,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
     <dd>Reset will revert to default values after <b>Save</b></dd>
     <dd class="note">Editing is non-destructive. Click <b>Save</b> to apply the changes.</dd>
 
-
     <dt>🗒 Report</dt>
     <dd>Display Lint Report with click-able lines to go to the corresponding line in the Script/CSS</dd>
-
 
     <dt><img src="../image/menu-dot.svg" alt=""> Menu</dt>
     <dd>
@@ -728,11 +722,6 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
           <dd>Storage value must be a <b>valid JSON</b></dd>
         </dl>
       </dd>
-
-
-    <dt>Multiple Enable/Disable, Delete & Export</dt>
-    <dd><kbd>Ctrl</kbd> or <kbd>Shift</kbd> click to select multiple of items listed under Script & CSS</dd>
-
   </dl>
 
   <h3>Editor Area Statistic Info</h3>
@@ -750,9 +739,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <h2 id="Auto-Update">Update & Auto-Update</h2>
   <p>Any target can be set for <code>@updateURL</code> as long it directly leads to the final file and it is in plain text. The <code>.js</code> or <code>.css</code> file extensions are not necessary although it makes sense to have them. The <code>.user.</code> is not necessary.</p>
   <p><i>FireMonkey</i> uses <code>@version</code> for the update process and both the current file and the update file must have <code>@version</code> and the version of the target file must be higher.</p>
-  <p>In case of <i>GreasyFork</i> & <i>OpenUserJS</i>, the <code>@version</code> via Metadata Block in <code>https://...../*.meta.js</code> is verified first.</p>
+  <p>In case of <i>GreasyFork/SleazyFork</i> & <i>OpenUserJS</i>, the <code>@version</code> via Metadata Block in <code>https://...../*.meta.js</code> is verified first.</p>
   <p>Update will fail if the new version has a different name which already exists among user's installed Scripts/CSS.</p>
-  <p>Auto-update will only update enabled Scripts/CSS but manual update can update both enabled and disabled ones.</p>
+  <p><s>Auto-update will only update enabled Scripts/CSS but manual update can update both enabled and disabled ones.</s></p>
   <p><code>@downloadURL/@installURL</code>, if present, is set for script update.</p>
   <p class="note">Install URL will be set as update URL if there is no <code>@updateURL/@downloadURL</code> in the metadata block. (v2.57)</p>
 
@@ -858,26 +847,26 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 @description
 @version            <i>needed for updates</i>
 @updateURL          <i>needed for updates</i>
-
 @match
 @exclude-match
 @include            <i>merged into includeGlobs</i>
 @exclude            <i>merged into excludeMatches</i>
-
 @require            <i>(script-name/specific-library/other-URL)</i>
 @resource           <i>(resourceName resourceURL)</i>
-@noframes           <i>if present will set @allFrames to false (default)</i>
 @run-at             <i>document-start/document-end/document-idle (default)</i>
+
+@noframes           <i>if present will set @allFrames to false (default)</i>
+@allFrames          <i>true/false (default)</i>
+
 @inject-into        <i>page</i>
 @container          <i>default|private|container-1|container-2|... (Firefox 97-98)</i>
-
-@includeGlob
-@excludeGlob
 @matchAboutBlank    <i>true/false (default)</i>
-@allFrames          <i>true/false (default)</i>
 
 
 <span class="dim">
+@includeGlob        <i>merged into includeGlobs</i>
+@excludeGlob        <i>merged into excludeMatches</i>
+
 @matches            <i>browser API style same as @match</i>
 @excludeMatches     <i>browser API style same as @exclude-match</i>
 @includeGlobs       <i>browser API style same as @includeGlob</i>
@@ -910,19 +899,18 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
     <tr><th>@include</th>           <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@exclude</th>           <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@exclude-match</th>     <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="pass"></td></tr>
-    <tr><th>@includeGlob</th>       <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
-    <tr><th>@excludeGlob</th>       <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
-    <tr><th>@matchAboutBlank</th>   <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
-    <tr><th>@allFrames</th>         <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
-    <tr><th>@noframes</th>          <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@require</th>           <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@resource</th>          <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@run-at</th>            <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@downloadURL</th>       <td class="pass"></td><td class="fail"></td><td class="pass"></td><td class="pass"></td></tr>
-
+    <tr><th>@noframes</th>          <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr><th>@allFrames</th>         <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
+    <tr><th>@matchAboutBlank</th>   <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
     <tr><th>@antifeature</th>       <td class="pass"></td><td class="fail"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@inject-into</th>       <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="pass"></td></tr>
 
+    <tr><th class="dim">@includeGlob</th>     <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
+    <tr><th class="dim">@excludeGlob</th>     <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
     <tr><th class="dim">@matches</th>         <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
     <tr><th class="dim">@excludeMatches</th>  <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
     <tr><th class="dim">@includeGlobs</th>    <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
@@ -1250,7 +1238,35 @@ element.<span class="property">innerHTML</span> = dom;
 </table>
 
 
+<table>
+  <caption>Context Comparison: MV3</caption>
+  <colgroup>
+    <col style="width: 12em;">
+    <col style="width: auto;">
+    <col style="width: auto;">
+    <col style="width: auto;">
+    <col style="width: auto;">
+  </colgroup>
+  <thead>
+    <tr>
+      <th></th>
+      <th>FireMonkey</th>
+      <th>Greasemonkey</th>
+      <th>Tampermonkey</th>
+      <th>Violentmonkey</th>
+    </tr>
+  </thead>
+  <tbody class="slim">
+    <tr>
+      <th>default</th>
+      <td>USER_SCRIPT</td>
+      <td>USER_SCRIPT</td>
+      <td>USER_SCRIPT</td>
+      <td>USER_SCRIPT</td>
+    </tr>
 
+  </tbody>
+</table>
 
 
 
@@ -1268,35 +1284,7 @@ element.<span class="property">innerHTML</span> = dom;
     </ul>
 
 
-  <table>
-    <caption>Context Comparison: MV3</caption>
-    <colgroup>
-      <col style="width: 12em;">
-      <col style="width: auto;">
-      <col style="width: auto;">
-      <col style="width: auto;">
-      <col style="width: auto;">
-    </colgroup>
-    <thead>
-      <tr>
-        <th></th>
-        <th>FireMonkey</th>
-        <th>Greasemonkey</th>
-        <th>Tampermonkey</th>
-        <th>Violentmonkey</th>
-      </tr>
-    </thead>
-    <tbody class="slim">
-      <tr>
-        <th>default</th>
-        <td>USER_SCRIPT</td>
-        <td>USER_SCRIPT</td>
-        <td>USER_SCRIPT</td>
-        <td>USER_SCRIPT</td>
-      </tr>
 
-    </tbody>
-  </table>
 
   <h3 id="var" class="experimental">@var</h3>
   <p>Configurable User variables for userScript & userCSS (one per line)</p>
@@ -1963,7 +1951,7 @@ body {
     <tr><th>GM.download</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="fail"></td><td>18</td></tr>
     <tr><th>GM.fetch</th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
     <tr><th>GM.getResourceText</th><td class="pass async"></td><td class="fail"><a href="https://github.com/greasemonkey/greasemonkey/issues/2548" title="Add or replace GM.getResourceText" target="_blank">ⓘ</a></td><td class="pass async"></td><td class="fail"></td><td>11</td></tr>
-    <tr><th>GM.getResourceUrl</th><td class="pass async"><a href="#getResourceUrl">ⓘ</a> different</td><td class="pass async"><a href="https://wiki.greasespot.net/GM.getResourceUrl" target="_blank">ⓘ</a></td><td class="pass async"></td><td class="pass async">v2.13.1</td><td>30</td></tr>
+    <tr><th>GM.getResourceUrl</th><td class="pass async">different <a href="#getResourceUrl">ⓘ</a></td><td class="pass async"><a href="https://wiki.greasespot.net/GM.getResourceUrl" target="_blank">ⓘ</a></td><td class="pass async"></td><td class="pass async">v2.13.1</td><td>30</td></tr>
     <tr><th>GM.getTab</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>3</td></tr>
     <tr><th>GM.getTabs</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>0</td></tr>
     <tr><th>GM.info</th><td class="pass sync"></td><td class="pass sync"></td><td class="pass sync"></td><td class="pass sync"></td><td>69</td></tr>
@@ -2001,8 +1989,8 @@ body {
     <tr><th>GM_cookie</th><td class="fail"></td><td class="fail"></td><td class="pass sync"><a href="https://github.com/Tampermonkey/tampermonkey/issues/465" title="GM_cookie - HttpOnly Cookie" target="_blank">ⓘ</a></td><td class="fail"></td><td>49</td></tr>
     <tr><th>GM_download</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>478</td></tr>
     <tr><th>GM_fetch</th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>3</td></tr>
-    <tr><th>GM_getResourceText</th><td class="pass sync alt"><a href="#getResourceText">ⓘ</a> different</td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>954</td></tr>
-    <tr><th>GM_getResourceURL</th><td class="pass sync"><a href="#getResourceUrl">ⓘ</a> different</td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>355</td></tr>
+    <tr><th>GM_getResourceText</th><td class="pass sync">different <a href="#getResourceText">ⓘ</a> </td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>954</td></tr>
+    <tr><th>GM_getResourceURL</th><td class="pass sync">different <a href="#getResourceUrl">ⓘ</a> </td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>355</td></tr>
     <tr><th>GM_getTab</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>43</td></tr>
     <tr><th>GM_getTabs</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>39</td></tr>
     <tr><th>GM_info</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>731</td></tr>
@@ -3219,7 +3207,7 @@ popup.addStyle(css);
   <h2 id="setClipboard">setClipboard</h2>
   <p>Copy text (<i>default</i>) or data (must include <i>type</i>) to the clipboard</p>
 
-  <p><b>Return value:</b> <code>undefined</code></p>
+  <p><b>Return value:</b> <code>undefined</code> or reject with error message</p>
 
 <pre>
 <span class="comment">// usually there is no need to wait for the following, but if needed, use await</span>
@@ -3278,7 +3266,7 @@ popup.addStyle(css);
 <span class="gm">GM_log</span>(<span class="gm">GM_info</span>);
 </pre>
 
-  <h2 id="unsafeWindow">unsafeWindow ⚠️</h2>
+  <h2 id="unsafeWindow">⚠️ unsafeWindow</h2>
   <p><code>unsafeWindow</code> in <i>FireMonkey</i> is an alias for <code>window.wrappedJSObject</code>. You can also use <code>window.wrappedJSObject</code> or <code>window.eval()</code> to access page JavaScript <b>globals</b> or to create function & objects in `page` context.</p>
 
   <p><b>Return value:</b> <code>window.wrappedJSObjec</code></p>
@@ -3959,7 +3947,7 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
 
   <h2 id="Injection-Comparison">Injection Comparison</h2>
 
-  <h3>Other userScript/userStyle Managers</h3>
+  <h4>Other userScript/userStyle Managers</h4>
   <ul>
     <li>Add listeners to all HTTP requests</li>
     <li>Loop through all scripts on every request to check if the there are scripts that match</li>
@@ -3968,7 +3956,7 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
     <li>Script injection is made into privileged <code>content</code> context, or <code>page</code> context</li>
   </ul>
 
-  <h3>FireMonkey</h3>
+  <h4>FireMonkey</h4>
   <ul>
     <li>All scripts are prepared and passed to Firefox native engine at start-up and when script/CSS is updated</li>
     <li>From then, FireMonkey does nothing and all script/CSS injections are handled by Firefox natively</li>
@@ -3976,7 +3964,7 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
   </ul>
 
 
-<h2 id="Performance-Test">Performance Test</h2>
+<h4 id="Performance-Test">Performance Test</h4>
   <ul>
     <li>Load the same userScript/userStyle/userCSS in <i>FireMonkey</i> and in other managers</li>
     <li>Open <code>about:performance</code></li>
@@ -3998,7 +3986,8 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
 
   </ul>
 
-  <h2 id="ftp">⚠️ FTP <span>(removed in Firefox 90)</span></h2>
+  <h2 id="ftp">⚠️ FTP</h2>
+  <p>FTP support has been removed in Firefox 90+.</p>
 
   <blockquote>
     <p>Aligning with our <a href="https://blog.mozilla.org/security/2015/04/30/deprecating-non-secure-http/" target="_blank">intent to deprecate non-secure HTTP</a> and increase the percentage of secure connections, we, as well as other major web browsers, decided to discontinue support of the FTP protocol.</p>
@@ -4029,10 +4018,30 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
       </tr>
     </thead>
     <tbody class="slim">
-      <tr><th>2.68</th><td>75 <span class="dim">(2020-04-07)</span></td><td>to use static public class fields<br>Statistics: no <i>FireMonkey</i> users below Firefox 78</td></td></tr>
-      <tr><th>2.42</th><td>74 <span class="dim">(2020-03-10)</span></td><td>To benefit from ECMAScript 2020 aka ES11<br>Statistics: no <i>FireMonkey</i> users below Firefox 77</td></tr>
-      <tr><th>1.25</th><td>68 <span class="dim">(2019-07-09)</span></td><td>Official <i>userScripts</i> API release</td></tr>
-      <tr><th>1.0 - 1.24</th><td>65 <span class="dim">(2019-01-29)</span></td><td>Initial <i>userScripts</i> API release<br>API was added in Firefox 65-67 but was disabled and had to be enabled via <code>about:config?filter=extensions.webextensions.userScripts.enabled</code></td></tr>
+      <tr>
+        <th>2.68</th>
+        <td>93 <span class="dim">(2021-10-05)</span></td>
+        <td>To benefit from ECMAScript 2022 aka ES13<br>Statistics: 4 users below Firefox 95</td>
+        </td>
+      </tr>
+      <tr>
+        <th>2.42</th>
+        <td>74 <span class="dim">(2020-03-10)</span></td>
+        <td>To benefit from ECMAScript 2020 aka ES11<br>Statistics: no users below Firefox 77</td>
+      </tr>
+      <tr>
+        <th>1.25</th>
+        <td>68 <span class="dim">(2019-07-09)</span></td>
+        <td>Official <i>userScripts</i> API release</td>
+      </tr>
+      <tr>
+        <th>1.0 - 1.24</th>
+        <td>65 <span class="dim">(2019-01-29)</span></td>
+        <td>Initial <i>userScripts</i> API release<br>
+          API was added in Firefox 65-67 but was disabled and had to be enabled via <br>
+          <code>about:config?filter=extensions.webextensions.userScripts.enabled</code>
+        </td>
+      </tr>
 
     </tbody>
   </table>

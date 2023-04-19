@@ -47,12 +47,17 @@ article {
   padding: 0.5em;
 }
 
-h1, h2, h3, h4, h5 {
-  font-family: serif;
+h1, h2 {
+  font-weight: normal;
 }
 
 h1 {
   color: var(--h1);
+  font-size: 2.5em;
+  border-bottom: 1px solid var(--border);
+}
+
+h2 {
   font-size: 2em;
 }
 
@@ -62,7 +67,6 @@ h1 {
 
 h1 img, h2 img, h3 img {
   width: 1em;
-  vertical-align: unset;
 }
 
 h2 span, h3 span {
@@ -86,7 +90,6 @@ strong {
 dt {
   color: var(--dt);
   background-color: var(--code);
-  /* font-weight: bold; */
   display: table;
   padding: 0.2em 0.5em;
   margin-bottom: 0.2em;
@@ -97,7 +100,7 @@ dd + dt {
 }
 
 dd > dl {
-  margin: 1em auto;
+  margin-top: 0.5em;
 }
 
 dt img, dd img {
@@ -134,19 +137,18 @@ a[href^="http"]::after {
   font-size: 0.7em;
 }
 
-a[href^="https://bugzilla.mozilla.org/show_bug.cgi?id="]::before {
-  content: '🐞';
-  margin-right: 0.3em;
-}
 
-a[href^="https://blog.mozilla.org/"]::before,
-a[href^="https://developer.mozilla.org/"]::before,
-a[href^="https://www.mozilla.org/"]::before,
 
+/* dino.svg */
 a[href^="https://addons.mozilla.org/"]::before,
 a[href^="https://extensionworkshop.com/"]::before,
 a[href^="https://support.mozilla.org/"]::before,
-
+/* moz.svg */
+a[href^="https://blog.mozilla.org/"]::before,
+a[href^="https://developer.mozilla.org/"]::before,
+a[href^="https://www.mozilla.org/"]::before,
+/* mix */
+a[href^="https://bugzilla.mozilla.org/show_bug.cgi?id="]::before,
 a[href^="https://codemirror.net/"]::before,
 a[href^="https://developer.chrome.com/"]::before,
 a[href^="https://github.com/"]::before {
@@ -166,6 +168,11 @@ a[href^="https://www.mozilla.org/"]::before {
   background-image: url('../image/moz.svg');
   border-radius: 1em;
 }
+
+a[href^="https://bugzilla.mozilla.org/show_bug.cgi?id="]::before {
+  background-image: url('../image/bugzilla.png');
+}
+
 
 a[href^="https://github.com/"]::before {
   background-image: url('../image/github.svg');
@@ -418,8 +425,8 @@ kbd {
   content: '';
   background: url('../image/beaker.svg') no-repeat center / contain;
   display: inline-block;
-  width: 1.2em;
-  height: 1.2em;
+  width: 1em;
+  height: 1em;
   margin-left: 0.5em;
   vertical-align: text-top;
 }
@@ -537,17 +544,14 @@ code.small {
 
 .pass::before {
   content: '✔ ';
-  font-weight: bold;
 }
 
 .fail::before {
   content: '✘ ';
-  font-weight: bold;
 }
 
 .unknown::before {
   content: '❓ ';
-  font-weight: bold;
 }
 
 .dim {
