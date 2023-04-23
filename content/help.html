@@ -153,7 +153,7 @@
     </tbody>
   </table>
 
-  <h2>Quick Fixes</h2>
+  <h2 id="Quick-Fixes">Quick Fixes</h2>
   <dl>
     <dt>SyntaxError: <b>return</b> not in function</dt>
     <dd>💡 Use Wrap code in <a href="#IIFE">IIFE</a></dd>
@@ -715,6 +715,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 @run-at
 @container                    (Firefox 97-98)
 @updateURL
+@metaURL
 </pre></dd>
 
           <dt>💿 Storage</dt>
@@ -739,11 +740,18 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <h2 id="Auto-Update">Update & Auto-Update</h2>
   <p>Any target can be set for <code>@updateURL</code> as long it directly leads to the final file and it is in plain text. The <code>.js</code> or <code>.css</code> file extensions are not necessary although it makes sense to have them. The <code>.user.</code> is not necessary.</p>
   <p><i>FireMonkey</i> uses <code>@version</code> for the update process and both the current file and the update file must have <code>@version</code> and the version of the target file must be higher.</p>
-  <p>In case of <i>GreasyFork/SleazyFork</i> & <i>OpenUserJS</i>, the <code>@version</code> via Metadata Block in <code>https://...../*.meta.js</code> is verified first.</p>
-  <p>Update will fail if the new version has a different name which already exists among user's installed Scripts/CSS.</p>
-  <p><s>Auto-update will only update enabled Scripts/CSS but manual update can update both enabled and disabled ones.</s></p>
-  <p><code>@downloadURL/@installURL</code>, if present, is set for script update.</p>
-  <p class="note">Install URL will be set as update URL if there is no <code>@updateURL/@downloadURL</code> in the metadata block. (v2.57)</p>
+
+
+  <ul>
+    <li>In case of <i>GreasyFork/SleazyFork/OpenUserJS</i>, the <code>@version</code> via <code>https://...../*.meta.js</code> is checked first.</l>
+    <li>Update will be canceled if the new version has a different name which already exists among user's installed Scripts/CSS.</li>
+    <li><s>Auto-update will only update enabled Scripts/CSS but manual update can update both enabled and disabled ones.</s></li>
+    <li><code>@downloadURL/@installURL</code>, if present, is set for script update.</li>
+    <li><code>@metaURL</code>, if present, is set for script update check. (2.68)</li>
+    <li>If <code>@downloadURL</code>, ends in <code>.meta.js</code>, it will be set as <code>@metaURL</code>. (v2.68)</li>
+    <li>Install URL will be set as update URL if there is no <code>@updateURL/@downloadURL</code> in the metadata block. (v2.57)</li>
+  </ul>
+
 
 
 <table>
@@ -759,9 +767,10 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   </thead>
   <tbody class="slim">
 
-    <tr><th>@updateURL</th><td class="pass">update target</td><td class="fail"></td><td>JSON</td><td class="unknown"></td></tr>
+    <tr><th>@updateURL</th><td class="pass">update target <span class="small">(.meta.js -> @metaURL)</span></td><td class="fail"></td><td>JSON</td><td class="unknown"></td></tr>
     <tr><th>@downloadURL</th><td class="pass">= @updateURL</td><td class="fail"></td><td>update target</td><td>update target <a href="https://violentmonkey.github.io/api/metadata-block/#downloadurl" title="Metadata Block @downloadURL" target="_blank">ⓘ</a></td></tr>
     <tr><th>install source</th><td class="pass"></td><td class="fail"></td><td class="unknown"></td><td>update target <a href="https://violentmonkey.github.io/api/metadata-block/#downloadurl" title="Automatically added when using 'Install from URL.'" target="_blank">ⓘ</a></td></tr>
+    <tr><th>@metaURL <span>(v2.68)</span></th><td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
     <tr><th>meta.js</th><td class="pass"></td><td>update target <a href="https://github.com/greasemonkey/greasemonkey/issues/3057" title="Auto-Update Scripts" target="_blank">ⓘ</a></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>meta.css</th><td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
     <tr><th>last-modified header</th><td class="fail"></td><td class="fail"></td><td class="unknown"></td><td class="unknown"></td></tr>
@@ -889,13 +898,14 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   </thead>
   <tbody class="slim">
     <tr><th>@name</th>              <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
-    <tr><th>@name:xx-YY</th>        <td class="pass"></td><td class="pass"><span>v4.11</span> <a href="https://wiki.greasespot.net/Version_history" target="_blank">ⓘ</a></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr><th>@name:xx-YY</th>        <td class="pass"></td><td class="pass">v4.11 <a href="https://wiki.greasespot.net/Version_history" target="_blank">ⓘ</a></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@author</th>            <td class="pass"></td><td class="fail"></td><td class="pass"></td><td class="pass"><a href="https://violentmonkey.github.io/api/metadata-block/" target="_blank">undocumented </a> <a href="https://github.com/violentmonkey/violentmonkey/blob/e49c64f7235ef4609fe0a33bc9e3670404cabb1c/src/common/options-defaults.js#L64" target="_blank">ⓘ</a></td></tr>
     <tr><th>@description</th>       <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
-    <tr><th>@description:xx-YY</th> <td class="pass"></td><td class="pass"><span>v4.11</span> <a href="https://wiki.greasespot.net/Version_history" target="_blank">ⓘ</a></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr><th>@description:xx-YY</th> <td class="pass"></td><td class="pass">v4.11 <a href="https://wiki.greasespot.net/Version_history" target="_blank">ⓘ</a></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@version</th>           <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@updateURL</th>         <td class="pass"></td><td class="fail"></td><td class="pass"></td><td class="pass"><a href="https://violentmonkey.github.io/api/metadata-block/" target="_blank">undocumented </a> <a href="https://github.com/violentmonkey/violentmonkey/blob/e49c64f7235ef4609fe0a33bc9e3670404cabb1c/src/background/utils/update.js#L71" target="_blank">ⓘ</a></td></tr>
-    <tr><th>@match</th>             <td class="pass"></td><td class="pass"><span>v0.9.8 (2011)</span> <a href="https://wiki.greasespot.net/Version_history" target="_blank">ⓘ</a></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr><th>@metaURL</th>           <td class="pass">v2.68</td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
+    <tr><th>@match</th>             <td class="pass"></td><td class="pass">v0.9.8 (2011) <a href="https://wiki.greasespot.net/Version_history" target="_blank">ⓘ</a></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@include</th>           <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@exclude</th>           <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@exclude-match</th>     <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="pass"></td></tr>
@@ -906,7 +916,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
     <tr><th>@noframes</th>          <td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@allFrames</th>         <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
     <tr><th>@matchAboutBlank</th>   <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
-    <tr><th>@antifeature</th>       <td class="pass"></td><td class="fail"></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr><th>@antifeature</th>       <td class="pass">v2.0</td><td class="fail"></td><td class="pass"></td><td class="pass"></td></tr>
     <tr><th>@inject-into</th>       <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="pass"></td></tr>
 
     <tr><th class="dim">@includeGlob</th>     <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
@@ -1942,11 +1952,15 @@ body {
     <tr><th>GM.setValues <span>(v2.68)</span></th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td></td></tr>
     <tr><th>GM.deleteValues <span>(v2.68)</span></th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td></td></tr>
 
-    <tr><th><b>Other</b></th><td colspan="5"></td></tr>
+    <tr><th><b>DOM</b></th><td colspan="5"></td></tr>
 
     <tr><th>GM.addElement</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync">v4.12</td><td class="pass sync">v2.13.1</td><td>4</td></tr>
     <tr><th>GM.addScript</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
     <tr><th>GM.addStyle</th><td class="pass sync"></td><td class="fail"><a href="https://wiki.greasespot.net/GM_addStyle" title="As of Greasemonkey 4.0, this method has been removed. " target="_blank">ⓘ</a></td><td class="pass sync"></td><td class="pass sync"></td><td>102</td></tr>
+    <tr><th>GM.popup</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
+
+    <tr><th><b>Other</b></th><td colspan="5"></td></tr>
+
     <tr><th>GM.cookie</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>9</td></tr>
     <tr><th>GM.download</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="fail"></td><td>18</td></tr>
     <tr><th>GM.fetch</th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
@@ -1959,7 +1973,7 @@ body {
     <tr><th>GM.log</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>7</td></tr>
     <tr><th>GM.notification</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>42</td></tr>
     <tr><th>GM.openInTab</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>178</td></tr>
-    <tr><th>GM.popup</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
+
     <tr><th>GM.registerMenuCommand</th><td class="pass callback"></td><td class="pass callback">v4.11 <a href="https://wiki.greasespot.net/Version_history" target="_blank">ⓘ</a></td><td class="pass callback"></td><td class="pass callback">v2.12.10</td><td>131</td></tr>
     <tr><th>GM.setClipboard</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"> <a href="https://github.com/Tampermonkey/tampermonkey/issues/918" title="setClipboard API sets the clipboard to 'undefined'" target="_blank">ⓘ</a></td><td class="pass async"></td><td>77</td></tr>
     <tr><th>GM.unregisterMenuCommand</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>6</td></tr>
@@ -1975,17 +1989,19 @@ body {
     <tr><th>GM_addValueChangeListener</th><td class="pass callback"></td><td class="fail"></td><td class="pass callback"></td><td class="pass callback"></td><td>209</td></tr>
     <tr><th>GM_removeValueChangeListener</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>77</td></tr>
 
-
-
     <tr><th>GM_getValues <span>(v2.68)</span></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td></td></tr>
     <tr><th>GM_setValues <span>(v2.68)</span></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td></td></tr>
     <tr><th>GM_deleteValues <span>(v2.68)</span></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td></td></tr>
 
-    <tr><th><b>Other</b></th><td colspan="5"></td></tr>
+    <tr><th><b>DOM</b></th><td colspan="5"></td></tr>
 
     <tr><th>GM_addElement</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync">v4.11 <a href="https://www.tampermonkey.net/changelog.php?ext=dhdg&show=fire" target="_blank">ⓘ</a></td><td class="pass sync">v2.13.1</td><td>41</td></tr>
     <tr><th>GM_addScript</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
     <tr><th>GM_addStyle</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>5,452</td></tr>
+    <tr><th>GM_popup</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
+
+    <tr><th><b>Other</b></th><td colspan="5"></td></tr>
+
     <tr><th>GM_cookie</th><td class="fail"></td><td class="fail"></td><td class="pass sync"><a href="https://github.com/Tampermonkey/tampermonkey/issues/465" title="GM_cookie - HttpOnly Cookie" target="_blank">ⓘ</a></td><td class="fail"></td><td>49</td></tr>
     <tr><th>GM_download</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>478</td></tr>
     <tr><th>GM_fetch</th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>3</td></tr>
@@ -1997,7 +2013,6 @@ body {
     <tr><th>GM_log</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>865</td></tr>
     <tr><th>GM_notification</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>617</td></tr>
     <tr><th>GM_openInTab</th><td class="pass async"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>1,326</td></tr>
-    <tr><th>GM_popup</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
     <tr><th>GM_registerMenuCommand</th><td class="pass callback"></td><td class="fail"></td><td class="pass callback"></td><td class="pass callback"></td><td>1,923</td></tr>
     <tr><th>GM_saveTab</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>37</td></tr>
     <tr><th>GM_setClipboard</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>1,556</td></tr>
@@ -2272,7 +2287,7 @@ body {
 
   <h2 id="addElement" class="experimental">addElement</h2>
   <p>Compatibility API with <i>Tampermonkey</i> <a href="https://www.tampermonkey.net/documentation.php#GM_addElement" title="this feature is experimental and the API may change" target="_blank">ⓘ</a> & <i>Violentmonkey</i> <a href="https://violentmonkey.github.io/api/gm/#gm_addelement" title="This API is experimental in Tampermonkey, and hence subject to change" target="_blank">ⓘ</a> (experimental and subject to change).</p>
-  <p><b>Return value:</b> created element || <code>undefined</code></p>
+  <p><b>Return value:</b> created element || <code>undefined</code> <i>(on error)</i></p>
 
 <pre>
 <span class="keyword">const</span> elem = <span class="gm">GM.addElement</span>(tagName, attributes);
@@ -2361,7 +2376,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 </pre>
 
 
-  <h2 id="fetch">fetch <span>(⚠️ breaking changes in v2.33)</span></h2>
+  <h2 id="fetch">fetch</h2>
 
   <p><i>FireMonkey</i> <code>fetch</code> API is based on the JavaScript <a href="https://developer.mozilla.org/docs/Web/API/WindowOrWorkerGlobalScope/fetch" target="_blank">Fetch API</a> which provides the new Promise based interface for fetching resources (including across the network). It will seem familiar to anyone who has used <code>XMLHttpRequest</code>, but it provides a more powerful and flexible feature set.</p>
   <p>For simplicity and compatibility, the same GM style naming is kept for <code>fetch</code> API although it is not available in <i>Greasemonkey</i>.</p>
@@ -3175,17 +3190,17 @@ popup.addStyle(css);
 <p class="caption">Return Object</p>
 <pre>{
   <span class="property">scriptHandler</span>:    <span class="string">'FireMonkey'</span>,
-  <span class="property">version</span>:          <span class="string">'e.g. 2.45'</span>,
-  <span class="property">scriptMetaStr</span>:    <span class="keyword">null</span>,
+  <span class="property">version</span>:          <span class="string">'e.g. 2.68'</span>,
+  <span class="property">scriptMetaStr</span>:    <span class="string">''</span>,       <span class="comment">// empty string (v2.68)</span>
   <span class="property">platform</span>: {
-    <span class="property">os</span>:             <span class="string">'e.g. mac win android cros linux openbsd'</span>,
-    <span class="property">arch</span>:           <span class="string">'e.g. arm x86-32 x86-64'</span>
+    <span class="property">arch</span>:           <span class="string">'e.g. arm x86-32 x86-64'</span>,
+    <span class="property">os</span>:             <span class="string">'e.g. mac win android cros linux openbsd'</span>
   },
   <span class="property">browser</span>: {
     <span class="property">name</span>:           <span class="string">'Firefox'</span>,
     <span class="property">vendor</span>:         <span class="string">'Mozilla'</span>,
-    <span class="property">version</span>:        <span class="string">'e.g. 100.0a1'</span>,
-    <span class="property">buildID</span>:        <span class="string">'e.g. 20220318212951'</span>
+    <span class="property">version</span>:        <span class="string">'e.g. 114.0a1'</span>,
+    <span class="property">buildID</span>:        <span class="string">'e.g. 20230421211246'</span>
   },
   <span class="property">script</span>: {
     <span class="property">name</span>:           <span class="string">'script name'</span>,
@@ -3198,7 +3213,7 @@ popup.addStyle(css);
     <span class="property">includeGlobs</span>:   <span class="value">[array of include/includeGlob]</span>,
     <span class="property">excludeGlobs</span>:   <span class="value">[array of exclude/excludeGlob]</span>,
     <span class="property">'run-at'</span>:       <span class="string">'e.g. document-idle'</span>,
-    <span class="property">namespace</span>:      <span class="keyword">null</span>,
+    <span class="property">namespace</span>:      <span class="string">''</span>,       <span class="comment">// empty string (v2.68)</span>
     <span class="property">resources</span>:      <span class="value">{object of name: url}</span>
   }
 }</pre>
@@ -3424,7 +3439,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
       <th>xmlHttpRequest<br>Browser Cookie Isolation</th>
       <td class="pass"></td>
       <td class="fail"></td>
-      <td class="pass"><span>v4.12.6132</span> <a href="https://addons.mozilla.org/firefox/addon/tampermonkey/versions/" target="_blank">ⓘ</a> <a href="https://github.com/Tampermonkey/tampermonkey/issues/1436" title="GM_xmlhttpRequest does not respect the contextual identity in Firefox" target="_blank">ⓘ</a></td>
+      <td class="pass">v4.12.6132 <a href="https://addons.mozilla.org/firefox/addon/tampermonkey/versions/" target="_blank">ⓘ</a> <a href="https://github.com/Tampermonkey/tampermonkey/issues/1436" title="GM_xmlhttpRequest does not respect the contextual identity in Firefox" target="_blank">ⓘ</a></td>
       <td class="pass"></td>
     </tr>
 
@@ -3457,7 +3472,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
       <td class="pass"></td>
       <td class="fail"></td>
       <td class="pass"></td>
-      <td class="pass"><span>v2.10.1</span> <a href="https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest" title="Violentmonkey GM_* APIs" target="_blank">ⓘ</a>
+      <td class="pass">v2.10.1 <a href="https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest" title="Violentmonkey GM_* APIs" target="_blank">ⓘ</a>
       </td>
     </tr>
 
@@ -3466,7 +3481,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
       <td class="pass"></td>
       <td class="fail"></td>
       <td class="pass"></td>
-      <td class="pass"><span>v2.12.5</span> <a href="https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest" title="Violentmonkey GM_* APIs" target="_blank">ⓘ</a>
+      <td class="pass">v2.12.5 <a href="https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest" title="Violentmonkey GM_* APIs" target="_blank">ⓘ</a>
       <a href="https://github.com/violentmonkey/violentmonkey/issues/794" title="GM_xmlhttpRequest's Set-Cookie header overwrites cookies " target="_blank">ⓘ</a>
       </td>
     </tr>
@@ -3933,7 +3948,7 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
 </pre></dd>
 
     <dt>View Inserted UserScript</dt>
-    <dd>You can see the actual blob JavaScript in <a href="https://developer.mozilla.org/docs/Tools" target="_blank">Developer Tools</a> (<kbd>F12</kbd>) <b>Debugger</b> tab under <code>FireMonkey/userscript/</code> (v2.68) (<code>user-script://FireMonkey/</code> pre-2.68) (you may have to refresh the page)</dd>
+    <dd>You can see the actual blob JavaScript in <a href="https://developer.mozilla.org/docs/Tools" target="_blank">Developer Tools</a> (<kbd>F12</kbd>) <b>Debugger</b> tab under <code>FireMonkey/userscript/</code> (v2.68) (<code>user-script://FireMonkey/</code> pre-2.68) (you may have to refresh the page) (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1824910" target="_blank">Display inconsistency of folder & file</a>)</dd>
 
     <dt>CSS Errors</dt>
     <dd>The CSS error can be checked in <b>Developer Tools</b> (<kbd>F12</kbd>) for the page that the CSS is injected into.</dd>

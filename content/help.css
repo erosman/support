@@ -137,8 +137,6 @@ a[href^="http"]::after {
   font-size: 0.7em;
 }
 
-
-
 /* dino.svg */
 a[href^="https://addons.mozilla.org/"]::before,
 a[href^="https://extensionworkshop.com/"]::before,
@@ -173,7 +171,6 @@ a[href^="https://bugzilla.mozilla.org/show_bug.cgi?id="]::before {
   background-image: url('../image/bugzilla.png');
 }
 
-
 a[href^="https://github.com/"]::before {
   background-image: url('../image/github.svg');
 }
@@ -187,7 +184,7 @@ a[href^="https://developer.chrome.com/"]::before {
 }
 
 /* ----- Navigation ----- */
-nav  {
+nav {
   background-color: var(--nav);
   position: sticky;
   top: 0;
@@ -294,8 +291,8 @@ nav li:hover ul {
 }
 
 @keyframes fade {
-  0%    { opacity: 0; }
-  100%  { opacity: 1; }
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
 }
 /* ----- /Navigation ----- */
 
@@ -391,7 +388,7 @@ kbd {
   font-family: monospace;
 }
 
-.note, .footnote, .warning  {
+.note, .footnote, .warning {
   border: 1px solid var(--border);
   border-left: 4px solid #17f;
   padding: 0.3em 0.5em 0.3em 2em;
@@ -516,8 +513,7 @@ td code {
   white-space: pre;
 }
 
-td .pass, td .fail,
-td.pass span, td.fail span {
+td .pass, td .fail {
  font-family: monospace;
  font-size: initial;
 }
