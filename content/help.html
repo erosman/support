@@ -175,7 +175,7 @@
   </dl>
 
   <h2 id="manifest-v3">Manifest V3</h2>
-  <p>Changes introduced by Chrome in manifest v3 (MV3) will have considerable affect on the extensions.</p>
+  <p>Changes introduced by Chrome in manifest v3 (MV3) will have considerable effect on the extensions.</p>
 
   <blockquote><p>With the info available so far, ManifestV3 will kill Violentmonkey, Tampermonkey, Stylus, Stylish, and similar extensions. Google's engineers are either lying or evading such questions when asked directly. There's nothing we can do about that.</p>
     <cite><a href="https://github.com/violentmonkey/violentmonkey/issues/505" target="_blank">Violentmonkey and manifest V3</a></cite>
@@ -269,7 +269,7 @@
 
   <h2 id="toolbar">Toolbar Icon</h2>
 
-  <h3>Toolbar Icon Context Menu</h3>
+  <h3>Toolbar Icon Context Menu  <span>(not available on Android)</span></h3>
 
   <dl>
     <dt><img src="../image/gear.svg" alt=""> Options</dt>
@@ -371,7 +371,7 @@
 
   </dl>
 
-  <h2 id="page-menu">Page Context Menu</h2>
+  <h2 id="page-menu">Page Context Menu <span>(not available on Android)</span></h2>
 
   <h3>Install Stylish Style</h3>
   <p>Install styles on <i>userstyles.org</i></p>
@@ -743,15 +743,18 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
   <ul>
-    <li>In case of <i>GreasyFork/SleazyFork/OpenUserJS</i>, the <code>@version</code> via <code>https://...../*.meta.js</code> is checked first.</l>
-    <li>Update will be canceled if the new version has a different name which already exists among user's installed Scripts/CSS.</li>
-    <li><s>Auto-update will only update enabled Scripts/CSS but manual update can update both enabled and disabled ones.</s></li>
-    <li><code>@downloadURL/@installURL</code>, if present, is set for script update.</li>
-    <li><code>@metaURL</code>, if present, is set for script update check. (2.68)</li>
-    <li>If <code>@downloadURL</code>, ends in <code>.meta.js</code>, it will be set as <code>@metaURL</code>. (v2.68)</li>
-    <li>Install URL will be set as update URL if there is no <code>@updateURL/@downloadURL</code> in the metadata block. (v2.57)</li>
+    <li>In case of <i>GreasyFork/SleazyFork/OpenUserJS</i>, the <code>@version</code> via <code>https://...../*.meta.js</code> is checked first</l>
+    <li>Update will be canceled if the new version has a different name which already exists among user's installed Scripts/CSS</li>
+    <li><code>@downloadURL/@installURL</code>, if present, is set for script update</li>
+    <li><code>@metaURL</code>, if present, is set for script update check (2.68)</li>
+    <li>If <code>@downloadURL</code>, ends in <code>.meta.js</code>, it will be set as <code>@metaURL</code> (v2.68)</li>
+    <li>Install URL will be set as update URL if there is no <code>@updateURL/@downloadURL</code> in the metadata block (v2.57)</li>
+    <li><s>Auto-update will only update enabled Scripts/CSS but manual update can update both enabled and disabled ones</s></li>
   </ul>
 
+  <h3>meta.js/meta.css</h3>
+  <p><i>FireMonkey</i> only checks <code>@version</code>, therefore a minimal <code>meta.js/meta.css</code> would suffice.</p>
+  <pre>@version            1.0</pre>
 
 
 <table>
@@ -767,7 +770,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   </thead>
   <tbody class="slim">
 
-    <tr><th>@updateURL</th><td class="pass">update target <span class="small">(.meta.js -> @metaURL)</span></td><td class="fail"></td><td>JSON</td><td class="unknown"></td></tr>
+    <tr><th>@updateURL</th><td class="pass">update target</td><td class="fail"></td><td>JSON</td><td class="unknown"></td></tr>
     <tr><th>@downloadURL</th><td class="pass">= @updateURL</td><td class="fail"></td><td>update target</td><td>update target <a href="https://violentmonkey.github.io/api/metadata-block/#downloadurl" title="Metadata Block @downloadURL" target="_blank">ⓘ</a></td></tr>
     <tr><th>install source</th><td class="pass"></td><td class="fail"></td><td class="unknown"></td><td>update target <a href="https://violentmonkey.github.io/api/metadata-block/#downloadurl" title="Automatically added when using 'Install from URL.'" target="_blank">ⓘ</a></td></tr>
     <tr><th>@metaURL <span>(v2.68)</span></th><td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
@@ -854,14 +857,18 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 @name
 @author
 @description
+
 @version            <i>needed for updates</i>
 @updateURL          <i>needed for updates</i>
+@metaURL            <i>meta.js/meta.css URL</i>
+
 @match
 @exclude-match
 @include            <i>merged into includeGlobs</i>
 @exclude            <i>merged into excludeMatches</i>
-@require            <i>(script-name/specific-library/other-URL)</i>
-@resource           <i>(resourceName resourceURL)</i>
+
+@require            <i>script-name/other-URL<s>/specific-library</s></i>
+@resource           <i>resourceName resourceURL</i>
 @run-at             <i>document-start/document-end/document-idle (default)</i>
 
 @noframes           <i>if present will set @allFrames to false (default)</i>
@@ -872,7 +879,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 @matchAboutBlank    <i>true/false (default)</i>
 
 
-<span class="dim">
+<span style="color: #777;">
 @includeGlob        <i>merged into includeGlobs</i>
 @excludeGlob        <i>merged into excludeMatches</i>
 
@@ -917,7 +924,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
     <tr><th>@allFrames</th>         <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
     <tr><th>@matchAboutBlank</th>   <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
     <tr><th>@antifeature</th>       <td class="pass">v2.0</td><td class="fail"></td><td class="pass"></td><td class="pass"></td></tr>
-    <tr><th>@inject-into</th>       <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="pass"></td></tr>
+    <tr><th>@inject-into</th>       <td class="pass">v2.13</td><td class="fail"></td><td class="fail"></td><td class="pass"></td></tr>
 
     <tr><th class="dim">@includeGlob</th>     <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
     <tr><th class="dim">@excludeGlob</th>     <td class="pass"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td></tr>
@@ -1118,24 +1125,15 @@ element.<span class="property">innerHTML</span> = dom;
     </li>
   </ul>
 
-
-
 <table>
   <caption>Context Comparison: MV2</caption>
-  <colgroup>
-    <col style="width: 12em;">
-    <col style="width: auto;">
-    <col style="width: auto;">
-    <col style="width: auto;">
-    <col style="width: auto;">
-  </colgroup>
   <thead>
     <tr>
-      <th></th>
-      <th>FireMonkey</th>
-      <th>Greasemonkey</th>
-      <th>Tampermonkey</th>
-      <th>Violentmonkey</th>
+      <th style="width: 12em;"></th>
+      <th style="width: 20em;">FireMonkey</th>
+      <th style="width: 25em;">Greasemonkey</th>
+      <th style="width: 20em;">Tampermonkey</th>
+      <th style="width: 20em;">Violentmonkey</th>
     </tr>
   </thead>
   <tbody class="slim">
@@ -1250,16 +1248,9 @@ element.<span class="property">innerHTML</span> = dom;
 
 <table>
   <caption>Context Comparison: MV3</caption>
-  <colgroup>
-    <col style="width: 12em;">
-    <col style="width: auto;">
-    <col style="width: auto;">
-    <col style="width: auto;">
-    <col style="width: auto;">
-  </colgroup>
   <thead>
     <tr>
-      <th></th>
+      <th style="width: 12em;"></th>
       <th>FireMonkey</th>
       <th>Greasemonkey</th>
       <th>Tampermonkey</th>
@@ -1608,11 +1599,12 @@ body {
           <p>(in this case http, https, file)</p>
         </td>
         <td>
-          <code class="pass">http://example.org/</code><br>
-          <code class="pass">https://files.example.org/</code><br>
-          <code class="pass"><s>ftp://example.org/some/path/</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">ⓘ</a></code>
+          <p class="pass">http://example.org/</p>
+          <p class="pass">https://files.example.org/</p>
+          <p class="pass"><s>ftp://example.org/some/path/</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">ⓘ</a></p>
         </td>
         <td>
+          <p class="fail">resource://a/b/c/</p>
         </td>
       </tr>
 
@@ -1622,11 +1614,11 @@ body {
           <p>Match all http, https</p>
         </td>
         <td>
-          <code class="pass">http://example.org/</code><br>
-          <code class="pass">https://www.example.org/aaa/</code>
+          <p class="pass">http://example.org/</p>
+          <p class="pass">https://www.example.org/aaa/</p>
         </td>
         <td>
-          <code class="fail"><s>ftp://www.example.org/</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">ⓘ</a></code>
+          <p class="fail"><s>ftp://www.example.org/</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">ⓘ</a></p>
         </td>
       </tr>
 
@@ -1635,12 +1627,12 @@ body {
           <code>*://*.example.org/*</code>
         </td>
         <td>
-          <code class="pass">http://example.org/</code><br>
-          <code class="pass">https://www.example.org/</code><br>
-          <code class="pass">http://www.sub.example.org/aaa/</code>
+          <p class="pass">http://example.org/</p>
+          <p class="pass">https://www.example.org/</p>
+          <p class="pass">http://www.sub.example.org/aaa/</p>
         </td>
         <td>
-          <code class="fail"><s>ftp://www.example.org/</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">ⓘ</a></code>
+          <p class="fail"><s>ftp://www.example.org/</s> <a href="#ftp" title="What to expect for the upcoming deprecation of FTP in Firefox">ⓘ</a></p>
         </td>
       </tr>
 
@@ -1649,12 +1641,12 @@ body {
           <code>*://example.org/</code>
         </td>
         <td>
-          <code class="pass">http://example.org/</code><br>
-          <code class="pass">https://example.org/</code>
+          <p class="pass">http://example.org/</p>
+          <p class="pass">https://example.org/</p>
         </td>
         <td>
-          <code class="fail">https://www.example.org/</code><br>
-          <code class="fail">http://example.org/aaa/</code>
+          <p class="fail">https://www.example.org/</p>
+          <p class="fail">http://example.org/aaa/</p>
         </td>
       </tr>
 
@@ -1663,12 +1655,11 @@ body {
           <code>https://*/path</code>
         </td>
         <td>
-
-          <code class="pass">https://www.example.org/path</code>
+          <p class="pass">https://www.example.org/path</p>
         </td>
         <td>
-          <code class="fail">http://example.org/</code><br>
-          <code class="fail">http://example.org/path</code>
+          <p class="fail">http://example.org/</p>
+          <p class="fail">http://example.org/path</p>
         </td>
       </tr>
 
@@ -1677,11 +1668,11 @@ body {
           <code>file:///blah/*</code>
         </td>
         <td>
-          <code class="pass">file:///blah/</code><br>
-          <code class="pass">file:///blah/etc</code>
+          <p class="pass">file:///blah/</p>
+          <p class="pass">file:///blah/etc</p>
         </td>
         <td>
-          <code class="fail">file:///etc/</code>
+          <p class="fail">file:///etc/</p>
         </td>
       </tr>
     </tbody>
@@ -1697,14 +1688,14 @@ body {
     </tr>
     </thead>
     <tbody>
-      <tr><td><code class="fail">resource://path/</code></td><td>Unsupported scheme</td></tr>
-      <tr><td><code class="fail">https://mozilla.org</code></td><td>No path</td></tr>
-      <tr><td><code class="fail">https://mozilla.*.org/</code></td><td><code>"*"</code> in host must be at the start</td></tr>
-      <tr><td><code class="fail">https://*zilla.org/</code></td><td><code>"*"</code> in host must be the only character or be followed by <code>"."</code></td></tr>
-      <tr><td><code class="fail">http*://mozilla.org/</code></td><td><code>"*"</code> in scheme must be the only character</td></tr>
-      <tr><td><code class="fail">https://mozilla.org:80/</code></td><td>Host must not include a port number</td></tr>
-      <tr><td><code class="fail">*://*</code></td><td>Empty path: this should be <code>"*://*/*"</code></td></tr>
-      <tr><td><code class="fail">file://*</code></td><td>Empty path: this should be <code>"file:///*"</code></td></tr>
+      <tr><td class="fail code">resource://path/</td><td>Unsupported scheme</td></tr>
+      <tr><td class="fail code">https://mozilla.org</td><td>No path</td></tr>
+      <tr><td class="fail code">https://mozilla.*.org/</td><td><code>"*"</code> in host must be at the start</td></tr>
+      <tr><td class="fail code">https://*zilla.org/</td><td><code>"*"</code> in host must be the only character or be followed by <code>"."</code></td></tr>
+      <tr><td class="fail code">http*://mozilla.org/</td><td><code>"*"</code> in scheme must be the only character</td></tr>
+      <tr><td class="fail code">https://mozilla.org:80/</td><td>Host must not include a port number</td></tr>
+      <tr><td class="fail code">*://*</td><td>Empty path: this should be <code>"*://*/*"</code></td></tr>
+      <tr><td class="fail code">file://*</td><td>Empty path: this should be <code>"file:///*"</code></td></tr>
   </tbody>
 </table>
 
@@ -2234,7 +2225,7 @@ body {
 
 
 
-<p><b>Return value:</b> GM.* Promise | GM_* synch return</p>
+<p><b>Return value:</b> GM.* Promise | GM_* sync return</p>
 <ul>
   <li>getValue: value || default</li>
   <li>setValue: <code>undefined</code></li>
@@ -2753,71 +2744,51 @@ xhr.send(<span class="keyword">null</span>);
     </tr>
   </thead>
   <tbody>
-    <tr><th>open_in_background<br><span>+ default values</span></th>
-      <td class="pass"><code class="small">false</code></td>
-      <td class="pass"><code class="small">false</code></td>
-      <td class="pass"><code class="small">true</code></td>
-      <td class="pass"><code class="small">false</code></td></tr>
+    <tr>
+      <th>open_in_background<br><span>+ default values</span></th>
+      <td>false</td>
+      <td>false</td>
+      <td>true</td>
+      <td>false</td>
+    </tr>
     <tr>
       <th>object<br><span>+ default values</span></th>
-      <td class="pass">
-<code class="small">
-<p style="border-bottom: 1px solid var(--dim);">object (v2.48)</p>{
-  active    true
-}
+      <td class="code small"><span style="border-bottom: 1px solid var(--dim);">object (v2.48)</span>
+active    true
 
-<p style="border-bottom: 1px solid var(--dim);">behaviour (v2.45)</p>active      !open_in_background
+<span style="border-bottom: 1px solid var(--dim);">behaviour (v2.45)</span>
+active      !open_in_background
 insert      true (Firefox default)
 setParent   same as opener tab
 incognito   same as opener tab
 pinned      same as opener tab
-container   same as opener tab
-</code></td>
+container   same as opener tab</td>
       <td class="fail"><a href="https://wiki.greasespot.net/GM.openInTab" target="_blank">ⓘ</a></td>
-      <td class="pass"><a href="https://www.tampermonkey.net/documentation.php#GM_openInTab" target="_blank">ⓘ</a><br>
-<code class="small">{
-  active      false
-  insert      true
+      <td class="code small"><a href="https://www.tampermonkey.net/documentation.php#GM_openInTab" target="_blank">ⓘ</a>
+active      false
+insert      true
 
-  setParent   false
-  incognito   false
-}</code>
-      </td>
-      <td class="pass"><a href="https://violentmonkey.github.io/api/gm/#gm_openintab" target="_blank">ⓘ</a><br>
-<code class="small">{
-  active      true
-  insert      true v2.11.0
+setParent   false
+incognito   false</td>
+      <td class="code small"><a href="https://violentmonkey.github.io/api/gm/#gm_openintab" target="_blank">ⓘ</a>
+active      true
+insert      true (v2.11.0)
 
-  pinned      false v2.12.5
-  container   0, 1, etc v2.12.5
-}</code>
-        </td>
+pinned      false (v2.12.5)
+container   0, 1, etc (v2.12.5)</td>
     </tr>
-
 
     <tr>
       <th>return value</th>
-      <td class="">
-<code class="small">
-true/false  <span class="experimental">v2.48</span>
-</code></td>
+      <td class="code">true/false  <span class="experimental">(v2.48)</span></td>
       <td class="fail"></td>
-      <td class="">
-<code class="small">{
-  onclose     callback
-  closed      boolean
-  close       function
-}</code>
-      </td>
-      <td class="">
-<code class="small">{
-  onclose     callback
-  closed      boolean
-  close       function
-}</code>
-        </td>
+      <td class="code small">onclose     callback
+closed      boolean
+close       function</td>
+      <td class="code small">onclose     callback
+closed      boolean
+close       function</td>
     </tr>
-
 
   </tbody>
 </table>
@@ -2919,6 +2890,7 @@ true/false  <span class="experimental">v2.48</span>
 // @resource        logo http://www.example.com/logo.jpg
 // ==/UserScript==</span>
 
+
 <code class="deprecated"><span class="comment">// instead of this code</span>
 (<span class="keyword">async</span> () =&gt; {
   <span class="keyword">const</span> link = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'link'</span>);
@@ -2931,7 +2903,6 @@ true/false  <span class="experimental">v2.48</span>
 link.<span class="property">href</span> = <span class="string">'http://www.example.com/example.css'</span>;
 link.rel = <span class="string">'stylesheet'</span>;
 <span class="property">document</span>.<span class="property">head</span>.<span class="method">appendChild</span>(link);</code>
-
 
 <code class="deprecated"><span class="comment">// instead of this code</span>
 (<span class="keyword">async</span> () =&gt; {
@@ -3289,6 +3260,45 @@ popup.addStyle(css);
   <p class="warning"><code>window.eval()</code> makes the object available to the page script as well while <code>unsafeWindow</code>, <code>window.wrappedJSObject</code> does not.</p>
 
 
+  <table>
+    <caption>unsafeWindow Comparison: MV2</caption>
+    <thead>
+      <tr>
+        <th>Context</th>
+        <th>FireMonkey</th>
+        <th>Greasemonkey</th>
+        <th>Tampermonkey</th>
+        <th>Violentmonkey</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>UserScript</th>
+        <td class="code">window.wrappedJSObjec</td>
+        <td class="fail"></td>
+        <td class="fail"></td>
+        <td class="fail"></td>
+      </tr>
+      <tr>
+        <th>content</th>
+        <td class="fail"></td>
+        <td class="code">window.wrappedJSObjec</td>
+        <td class="code">ret.window</td>
+        <td class="code">global vm object</td>
+      </tr>
+      <tr>
+        <th>page</th>
+        <td class="code">window</td>
+        <td class="fail"></td>
+        <td class="fail"></td>
+        <td class="code">window</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+
+
     <p class="caption">Example</p>
 <pre>
 <span class="comment">// page-script.js</span>
@@ -3379,8 +3389,6 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
 
     <p>Cookies also help advertisers deliver ads in your social media feeds. Social sites have their own tracking schemes and they’re far more robust. They can track every click, post, and comment. In addition, cookies can report what you’ve been doing online to a social site, which is how some ads follow you into social media. </p>
 
-    <br>
-
     <h2>Firefox Multi-Account Containers</h2>
 
     <p>The Firefox <a href="https://addons.mozilla.org/firefox/addon/multi-account-containers/">Multi-Account Containers</a> add-on isn’t technically a form of private browsing or tracking protection, but it can help keep companies from knowing everything you do online. It lets you open fresh, cookie-free tabs that can be used for different accounts—personal, work, shopping, etc. That means you can use Multi-Account Containers to open several Google accounts at once without any overlap. Most trackers won’t associate the different accounts, keeping your work life separate from your personal life online. Some more advanced trackers, however, can and will track you across different accounts, so beware.</p>
@@ -3426,7 +3434,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
       <th>Violentmonkey</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody class="slim">
     <tr>
       <th>Sending Cookies</th>
       <td class="pass"></td>
@@ -3512,10 +3520,10 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
 
     <tr>
       <th>First-party isolation <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/cookies#first-party_isolation" target="_blank">ⓘ</a></th>
-      <td class=""><a href="https://github.com/erosman/support/issues/431" title="[FireMonkey] GM.fetch doesn't work when privacy.firstparty.isolate is true" target="_blank">ⓘ</a></td>
-      <td class=""><a href="https://github.com/greasemonkey/greasemonkey/issues/2985" title="privacy.firstparty.isolate=true breaks GM.xmlHttpRequest" target="_blank">ⓘ</a></td>
-      <td class=""></td>
-      <td class=""><a href="https://github.com/violentmonkey/violentmonkey/issues/1467" title="RFC: Firefox tracking protection is explicitly deteriorated in cross-site request performed by userscript" target="_blank">ⓘ</a></td>
+      <td><a href="https://github.com/erosman/support/issues/431" title="[FireMonkey] GM.fetch doesn't work when privacy.firstparty.isolate is true" target="_blank">ⓘ</a></td>
+      <td><a href="https://github.com/greasemonkey/greasemonkey/issues/2985" title="privacy.firstparty.isolate=true breaks GM.xmlHttpRequest" target="_blank">ⓘ</a></td>
+      <td></td>
+      <td><a href="https://github.com/violentmonkey/violentmonkey/issues/1467" title="RFC: Firefox tracking protection is explicitly deteriorated in cross-site request performed by userscript" target="_blank">ⓘ</a></td>
     </tr>
 
   </tbody>
@@ -3559,11 +3567,11 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
   <p>Contexts are sandboxed layers of JavaScript in an extension to ensure security.</p>
 
 <table>
-    <caption>Context Layers</caption>
+    <caption>Context Layers: MV2</caption>
   <thead>
   <tr>
-    <th>Type</th>
-    <th>Browser API Access</th>
+    <th style="width: 20em;">Context</th>
+    <th style="width: 20em;">Browser API Access</th>
     <th>Details</th>
   </tr>
   </thead>
@@ -3623,6 +3631,44 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
     <cite><a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Content_scripts#Using_eval_in_content_scripts" target="_blank">Using eval() in content scripts</a></cite>
   </blockquote>
 
+
+
+  <table>
+    <caption>Context Layers: MV3 <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/ExecutionWorld" target="_blank">scripting.ExecutionWorld</a></caption>
+  <thead>
+  <tr>
+    <th style="width: 20em;">Type</th>
+    <th style="width: 20em;">Browser API Access</th>
+    <th>Details</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>ISOLATED</th>
+      <td class="pass">some</td>
+      <td>The default execution environment of <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Content_scripts">content scripts</a>.
+        This environment is isolated from the page's context: while they share the same document, the global scopes and available APIs differ.</td>
+    </tr>
+
+    <tr>
+      <th>USER_SCRIPT</th>
+      <td class="fail">only<br> <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage" target="_blank">runtime.sendMessage()</a></td>
+      <td>Details to be finalised<br>See also: <a href="https://github.com/w3c/webextensions/blob/main/proposals/user-scripts-api.md" target="_blank">User Scripts API</a></td>
+    </tr>
+
+    <tr>
+      <th>MAIN</th>
+      <td class="fail">none</td>
+      <td><p>
+        The execution environment of the web page. This environment is shared with the web page, without isolation.
+          Scripts in this environment do not have any access to APIs that are only available to content scripts.
+      </p>
+        <p class="warning">Due to the lack of isolation, the web page can detect the executed code and interfere with it.
+          Do not use the <code>MAIN</code> world unless it is acceptable for web pages to read, access, or modify the logic or data that flows through the executed code.</p></td>
+    </tr>
+
+  </tbody>
+</table>
 
 
   <h3>Injecting code into page context</h3>
@@ -3897,31 +3943,27 @@ script.<span class="method">remove</span>();
     <th>To</th>
   </tr>
   </thead>
-  <tbody>
+  <tbody class="code">
     <tr>
-      <td><code>@-moz-document <strong>domain</strong>('images.example.com')</code></td>
-      <td><code>@match      *://images.example.com/*</code></td>
+      <td>@-moz-document <strong>domain</strong>('images.example.com')</td>
+      <td>@match      *://images.example.com/*</td>
     </tr>
     <tr>
-      <td><code>@-moz-document <strong>url-prefix</strong>('http://www.example.com')</code></td>
-      <td><code>@match      http://www.example.com/*</code></td>
+      <td>@-moz-document <strong>url-prefix</strong>('http://www.example.com')</td>
+      <td>@match      http://www.example.com/*</td>
     </tr>
     <tr>
-      <td><code>@-moz-document <strong>url</strong>('http://www.example.com/test.html')</code></td>
-      <td><code>@match      http://www.example.com/test.html</code></td>
+      <td>@-moz-document <strong>url</strong>('http://www.example.com/test.html')</td>
+      <td>@match      http://www.example.com/test.html</td>
     </tr>
     <tr>
-      <td><code>@-moz-document <strong>regexp</strong>('http://www\\.example\\.(com|de)/images/.*')</code></td>
-      <td>
-<code>
-@match      http://www.example.com/images/*
-@match      http://www.example.de/images/*
-</code>
-  </td>
+      <td>@-moz-document <strong>regexp</strong>('http://www\\.example\\.(com|de)/images/.*')</td>
+      <td>@match      http://www.example.com/images/*
+@match      http://www.example.de/images/*</td>
     </tr>
     <tr>
-      <td><code>@-moz-document <strong>regexp</strong>('https?:\/\/(www\.|old\.)?reddit.com.*')</code></td>
-      <td><code>@match      *://*.reddit.com/*</code></td>
+      <td>@-moz-document <strong>regexp</strong>('https?:\/\/(www\.|old\.)?reddit.com.*')</td>
+      <td>@match      *://*.reddit.com/*</td>
     </tr>
   </tbody>
 </table>
@@ -3948,7 +3990,8 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
 </pre></dd>
 
     <dt>View Inserted UserScript</dt>
-    <dd>You can see the actual blob JavaScript in <a href="https://developer.mozilla.org/docs/Tools" target="_blank">Developer Tools</a> (<kbd>F12</kbd>) <b>Debugger</b> tab under <code>FireMonkey/userscript/</code> (v2.68) (<code>user-script://FireMonkey/</code> pre-2.68) (you may have to refresh the page) (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1824910" target="_blank">Display inconsistency of folder & file</a>)</dd>
+    <dd>You can see the actual blob JavaScript in <a href="https://developer.mozilla.org/docs/Tools" target="_blank">Developer Tools</a> (<kbd>F12</kbd>) <b>Debugger</b> tab under <code>FireMonkey/userscript/</code> (v2.68) (<code>user-script://FireMonkey/</code> pre-2.68) (you may have to refresh the page)</dd>
+    <dd>See also: <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1824910" target="_blank">Display inconsistency of folder & file</a> (Fixed in FireFox 114)</dd>
 
     <dt>CSS Errors</dt>
     <dd>The CSS error can be checked in <b>Developer Tools</b> (<kbd>F12</kbd>) for the page that the CSS is injected into.</dd>
@@ -3979,7 +4022,7 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
   </ul>
 
 
-<h4 id="Performance-Test">Performance Test</h4>
+  <h4 id="Performance-Test">Performance Test</h4>
   <ul>
     <li>Load the same userScript/userStyle/userCSS in <i>FireMonkey</i> and in other managers</li>
     <li>Open <code>about:performance</code></li>

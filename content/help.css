@@ -156,7 +156,7 @@ a[href^="https://github.com/"]::before {
   height: 1.1em;
   width: 1.1em;
   margin-right: 0.3em;
-  vertical-align: text-top;
+  vertical-align: text-bottom;
   filter: var(--img-filter);
 }
 
@@ -462,6 +462,10 @@ table {
   min-width: 70%;
 }
 
+ul + table {
+  margin-top: 0.5em;
+}
+
 th {
   background-color: var(--th);
   text-align: left;
@@ -498,22 +502,18 @@ td {
 
 td p {
   margin: 0;
+  display: block !important;
 }
 
-td code {
-  background-color: transparent;
-  padding: 0;
-  font-size: 1.2em;
-  white-space: pre;
-}
-
-.code td {
+.code td,
+td.code {
   font-family: monospace;
   font-size: 1.2em;
   white-space: pre;
 }
 
-td .pass, td .fail {
+td .pass,
+td .fail {
  font-family: monospace;
  font-size: initial;
 }
@@ -526,7 +526,8 @@ code.small {
   font-size: initial;
 }
 
-.slim th:first-of-type, .slim td {
+.slim th:first-of-type,
+.slim td {
   padding: 0.2em 0.5em;
 }
 
