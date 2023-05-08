@@ -1,7 +1,8 @@
 @import 'default.css';
 
 /* ----- Dark Theme ----- */
-:root, body.dark {
+:root,
+body.dark {
   --border: #444;
   --h1: #0cf;
   --dt: #abc;
@@ -131,6 +132,13 @@ article li img {
   max-width: 70vw;
 }
 
+div.grid-2 {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  column-gap: 1em;
+  row-gap: 1em;
+}
+
 a[href^="http"]::after {
   content: '🔗';
   margin-left: 0.3em;
@@ -149,7 +157,8 @@ a[href^="https://www.mozilla.org/"]::before,
 a[href^="https://bugzilla.mozilla.org/show_bug.cgi?id="]::before,
 a[href^="https://codemirror.net/"]::before,
 a[href^="https://developer.chrome.com/"]::before,
-a[href^="https://github.com/"]::before {
+a[href^="https://github.com/"]::before,
+a[href*=".github.io/"]::before {
   content: '';
   background: url('../image/dino.svg') no-repeat center / contain;
   display: inline-block;
@@ -171,7 +180,8 @@ a[href^="https://bugzilla.mozilla.org/show_bug.cgi?id="]::before {
   background-image: url('../image/bugzilla.png');
 }
 
-a[href^="https://github.com/"]::before {
+a[href^="https://github.com/"]::before,
+a[href*=".github.io/"]::before {
   background-image: url('../image/github.svg');
 }
 
@@ -310,7 +320,7 @@ pre code {
   padding: 1em;
   background-color: #f5fffa;
   position: relative;
-  margin: auto -1em;
+  /* margin: auto -1em; */
 }
 
 pre code::after {
@@ -462,8 +472,9 @@ table {
   min-width: 70%;
 }
 
-ul + table {
-  margin-top: 0.5em;
+ul + table,
+dl + table {
+  margin-top: 1em;
 }
 
 th {

@@ -40,9 +40,18 @@
         <li><a href="#Auto-Update">Update & Auto-Update</a></li>
         <li class="arrow"><a href="#Metadata-Block">Metadata Block</a>
           <ul>
-            <li><a href="#var">var</a></li>
+            <li><a href="#defaults">defaults</a></li>
+            <li><a href="#grant">@grant</a></li>
+            <li><a href="#container">@container</a></li>
+            <li><a href="#inject-into">@inject-into</a></li>
+            <li><a href="#var">@var</a></li>
+            <li><a href="#require">@require</a></li>
             <li><a href="#Match-Patterns">Match Patterns</a></li>
-            <li><a href="#require">require</a></li>
+            <li><a href="#include-exclude">@include & @exclude</a></li>
+
+            <!-- <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li> -->
           </ul>
         </li>
 
@@ -105,7 +114,7 @@
       </tr>
     </thead>
     <tbody class="slim">
-      <tr><th>GM_getResourceText</th><td>If loading anything other than CSS<br>e.g. JavaScript/JSON/HTML <a href="#getResourceText">ⓘ</a></td><td>954 / 63,435 (1.5%) scripts use the API<br>127 / 63,435 (<b>0.2%</b>) scripts incompatible</td></tr>
+      <!-- <tr><th>GM_getResourceText</th><td>If loading anything other than CSS<br>e.g. JavaScript/JSON/HTML <a href="#getResourceText">ⓘ</a></td><td>954 / 63,435 (1.5%) scripts use the API<br>127 / 63,435 (<b>0.2%</b>) scripts incompatible</td></tr> -->
       <tr><th>GM.getResourceUrl</th><td>If userscript processes the result before applying it <a href="#getResourceUrl">ⓘ</a></td><td>30 / 63,435 (0.05%) scripts use the API<br>all are compatible</td></tr>
       <tr><th>GM_getResourceURL</th><td>if userscript processes the result before applying it <a href="#getResourceUrl">ⓘ</a></td><td>355 / 63,435 (0.56%) scripts use the API<br>24 / 63,435 (<b>0.03%</b>) scripts incompatible</td></tr>
       <tr><th>uncommon @grant</th><td><code>GM_cookie</code>, <code>GM_getTab</code>, <code>GM_getTabs</code>, <code>GM_saveTab</code> <a href="#api">ⓘ</a></td><td>55 / 63,435 (<b>0.08%</b>) scripts use these APIs</td></tr>
@@ -147,7 +156,7 @@
       </tr>
 
       <tr><th>@var checkbox</th><td>Requires JavaScript to process logical <i>true/false</i> which is not part of CSS</td><td class="unknown"></td></tr>
-      <tr><th>@preprocessor less</th><td>Require <a href="https://lesscss.org/" target="_blank">Less</a> JavaScript Library</td><td class="unknown"></td></tr>
+      <tr><th>@preprocessor less</th><td>Requires <a href="https://lesscss.org/" target="_blank">Less</a> JavaScript Library</td><td class="unknown"></td></tr>
       <tr><th>@preprocessor stylus</th><td>If uses JavaScript or features which are not part of CSS</td><td class="unknown"></td></tr>
       <tr><th>@-moz-document regexp</th><td class="fail">not supported by Firefox API</td><td class="unknown"></td></tr>
     </tbody>
@@ -171,7 +180,11 @@
 
     <dt>No <code>@run-at</code> and script runs late</dt>
     <dd>💡 Try setting <code>@run-at &nbsp;&nbsp;&nbsp; document-end</code> in <a href="#User-Metadata">User Metadata</a></dd>
-    <dd>See also: <a href="#defaults">defaults</a></dd
+    <dd>See also: <a href="#defaults">defaults</a></dd>
+
+    <dt><code>window.addEventListener('load', ...)</code> (or <code>'DOMContentLoaded'</code>) does not fire</dt>
+    <dd>💡 Try setting <code>@run-at &nbsp;&nbsp;&nbsp; document-end</code> in <a href="#User-Metadata">User Metadata</a></dd>
+    <dd>See also: <a href="#run-at">@run-at</a></dd>
   </dl>
 
   <h2 id="manifest-v3">Manifest V3</h2>
@@ -262,7 +275,6 @@
     <li><a href="https://www.neowin.net/news/the-eff-will-fight-google-chrome-manifest-v3-which-kills-extensions-that-reliably-block-ads/" target="_blank">The EFF will fight Google Chrome Manifest v3 which kills extensions that reliably block ads</a></li>
     <li><a href="https://www.techrepublic.com/article/google-makes-the-perfect-case-for-why-you-shouldnt-use-chrome/" target="_blank">Google makes the perfect case for why you shouldn’t use Chrome</a></li>
 
-    <!-- <li><a href="" target="_blank"></a></li> -->
   </ul>
 
   <h1 id="how-to">How to Use</h1>
@@ -419,7 +431,7 @@
 
   <p>Each script will have a single entry in FireMonkey which is the script itself plus all its associated data (around 1-2KB more). The maximum allowed by Firefox Sync is 8KB for each item. Therefore, each script should be smaller than 6-7KB in order to Sync. Firefox Sync is impractical for user script/style managers unless user has a few small scripts/styles.</p>
 
-  <p>There is a discussion to increase the storage sync quota to 1MB (<a href="https://github.com/w3c/webextensions/issues/351" target="_blank">Discuss limits applied to storage.local and storage.sync API</a>).</p>
+  <p class="note">There is a discussion to increase the storage sync quota to 1MB (<a href="https://github.com/w3c/webextensions/issues/351" target="_blank">Discuss limits applied to storage.local and storage.sync API</a>).</p>
 
 
   <h2 id="counter">Counter</h2>
@@ -995,7 +1007,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-  <h3>@run-at</h3>
+  <h3 id="run-at">@run-at</h3>
   <p><i>FireMonkey</i> default <code>run-at</code> is <code>document_idle</code> for Scripts, therefore there is no need for event listeners such as <code>'load'</code> or <code>'DOMContentLoaded'</code> as they may not apply. If script has to run earlier, then the <code>run-at</code> has to be set accordingly.</p>
   <p><i>Greasemonkey</i> uses hyphen separated words (<code>document-start|document-end|document-idle</code>), while the API uses underscore separated words (<code>document_start|document_end|document_idle</code>). <i>FireMonkey</i> converts the hyphen so both can be used.</p>
 
@@ -1032,16 +1044,21 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-  <h3 class="experimental">@grant</h3>
-  <p class="note">v2.42: Experimental @grant background processing was added to auto-disable GM_* API if userScript supports async type GM.* API.
-  <br>v2.45: To prevent creating unnecessary message listeners, <code>@grant</code> is required for GM registerMenuCommand.</p>
+  <h3 id="grant" class="experimental">@grant</h3>
 
-  <p>Userscripts will have access to all available APIs and therefore <code>@grant</code> is not needed (note above).</p>
+  <p>Userscripts will have access to all available APIs and therefore <code>@grant</code> is not needed, however the following has been implemented.</p>
+
+  <ul>
+    <li>v2.42: Experimental <code>@grant</code> background processing was added to auto-disable GM_* API if userScript supports async type GM.* API</li>
+    <li>v2.45: To prevent creating unnecessary message listeners, <code>@grant</code> is required for GM registerMenuCommand</li>
+    <li>v2.68: <code>GM_getResourceText/GM.getResourceText</code> affects the processing of <code>@resource</code>. <a href="#getResourceText">ⓘ</a></li>
+  </ul>
+
 
   <p><code>@grant</code> for GM APIs in <i>FireMonkey</i> in <code>userScripts</code> context, are inconsequential security-wise. Even in the disputed case of <code>GM.xmlHttpRequest</code>, the following scripts work the same way in <i>FireMonkey</i> and there is no difference in their security i.e. script A is not more secure than script B, and vice versa.</p>
 
 
-<div style="display: grid; grid-template-columns: max-content max-content; column-gap: 1em;">
+<div class="grid-2">
   <pre><span class="comment">// ==UserScript==
 // @name            Script A
 // @match           http://www.example.com/*
@@ -1085,7 +1102,7 @@ element.<span class="property">innerHTML</span> = dom;
 
 
 
-  <h3 class="experimental">@container <span>(UserCSS Firefox 97, UserScript Firefox 98)</span></h3>
+  <h3 id="container" class="experimental">@container <span>(UserCSS Firefox 97, UserScript Firefox 98)</span></h3>
   <p>Setting one or more entries will further limit the script/CSS to certain contextual identity containers e.g. <code>default|private|container-1|container-2|...</code> after URL matching. (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1470651" title="Contextual Identities: Allow matching on cookieStoreId for browser.contentScripts.register" target="_blank">Bug 1470651</a> & <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1738567" title="Support cookieStoreId option in userScripts.register" target="_blank">Bug 1738567</a>)</p>
 
 <pre class="comment">
@@ -1119,8 +1136,8 @@ element.<span class="property">innerHTML</span> = dom;
     <li>In <code>page</code> mode, userscript injection might get blocked by page <a href="https://developer.mozilla.org/docs/Web/HTTP/CSP" target="_blank">Content Security Policy (CSP)</a></li>
     <li>In <code>page</code> mode, userscripts have no access to GM functions however ...
       <ul>
-        <li><code>unsafeWindow</code> is available for <i>Violentmonkey</i> compatibility</li>
-        <li><code>GM.info|GM_info</code> is available for <i>Tampermonkey/Violentmonkey</i> compatibility</li>
+        <li><code>unsafeWindow</code> is available to userscript for <i>Violentmonkey</i> compatibility</li>
+        <li><code>GM.info|GM_info</code> is available to userscript for <i>Tampermonkey/Violentmonkey</i> compatibility</li>
       </ul>
     </li>
   </ul>
@@ -1428,142 +1445,194 @@ body {
   </blockquote>
 
 
-
-  <h3>📊 URL Matching Performance</h3>
-  <p>From best (top) to worst:</p>
-
-  <ol>
-    <li>match & exclude-match</li>
-    <li>includeGlob & excludeGlob</li>
-    <li>include & exclude</li>
-    <li>include & exclude with regular expression</li>
-  </ol>
-
-
-
-
-  <h3 id="include">@include & @exclude</h3>
-
-  <p>They are the old and error-prone method of matching which has been superseded by <code>@match</code>/<code>@exclude-match</code>.</p>
-  <p><i>FireMonkey</i> attempts to convert <code>@include/@exclude</code> to <code>@match/@exclude-match</code> <span class="small">(v2.35)</span>. If all are not converted, then all will be merged into <code>@includeGlob/@excludeGlob</code> (duplicates removed).</p>
-  <p class="note"><code>@match/@exclude-match</code> performance is far more efficient.</p>
-  <p class="warning">Due to matching order in Firefox/Chrome APIs, having mixed <code>@match/@exclude-match</code> with <code>@include/@exclude/includeGlob/excludeGlob</code> might have unexpected matched/unmatched results.</p>
-
-
-  <p class="warning"><code>include_globs</code> & <code>exclude_globs</code> are currently missing from manifest v3 <a href="https://developer.chrome.com/docs/extensions/reference/scripting/" target="_blank">chrome.scripting</a> and <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/scripting/RegisteredContentScript" target="_blank">scripting.RegisteredContentScript</a> API which could result in deprecation of <code>@include</code> & <code>@exclude</code> in userscript managers.</p>
-
-  <blockquote>
-    <h3>Tampermonkey</h3>
-    <p>eslint: userscripts/better-use-match - Using @include is potentially unsafe and may be obsolete in Manifest v3 in early 2023. Please switch to @match.</p>
-
-    <p>ref: Tampermonkey lint.js & /_locales/en/messages.json</p>
-
-    <cite><a href="https://stackoverflow.com/questions/71882835/convert-deprecated-include-with-regular-expression-to-match-in-userscript" target="_blank">Convert deprecated @include with regular expression to @match in userscript</a></cite>
-  </blockquote>
-
-
-  <blockquote>
-    <dl>
-      <dt>include_globs</dt>
-      <dd><i>Optional.</i> Applied after matches to include only those URLs that also match this glob. Intended to emulate the <code>@include</code> Greasemonkey keyword.</dd>
-
-      <dt>exclude_globs</dt>
-      <dd><i>Optional.</i> Applied after matches to exclude URLs that match this glob. Intended to emulate the <code>@exclude</code> Greasemonkey keyword.</dd>
-    </dl>
-
-    <cite><a href="https://developer.chrome.com/docs/extensions/mv3/content_scripts/#matchAndGlob" target="_blank">Exclude matches and globs</a></cite>
-  </blockquote>
-
-
-  <blockquote>
-    <p>The <code>@match</code> metadata imperative is very similar to <code>@include</code>, however it is safer. It sets more strict rules on what the <code>*</code> character means.</p>
-
-    <cite><a href="https://wiki.greasespot.net/Metadata_Block#.40match" target="_blank">Greasemonkey @match</a></cite>
-  </blockquote>
-
-  <blockquote>
-    <p>It is recommended to use <code>@match</code> / <code>@exclude-match</code> rather than <code>@include</code> / <code>@exclude</code> because the match rules are safer and more strict.</p>
-
-    <cite><a href="https://violentmonkey.github.io/api/matching/" target="_blank">Violentmonkey Matching</a></cite>
-  </blockquote>
-
-
-
-  <h3 class="experimental">Regular Expression in @include & @exclude</h3>
-  <p>Regular Expression support has been implemented for <code>@include/@exclude</code> <span class="small">(v2.5)</span>.</p>
-
-  <ul>
-    <li>Regular Expressions start & end with forward-slash e.g.<code>/http://test\.com/.+/</code></li>
-    <li>Regular Expressions are processed with <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp" target="_blank">new RegExp()</a></li>
-    <li>Regular Expressions are set as case-insensitive</li>
-    <li>No need to escape forward-slashes</li>
-    <li>Regular Expression <a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes" target="_blank">Character classes</a> should be escaped e.g. <code>\.</code> <code>\\d</code> <code>\\s</code> <code>\\w</code></li>
-  </ul>
-
-  <h4>See also</h4>
-  <ul>
-    <li><a href="https://wiki.greasespot.net/Include_and_exclude_rules" target="_blank">Greasemonkey Include and exclude rules</a></li>
-    <li><a href="https://www.tampermonkey.net/documentation.php#_include" target="_blank">Tampermonkey @include</a></li>
-    <li><a href="https://violentmonkey.github.io/api/matching/" target="_blank">Violentmonkey Matching</a></li>
-  </ul>
-
-
-  <h3>@includeGlob & @excludeGlob</h3>
-  <p>Due to the following logic process in Firefox & Chrome, when using <code>includeGlob</code>, there must also be the mandatory <code>match</code>.</p>
-
-  <blockquote>
-    <p>Since <code>matches</code> is the only mandatory key, the other three keys are used to limit further the URLs that match. To match the key as a whole, a URL must:</p>
-
-    <ul>
-      <li>match the <code>matches</code> property</li>
-      <li>AND match the <code>include_globs</code> property, if present</li>
-      <li>AND NOT match the <code>exclude_matches</code> property, if present</li>
-      <li>AND NOT match the <code>exclude_globs</code> property, if present</li>
-    </ul>
-
-    <cite><a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_scripts" target="_blank">content_scripts</a></cite>
-  </blockquote>
-
-
-    <p class="caption">Example</p>
-<pre><span class="comment">/*
-==UserCSS==
-@name               My CSS
-@description        CSS is fun
-@match              *://*/*
-@includeGlobs       http://www.google.*/*
-@version            1.0
-==/UserCSS==
-*/
-</span></pre>
-
-
-
-  <h3>Converting include/exclude to match/exclude-match</h3>
-  <p>Some example of how you can convert to more robust Match Patterns.</p>
-
-<table>
-  <caption>Conversion Examples</caption>
-  <thead>
-  <tr>
-    <th>@include</th>
-    <th>@match</th>
-  </tr>
-  </thead>
-  <tbody class="code">
-    <tr><td>*</td><td>*://*/*</td></tr>
-    <tr><td>http://*</td><td>http://*/*</td></tr>
-    <tr><td>https://*</td><td>https://*/*</td></tr>
-    <tr><td>http*://*</td><td>*://*/*</td></tr>
-    <tr><td>http*://a.b.c/*</td><td>*://a.b.c/*</td></tr>
-    <tr><td>*.example.com/*</td><td>*://*.example.com/*</td></tr>
-  </tbody>
-</table>
-
   <h3 id="icon">@icon</h3>
   <p>Icons can be used to track users e.g.</p>
 
   <pre class="comment">// @icon            https://tracking-site.com/.../x-userscript.png</pre>
+
+
+
+  <h2 id="require">@require</h2>
+  <p>You can use <code>@require</code> for both scripts and CSS.</p>
+  <dl>
+    <dt>UserCSS</dt>
+    <dd>Require another installed UserCSS by name</dd>
+    <dd>Require a remote CSS</dd>
+
+    <dt>UserScript</dt>
+    <dd>Require another installed UserScript by name</dd>
+    <dd>Require a remote JS</dd>
+    <dd>Require a remote CSS (URL ending with <code>.css</code>)</dd>
+  </dl>
+
+
+  <h3>@require  <span style="font-size: inherit; margin-left: 4em;">script-name</span></h3>
+  <p><code>@require</code> can be used to pre-include other existing scripts into a script (or other existing CSS into a CSS). For example, user/developer can save some code as a script and name it <code>HelperSet</code>. It does not need to have <code>match/matches/include/includeGlobs</code> etc. It is best to have the script disabled.</p>
+
+
+  <p class="caption">Script Example</p>
+<pre><span class="comment">// ==UserScript==
+// @name            HelperSet
+// @description     A set of helper functions
+// @version         1.0
+// ==/UserScript==</span>
+
+<span class="keyword">function</span> someFunc(id) {
+<span class="comment">// some code </span>
+}
+
+<span class="keyword">function</span> otherFunc(text) {
+<span class="comment">// some code </span>
+}</pre>
+
+
+
+  <p class="caption">Include in Other Scripts</p>
+<pre class="comment">// ==UserScript==
+// @name            My Script
+// @description     Scripting is fun
+// @match           http://www.example.com/*
+// @match           http://www.example.org/*
+// @version         1.0
+// @require         HelperSet
+// ==/UserScript==
+
+// some code</pre>
+
+
+
+
+  <p class="caption">Multiple require <span>(injected in order)</span></p>
+<pre class="comment">
+<s>// @require         jquery-3</s>
+// @require         HelperSet
+// @require         https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/fontawesome.min.css
+</pre>
+
+
+
+  <p class="caption">CSS require</p>
+<pre class="comment">/*
+==UserCSS==
+@name               My CSS
+@description        CSS is fun
+@match              http://www.example.com/*
+@match              http://www.example.org/*
+@version            1.0
+@require            DefaultCSS
+@require            https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css
+==/UserCSS==
+*/</pre>
+
+<h3>@require <span style="font-size: inherit; margin-left: 4em;">other-URL ⚠️</span></h3>
+
+<p>The API works slightly differently in comparison to other script managers as the target is not not stored. It uses <code>fetch()</code> to get the target the first time but on subsequently <a href="https://developer.mozilla.org/docs/Web/API/Request/cache" target="_blank">Request.cache</a> will be used by the browser. Please note that processing many scripts with many <code>@require</code> can take time when registering scripts (i.e. browser start-up, disabling & re-enabling Script/CSS and/or <i>FireMonkey</i>).</p>
+
+<p>You can also use <a href="https://developer.mozilla.org/docs/Web/CSS/@import" target="_blank">@import</a> in userCSS for remote CSS.</p>
+
+  <p class="caption">CSS require Alternative</p>
+
+<pre><span class="comment">/*
+==UserCSS==
+@name               My CSS
+@description        CSS is fun
+@match              http://www.example.com/*
+@match              http://www.example.org/*
+@version            1.0
+==/UserCSS==
+*/</span>
+
+<span class="property">@import</span> <span class="string">'https://fonts.googleapis.com/css?family=Tangerine'</span>;
+<span class="comment">/* --- or --- */</span>
+<span class="property">@import</span> <span class="value">url</span>(<span class="string">'https://fonts.googleapis.com/css?family=Tangerine'</span>);
+
+<span class="html">body</span> {
+<span class="property">font-family</span>: <span class="string">'Tangerine'</span>, <span class="font">serif</span>;
+<span class="property">font-size</span>: <span class="value">48px</span>;
+}</pre>
+
+
+<h3 style="margin-top: 2em;">📌 Bundled Libraries are removed in v2.68</h3>
+<p>The removal should only affect userscripts that used library shorthand.</p>
+
+<s style="font-size: 0.6em; display: table; margin-left: 3rem;">
+<h3>@require <span style="font-size: inherit; margin-left: 4em;">specific-library</span></h3>
+
+
+<p>Few libraries have been packed with <i>FireMonkey</i> which will be injected for user-scripts using <code>@require</code>. A shorthand (case-insensitive) can also be used.</p>
+<p>Based on data provided by <i>GreasyFork</i> (2020-02-09), 8,011/31,170 (26%) use <code>@require</code> and from those 7,082/11,236 (63%) entries relate to these libraries (& <i>gm4-polyfill</i>).</p>
+
+<p>Following CDN sources are processed:</p>
+
+<ul style="columns: 3;">
+  <li>ajax.aspnetcdn.com</li>
+  <li>ajax.googleapis.com</li>
+  <li>apps.bdimg.com</li>
+  <li>cdn.bootcdn.net</li>
+  <li>cdn.bootcss.com</li>
+  <li>cdn.jsdelivr.net</li>
+  <li>cdn.staticfile.org</li>
+  <li>cdnjs.cloudflare.com</li>
+  <li>code.jquery.com</li>
+  <li>lf*-cdn-tos.bytecdntp.com</li>
+  <li>lib.baomitu.com</li>
+  <li>libs.baidu.com</li>
+  <li>pagecdn.io</li>
+  <li>unpkg.com</li>
+</ul>
+
+
+<table>
+<caption>Bundled Libraries</caption>
+<thead>
+<tr>
+  <th>CDN Links to</th>
+  <th>Shorthand</th>
+  <th>Injected Library Version</th>
+</tr>
+</thead>
+<tbody class="slim">
+  <tr><td>bootstrap 4</td>    <td>bootstrap-4</td>    <td>4.6.1</td></tr>
+  <tr><td>bootstrap 5</td>    <td>bootstrap-5</td>    <td>5.1.3 <a href="https://getbootstrap.com/docs/4.6/getting-started/introduction/" target="_blank">ⓘ</a></td></tr>
+  <tr><td>jquery 1</td>       <td>jquery-1</td>       <td>1.12.4</td></tr>
+  <tr><td>jquery 2</td>       <td>jquery-2</td>       <td>2.2.4</td></tr>
+  <tr><td>jquery 3</td>       <td>jquery-3</td>       <td>3.6.0 <a href="https://releases.jquery.com/jquery/" target="_blank">ⓘ</a></td></tr>
+  <tr><td>jquery-ui 1</td>    <td>jquery-ui-1</td>    <td>1.13.1</td></tr>
+  <tr><td>moment</td>         <td>moment-2</td>       <td>2.29.1 <a href="https://momentjs.com/" target="_blank">ⓘ</a></td></tr>
+  <tr><td>underscore</td>     <td>underscore-1</td>   <td>1.13.1 <a href="https://underscorejs.org/" target="_blank">ⓘ</a></td></tr>
+</tbody>
+</table>
+
+  <p class="caption">Example</p>
+<pre class="comment">
+// @require         jquery-3
+// @require         https://code.jquery.com/jquery-3.5.1.js
+// @require         https://code.jquery.com/jquery-3.5.1.min.js
+// @require         https://code.jquery.com/jquery-3.5.0.slim.js
+// @require         https://code.jquery.com/jquery-3.5.0.slim.min.js
+// @require         https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js
+... etc
+// @require         https://unpkg.com/jquery@3.5.0/dist/jquery.js
+... etc
+// @require         https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/fontawesome.min.css
+</pre>
+
+
+
+<p>On popular demand, more libraries may be added in future.</p>
+
+</s>
+
+
+<h3 id="Storing-require">ℹ️ Storing require & resource Targets</h3>
+<p>In legacy Firefox, extensions were able to save files to their folder in Firefox profile. Script managers would download <code>@require</code> & <code>@resource</code> targets, save it to users' HD and inject it when called.</p>
+
+<p>Firefox Quantum no longer allows extension to save files to Firefox profile folder. Script managers will have to use the storage assigned to the extension to save <code>@require</code> & <code>@resource</code> files in form of data.</p>
+
+<p>Saving large volume of data to storage impact RAM and CPU resource usage of the extension, slows down read/write to the extension storage and generally impact the browser performance. Known Libraries often are 100+KB to 1+MB e.g. <i>jquery-3.4.1.js 273MB,jquery-3.4.1.min.js 86KB, jquery-ui-1.12.1.js 508KB, jquery-ui-1.12.1.min.js 247KB, angular-1.7.6.js 1.3MB</i> ... etc. In case of <code>@resource</code>, images for example could be many megabytes of data.</p>
+
+<p>Considering that a user may have many user-Scripts and they may have many <code>@require</code> & <code>@resource</code>, the size of storage can get extremely large and its effect on browser performance quite considerable.</p>
+
 
 
   <h2 id="Match-Patterns">Match Patterns</h2>
@@ -1724,193 +1793,138 @@ body {
   </div>
 
 
+  <h2 id="include-exclude">@include & @exclude</h2>
 
-  <h2 id="require">@require</h2>
-  <p>The API is added for convenience and compatibility but it works differently in comparison to other script managers.</p>
-  <p>You can use <code>@require</code> for both scripts and CSS.</p>
-  <dl>
-    <dt>UserCSS</dt>
-    <dd>Require another installed UserCSS by name</dd>
-    <dd>Require a remote CSS</dd>
+  <p>They are the old and error-prone method of matching which has been superseded by <code>@match</code>/<code>@exclude-match</code>.</p>
 
-    <dt>UserScript</dt>
-    <dd>Require another installed UserScript by name</dd>
-    <dd>Require a remote JS</dd>
-    <dd>Require a remote CSS (URL ending with <code>.css</code>)</dd>
-   </dl>
-
-
-  <h3>@require  <span style="font-size: inherit; margin-left: 4em;">script-name</span></h3>
-  <p><code>@require</code> can be used to pre-include other existing scripts into a script (or other existing CSS into a CSS). For example, user/developer can save some code as a script and name it <code>HelperSet</code>. It does not need to have <code>match/matches/include/includeGlobs</code> etc. It is best to have the script disabled.</p>
-
-
-    <p class="caption">Script Example</p>
-<pre><span class="comment">// ==UserScript==
-// @name            HelperSet
-// @description     A set of helper functions
-// @version         1.0
-// ==/UserScript==</span>
-
-<span class="keyword">function</span> someFunc(id) {
-  <span class="comment">// some code </span>
-}
-
-<span class="keyword">function</span> otherFunc(text) {
-  <span class="comment">// some code </span>
-}</pre>
-
-
-
-
-    <p class="caption">Include in Other Scripts</p>
-<pre class="comment">// ==UserScript==
-// @name            My Script
-// @description     Scripting is fun
-// @match           http://www.example.com/*
-// @match           http://www.example.org/*
-// @version         1.0
-// @require         HelperSet
-// ==/UserScript==
-
-// some code</pre>
-
-
-
-
-    <p class="caption">Multiple require <span>(injected in order)</span></p>
-<pre class="comment">
-<s>// @require         jquery-3</s>
-// @require         HelperSet
-// @require         https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/fontawesome.min.css
-</pre>
-
-
-
-    <p class="caption">CSS require</p>
-<pre class="comment">/*
-==UserCSS==
-@name               My CSS
-@description        CSS is fun
-@match              http://www.example.com/*
-@match              http://www.example.org/*
-@version            1.0
-@require            DefaultCSS
-@require            https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css
-==/UserCSS==
-*/</pre>
-
-  <h3>@require <span style="font-size: inherit; margin-left: 4em;">other-URL ⚠️</span></h3>
-
-  <p>The API is added for convenience and compatibility but it works differently in comparison to other script managers as the target is not not stored. It uses <code>fetch()</code> to get the target the first time but on subsequently <a href="https://developer.mozilla.org/docs/Web/API/Request/cache" target="_blank">Request.cache</a> will be used by the browser. Please note:</p>
   <ul>
-    <li>Processing many scripts with many <code>@require</code> can take time when registering scripts (i.e. browser start-up, disabling & re-enabling <i>FireMonkey</i>)</li>
-    <li><i>gm4-polyfill</i> is not applicable (and may cause conflict) and therefore is not processed</li>
+    <li><code>@match/@exclude-match</code> performance is far more efficient.</li>
+    <li><i>FireMonkey</i> attempts to convert <code>@include/@exclude</code> to <code>@match/@exclude-match</code> <span class="small">(v2.35)</span>.<br>If all are not converted, then all will be merged into <code>@includeGlob/@excludeGlob</code> (duplicates removed).</li>
+    <li>Due to matching order in Firefox/Chrome APIs, having mixed <code>@match/@exclude-match</code> with <code>@include/@exclude/includeGlob/excludeGlob</code> might have unexpected matched/unmatched results.</li>
   </ul>
 
-  <p>You can also use <a href="https://developer.mozilla.org/docs/Web/CSS/@import" target="_blank">@import</a> in userCSS for remote CSS.</p>
 
-    <p class="caption">CSS require Alternative</p>
 
+
+  <p class="warning"><code>include_globs</code> & <code>exclude_globs</code> are currently missing from manifest v3 <a href="https://developer.chrome.com/docs/extensions/reference/scripting/" target="_blank">chrome.scripting</a> and <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/scripting/RegisteredContentScript" target="_blank">scripting.RegisteredContentScript</a> API which could result in deprecation of <code>@include</code> & <code>@exclude</code> in userscript managers.</p>
+
+  <blockquote>
+    <h3>Tampermonkey</h3>
+    <p>eslint: userscripts/better-use-match - Using @include is potentially unsafe and may be obsolete in Manifest v3 in early 2023. Please switch to @match.</p>
+
+    <p>ref: Tampermonkey lint.js & /_locales/en/messages.json</p>
+
+    <cite><a href="https://stackoverflow.com/questions/71882835/convert-deprecated-include-with-regular-expression-to-match-in-userscript" target="_blank">Convert deprecated @include with regular expression to @match in userscript</a></cite>
+  </blockquote>
+
+
+  <blockquote>
+    <dl>
+      <dt>include_globs</dt>
+      <dd><i>Optional.</i> Applied after matches to include only those URLs that also match this glob. Intended to emulate the <code>@include</code> Greasemonkey keyword.</dd>
+
+      <dt>exclude_globs</dt>
+      <dd><i>Optional.</i> Applied after matches to exclude URLs that match this glob. Intended to emulate the <code>@exclude</code> Greasemonkey keyword.</dd>
+    </dl>
+
+    <cite><a href="https://developer.chrome.com/docs/extensions/mv3/content_scripts/#matchAndGlob" target="_blank">Exclude matches and globs</a></cite>
+  </blockquote>
+
+
+  <blockquote>
+    <p>The <code>@match</code> metadata imperative is very similar to <code>@include</code>, however it is safer. It sets more strict rules on what the <code>*</code> character means.</p>
+
+    <cite><a href="https://wiki.greasespot.net/Metadata_Block#.40match" target="_blank">Greasemonkey @match</a></cite>
+  </blockquote>
+
+  <blockquote>
+    <p>It is recommended to use <code>@match</code> / <code>@exclude-match</code> rather than <code>@include</code> / <code>@exclude</code> because the match rules are safer and more strict.</p>
+
+    <cite><a href="https://violentmonkey.github.io/api/matching/" target="_blank">Violentmonkey Matching</a></cite>
+  </blockquote>
+
+  <h3>📊 URL Matching Performance</h3>
+  <p>From best (top) to worst:</p>
+
+  <ol>
+    <li>match & exclude-match</li>
+    <li>includeGlob & excludeGlob</li>
+    <li>include & exclude</li>
+    <li>include & exclude with regular expression</li>
+  </ol>
+
+
+
+  <h3 class="experimental">Regular Expression in @include & @exclude</h3>
+  <p>Regular Expression support has been implemented for <code>@include/@exclude</code> <span class="small">(v2.5)</span>.</p>
+
+  <ul>
+    <li>Regular Expressions start & end with forward-slash e.g.<code>/http://test\.com/.+/</code></li>
+    <li>Regular Expressions are processed with <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp" target="_blank">new RegExp()</a></li>
+    <li>Regular Expressions are set as case-insensitive</li>
+    <li>No need to escape forward-slashes</li>
+    <li>Regular Expression <a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes" target="_blank">Character classes</a> should be escaped e.g. <code>\.</code> <code>\\d</code> <code>\\s</code> <code>\\w</code></li>
+  </ul>
+
+  <h4>See also</h4>
+  <ul>
+    <li><a href="https://wiki.greasespot.net/Include_and_exclude_rules" target="_blank">Greasemonkey Include and exclude rules</a></li>
+    <li><a href="https://www.tampermonkey.net/documentation.php#_include" target="_blank">Tampermonkey @include</a></li>
+    <li><a href="https://violentmonkey.github.io/api/matching/" target="_blank">Violentmonkey Matching</a></li>
+  </ul>
+
+
+  <h3>@includeGlob & @excludeGlob</h3>
+  <p>Due to the following logic process in Firefox & Chrome, when using <code>includeGlob</code>, there must also be the mandatory <code>match</code>.</p>
+
+  <blockquote>
+    <p>Since <code>matches</code> is the only mandatory key, the other three keys are used to limit further the URLs that match. To match the key as a whole, a URL must:</p>
+
+    <ul>
+      <li>match the <code>matches</code> property</li>
+      <li>AND match the <code>include_globs</code> property, if present</li>
+      <li>AND NOT match the <code>exclude_matches</code> property, if present</li>
+      <li>AND NOT match the <code>exclude_globs</code> property, if present</li>
+    </ul>
+
+    <cite><a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_scripts" target="_blank">content_scripts</a></cite>
+  </blockquote>
+
+
+    <p class="caption">Example</p>
 <pre><span class="comment">/*
 ==UserCSS==
 @name               My CSS
 @description        CSS is fun
-@match              http://www.example.com/*
-@match              http://www.example.org/*
+@match              *://*/*
+@includeGlobs       http://www.google.*/*
 @version            1.0
 ==/UserCSS==
-*/</span>
-
-<span class="property">@import</span> <span class="string">'https://fonts.googleapis.com/css?family=Tangerine'</span>;
-<span class="comment">/* --- or --- */</span>
-<span class="property">@import</span> <span class="value">url</span>(<span class="string">'https://fonts.googleapis.com/css?family=Tangerine'</span>);
-
-<span class="html">body</span> {
-  <span class="property">font-family</span>: <span class="string">'Tangerine'</span>, <span class="font">serif</span>;
-  <span class="property">font-size</span>: <span class="value">48px</span>;
-}</pre>
+*/
+</span></pre>
 
 
-<h3 class="warning" style="margin-top: 2em;">Bundled Libraries are removed in v2.68</h3>
-<p>The removal should only affect userscripts that used library shorthand.</p>
 
-<s style="font-size: 0.7em;">
-  <h3>@require <span style="font-size: inherit; margin-left: 4em;">specific-library</span></h3>
-
-
-  <p>Few libraries have been packed with <i>FireMonkey</i> which will be injected for user-scripts using <code>@require</code>. A shorthand (case-insensitive) can also be used.</p>
-  <p>Based on data provided by <i>GreasyFork</i> (2020-02-09), 8,011/31,170 (26%) use <code>@require</code> and from those 7,082/11,236 (63%) entries relate to these libraries (& <i>gm4-polyfill</i>).</p>
-
-  <p>Following CDN sources are processed:</p>
-
-  <ul style="columns: 3;">
-    <li>ajax.aspnetcdn.com</li>
-    <li>ajax.googleapis.com</li>
-    <li>apps.bdimg.com</li>
-    <li>cdn.bootcdn.net</li>
-    <li>cdn.bootcss.com</li>
-    <li>cdn.jsdelivr.net</li>
-    <li>cdn.staticfile.org</li>
-    <li>cdnjs.cloudflare.com</li>
-    <li>code.jquery.com</li>
-    <li>lf*-cdn-tos.bytecdntp.com</li>
-    <li>lib.baomitu.com</li>
-    <li>libs.baidu.com</li>
-    <li>pagecdn.io</li>
-    <li>unpkg.com</li>
-  </ul>
-
+  <h3>Converting include/exclude to match/exclude-match</h3>
+  <p>Some example of how you can convert to more robust Match Patterns.</p>
 
 <table>
-  <caption>Bundled Libraries</caption>
+  <caption>Conversion Examples</caption>
   <thead>
   <tr>
-    <th>CDN Links to</th>
-    <th>Shorthand</th>
-    <th>Injected Library Version</th>
+    <th>@include</th>
+    <th>@match</th>
   </tr>
   </thead>
-  <tbody class="slim">
-    <tr><td>bootstrap 4</td>    <td>bootstrap-4</td>    <td>4.6.1</td></tr>
-    <tr><td>bootstrap 5</td>    <td>bootstrap-5</td>    <td>5.1.3 <a href="https://getbootstrap.com/docs/4.6/getting-started/introduction/" target="_blank">ⓘ</a></td></tr>
-    <tr><td>jquery 1</td>       <td>jquery-1</td>       <td>1.12.4</td></tr>
-    <tr><td>jquery 2</td>       <td>jquery-2</td>       <td>2.2.4</td></tr>
-    <tr><td>jquery 3</td>       <td>jquery-3</td>       <td>3.6.0 <a href="https://releases.jquery.com/jquery/" target="_blank">ⓘ</a></td></tr>
-    <tr><td>jquery-ui 1</td>    <td>jquery-ui-1</td>    <td>1.13.1</td></tr>
-    <tr><td>moment</td>         <td>moment-2</td>       <td>2.29.1 <a href="https://momentjs.com/" target="_blank">ⓘ</a></td></tr>
-    <tr><td>underscore</td>     <td>underscore-1</td>   <td>1.13.1 <a href="https://underscorejs.org/" target="_blank">ⓘ</a></td></tr>
+  <tbody class="code">
+    <tr><td>*</td><td>*://*/*</td></tr>
+    <tr><td>http://*</td><td>http://*/*</td></tr>
+    <tr><td>https://*</td><td>https://*/*</td></tr>
+    <tr><td>http*://*</td><td>*://*/*</td></tr>
+    <tr><td>http*://a.b.c/*</td><td>*://a.b.c/*</td></tr>
+    <tr><td>*.example.com/*</td><td>*://*.example.com/*</td></tr>
   </tbody>
 </table>
-
-    <p class="caption">Example</p>
-<pre class="comment">
-// @require         jquery-3
-// @require         https://code.jquery.com/jquery-3.5.1.js
-// @require         https://code.jquery.com/jquery-3.5.1.min.js
-// @require         https://code.jquery.com/jquery-3.5.0.slim.js
-// @require         https://code.jquery.com/jquery-3.5.0.slim.min.js
-// @require         https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js
-  ... etc
-// @require         https://unpkg.com/jquery@3.5.0/dist/jquery.js
-  ... etc
-// @require         https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/fontawesome.min.css
-</pre>
-
-
-
-  <p>On popular demand, more libraries may be added in future.</p>
-
-</s>
-
-
-  <h3 id="Storing-require">ℹ️ Storing require & resource Targets</h3>
-  <p>In legacy Firefox, extensions were able to save files to their folder in Firefox profile. Script managers would download <code>@require</code> & <code>@resource</code> targets, save it to users' HD and inject it when called.</p>
-
-  <p>Firefox Quantum no longer allows extension to save files to Firefox profile folder. Script managers will have to use the storage assigned to the extension to save <code>@require</code> & <code>@resource</code> files in form of data.</p>
-
-  <p>Saving large volume of data to storage impact RAM and CPU resource usage of the extension, slows down read/write to the extension storage and generally impact the browser performance. Known Libraries often are 100+KB to 1+MB e.g. <i>jquery-3.4.1.js 273MB,jquery-3.4.1.min.js 86KB, jquery-ui-1.12.1.js 508KB, jquery-ui-1.12.1.min.js 247KB, angular-1.7.6.js 1.3MB</i> ... etc. In case of <code>@resource</code>, images for example could be many megabytes of data.</p>
-
-  <p>Considering that a user may have many user-Scripts and they may have many <code>@require</code> & <code>@resource</code>, the size of storage can get extremely large and its effect on browser performance quite considerable.</p>
 
 
 
@@ -1952,23 +1966,23 @@ body {
 
     <tr><th><b>Other</b></th><td colspan="5"></td></tr>
 
-    <tr><th>GM.cookie</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>9</td></tr>
     <tr><th>GM.download</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="fail"></td><td>18</td></tr>
     <tr><th>GM.fetch</th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
     <tr><th>GM.getResourceText</th><td class="pass async"></td><td class="fail"><a href="https://github.com/greasemonkey/greasemonkey/issues/2548" title="Add or replace GM.getResourceText" target="_blank">ⓘ</a></td><td class="pass async"></td><td class="fail"></td><td>11</td></tr>
     <tr><th>GM.getResourceUrl</th><td class="pass async">different <a href="#getResourceUrl">ⓘ</a></td><td class="pass async"><a href="https://wiki.greasespot.net/GM.getResourceUrl" target="_blank">ⓘ</a></td><td class="pass async"></td><td class="pass async">v2.13.1</td><td>30</td></tr>
-    <tr><th>GM.getTab</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>3</td></tr>
-    <tr><th>GM.getTabs</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>0</td></tr>
     <tr><th>GM.info</th><td class="pass sync"></td><td class="pass sync"></td><td class="pass sync"></td><td class="pass sync"></td><td>69</td></tr>
-
     <tr><th>GM.log</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>7</td></tr>
     <tr><th>GM.notification</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>42</td></tr>
     <tr><th>GM.openInTab</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>178</td></tr>
-
     <tr><th>GM.registerMenuCommand</th><td class="pass callback"></td><td class="pass callback">v4.11 <a href="https://wiki.greasespot.net/Version_history" target="_blank">ⓘ</a></td><td class="pass callback"></td><td class="pass callback">v2.12.10</td><td>131</td></tr>
     <tr><th>GM.setClipboard</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"> <a href="https://github.com/Tampermonkey/tampermonkey/issues/918" title="setClipboard API sets the clipboard to 'undefined'" target="_blank">ⓘ</a></td><td class="pass async"></td><td>77</td></tr>
     <tr><th>GM.unregisterMenuCommand</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>6</td></tr>
     <tr><th>GM.xmlHttpRequest</th><td class="pass callback"></td><td class="pass callback"></td><td class="pass callback"></td><td class="pass callback"></td><td>699</td></tr>
+
+    <tr><th>GM.cookie</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>9</td></tr>
+    <tr><th>GM.getTab</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>3</td></tr>
+    <tr><th>GM.getTabs</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>0</td></tr>
+
 
     <tr><th>&nbsp;</th><td colspan="5"></td></tr>
 
@@ -1993,22 +2007,24 @@ body {
 
     <tr><th><b>Other</b></th><td colspan="5"></td></tr>
 
-    <tr><th>GM_cookie</th><td class="fail"></td><td class="fail"></td><td class="pass sync"><a href="https://github.com/Tampermonkey/tampermonkey/issues/465" title="GM_cookie - HttpOnly Cookie" target="_blank">ⓘ</a></td><td class="fail"></td><td>49</td></tr>
     <tr><th>GM_download</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>478</td></tr>
     <tr><th>GM_fetch</th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>3</td></tr>
-    <tr><th>GM_getResourceText</th><td class="pass sync">different <a href="#getResourceText">ⓘ</a> </td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>954</td></tr>
+    <tr><th>GM_getResourceText</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>954</td></tr>
     <tr><th>GM_getResourceURL</th><td class="pass sync">different <a href="#getResourceUrl">ⓘ</a> </td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>355</td></tr>
-    <tr><th>GM_getTab</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>43</td></tr>
-    <tr><th>GM_getTabs</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>39</td></tr>
     <tr><th>GM_info</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>731</td></tr>
     <tr><th>GM_log</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>865</td></tr>
     <tr><th>GM_notification</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>617</td></tr>
-    <tr><th>GM_openInTab</th><td class="pass async"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>1,326</td></tr>
+    <tr><th>GM_openInTab</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async">(sync returns object)</td><td>1,326</td></tr>
     <tr><th>GM_registerMenuCommand</th><td class="pass callback"></td><td class="fail"></td><td class="pass callback"></td><td class="pass callback"></td><td>1,923</td></tr>
-    <tr><th>GM_saveTab</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>37</td></tr>
     <tr><th>GM_setClipboard</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>1,556</td></tr>
     <tr><th>GM_unregisterMenuCommand</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>220</td></tr>
     <tr><th>GM_xmlhttpRequest</th><td class="pass callback"></td><td class="fail"></td><td class="pass callback"></td><td class="pass callback"></td><td>5,436</td></tr>
+
+
+    <tr><th>GM_cookie</th><td class="fail"></td><td class="fail"></td><td class="pass sync"><a href="https://github.com/Tampermonkey/tampermonkey/issues/465" title="GM_cookie - HttpOnly Cookie" target="_blank">ⓘ</a></td><td class="fail"></td><td>49</td></tr>
+    <tr><th>GM_getTab</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>43</td></tr>
+    <tr><th>GM_getTabs</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>39</td></tr>
+    <tr><th>GM_saveTab</th><td class="fail"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"><a href="https://github.com/violentmonkey/violentmonkey/issues/1120" target="_blank">ⓘ</a></td><td>37</td></tr>
 
     <tr><th>&nbsp;</th><td colspan="5"></td></tr>
 
@@ -2490,8 +2506,8 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
 <pre>
 <span class="comment">// Response Object</span>
-<span class="gm">GM.xmlHttpRequest</span>({url, onload});
-<span class="gm">GM_xmlhttpRequest</span>({url, onload});
+<span class="gm">GM.xmlHttpRequest</span>({url, onload}); <span class="comment">// note uppercase H</span>
+<span class="gm">GM_xmlhttpRequest</span>({url, onload}); <span class="comment">// note lowercase h</span>
 </pre>
 
 
@@ -2839,44 +2855,37 @@ close       function</td>
 <span class="gm">GM.unregisterMenuCommand</span>(<span class="string">'Hello, world (named)'</span>);
 </pre>
 
+
   <h2 id="getResourceText">getResourceText</h2>
+  <!-- <p>Fetch remote resource as text</p> -->
+  <p>If Metadata Block contains <code>@resource</code> and <code>GM_getResourceText/GM.getResourceText</code>, text <code>@resource</code> targets (not images) are fetched at the registration time and cached. (v2.68)</p>
+
+
+  <p><b>Return value:</b> text <code>string</code> || <code>''</code></p>
 
 <pre>
-<span class="keyword">const</span> text = <span class="keyword">await</span> <span class="gm">GM.getResourceText</span>(resourceName);
+<span class="keyword">const</span> text = <span class="keyword">await</span> <span class="gm">GM.getResourceText</span>(resourceName); <span class="comment">// returns a Promise</span>
 <span class="keyword">const</span> text = <span class="gm">GM_getResourceText</span>(resourceName);
 </pre>
+<!--
+  <dl>
+    <dt>GM_getResourceText</dt>
+    <dd>If Metadata Block contains <code>@resource</code> and <code>GM_getResourceText</code>, and not <code>GM.getResourceText</code>, text <code>@resource</code> targets (not images) are fetched at the registration time and cached (v2.68)</dd>
 
-  <h3>GM.getResourceText</h3>
-  <p>Asynchronous <code>GM.getResourceText</code> is similar to <code>GM.fetch</code>, with fewer options. It uses <code>fetch()</code> to get the target the first time but subsequently <a href="https://developer.mozilla.org/docs/Web/API/Request/cache" target="_blank">Request.cache</a> will be used by the browser.</p>
-
-  <p><b>Return value:</b> text <code>string</code></p>
-
-<pre>
-<span class="keyword">const</span> text = <span class="keyword">await</span> <span class="gm">GM_getResourceText</span>(<span class="string">'resourceName'</span>); <span class="comment">// returns a Promise</span>
-</pre>
-
-  <h3>GM_getResourceText</h3>
-  <p>In case of synchronous <code>GM_getResourceText</code>, <i>Tampermonkey/ViolentMonkey</i> load & cache the remote resources, and then pass them to the userscript synchronously. Caching remote resources will increase the resources used by the extension, especially when the data is large. <a href="#Storing-require" title="Storing require & resource Targets">ⓘ</a></p>
-
-  <p>Implementation of <code>GM_getResourceText</code> is different in FireMonkey.</p>
-
-  <ul>
-    <li>If resourceURL ends in <code>.css</code> or contains <code>.css?</code> (which is the majority of cases), they are injected as <code>&lt;link href="...resoruceURL..." rel="stylesheet"&gt;</code> and loaded by the browser into the page</li>
-    <li>In case of JavaScript/JSON/HTML resources, it is not currently possible to dynamically load them into userScript context</li>
-    <li>In all cases, <code>GM_getResourceText</code> returns an empty string (to prevent error)</li>
-  </ul>
-
-  <p><b>Return value:</b> empty space <code>string ' '</code></p>
+    <dt>GM.getResourceText <span>(recommended)</span></dt>
+    <dd>Asynchronous <code>GM.getResourceText</code> is similar to <code>GM.fetch</code>, with fewer options. It uses <code>fetch()</code> to get the target the first time but subsequently <a href="https://developer.mozilla.org/docs/Web/API/Request/cache" target="_blank">Request.cache</a> will be used by the browser.</dd>
+  </dl>
+ -->
 
 
   <h2 id="getResourceUrl">getResourceUrl</h2>
-  <p>The API is added for convenience and compatibility. It works differently in comparison to other script managers as the target is not stored, but it should work out in most cases. It maps directly to the <i>resourceURL</i>.</p>
+  <p>The API works differently in comparison to other script managers as the target is not stored, but it should work out in most cases. It maps directly to the <i>resourceURL</i>.</p>
 
-  <p><b>Return value:</b> URL || <code>undefined</code></p>
+  <p><b>Return value:</b> URL <code>string</code> || <code>undefined</code></p>
 
 <pre>
-<span class="keyword">const</span> url = <span class="keyword">await</span> <span class="gm">GM.getResource<b style="color: #f30;">Url</b></span>(resourceName); <span class="comment">// returns a Promise</span>
-<span class="keyword">const</span> url = <span class="gm">GM_getResource<b style="color: #f30;">URL</b></span>(resourceName);
+<span class="keyword">const</span> url = <span class="keyword">await</span> <span class="gm">GM.getResourceUrl</span>(resourceName); <span class="comment">// returns a Promise, note Url camel-case</span>
+<span class="keyword">const</span> url = <span class="gm">GM_getResourceURL</span>(resourceName); <span class="comment">// note URL uppercase</span>
 </pre>
 
 
@@ -2890,7 +2899,7 @@ close       function</td>
 // @resource        logo http://www.example.com/logo.jpg
 // ==/UserScript==</span>
 
-
+<div class="grid-2">
 <code class="deprecated"><span class="comment">// instead of this code</span>
 (<span class="keyword">async</span> () =&gt; {
   <span class="keyword">const</span> link = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'link'</span>);
@@ -2898,7 +2907,9 @@ close       function</td>
   link.rel = <span class="string">'stylesheet'</span>;
   <span class="property">document</span>.<span class="property">body</span>.<span class="method">appendChild</span>(<span class="property">style</span>);
 })();</code>
+
 <code><span class="comment">// you can use this one</span>
+
 <span class="keyword">const</span> link = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'link'</span>);
 link.<span class="property">href</span> = <span class="string">'http://www.example.com/example.css'</span>;
 link.rel = <span class="string">'stylesheet'</span>;
@@ -2910,12 +2921,78 @@ link.rel = <span class="string">'stylesheet'</span>;
   img.<span class="property">src</span> = <span class="keyword">await</span> <span class="gm">GM.getResourceUrl</span>(<span class="string">'logo'</span>);
   <span class="property">document</span>.<span class="property">body</span>.<span class="method">appendChild</span>(<span class="property">img</span>);
 })();</code>
+
 <code><span class="comment">// you can use this one</span>
+
 <span class="keyword">const</span> img = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'img'</span>);
 img.<span class="property">src</span> = <span class="string">'http://www.example.com/logo.jpg'</span>;
-<span class="property">document</span>.<span class="property">head</span>.<span class="method">appendChild</span>(img);</code></pre>
+<span class="property">document</span>.<span class="property">head</span>.<span class="method">appendChild</span>(img);</code>
+</div></pre>
 
 
+
+
+
+
+
+
+<p class="caption">Example: <a href="https://github.com/Tampermonkey/tampermonkey/issues/1592" target="_blank">Cannot load SVG images with GM_getResourceURL and GM_addStyle</a></p>
+<pre>
+<span class="comment">// ==UserScript==
+// @name         SVG test
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       You
+// @match        *://*/a.html
+// @resource     EMOJI_SVG https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f36d.svg
+// @resource     EMOJI_PNG https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f36d.png
+// @grant        GM_getResourceURL
+// @grant        GM_addStyle
+// ==/UserScript==</span>
+
+(<span class="keyword">function</span>() {
+  <span class="string">'use strict';</span>
+
+  <span class="keyword">const</span> svg = <span class="gm">GM_getResourceUrl</span>( <span class="string">"EMOJI_SVG"</span> );
+  <span class="gm">GM_addStyle</span>(<span class="string">`
+
+  .icon.svg { background-image: url( "${svg}" ); }
+
+  `</span>);
+
+  <span class="keyword">const</span> png = <span class="gm">GM_getResourceUrl</span>( <span class="string">"EMOJI_PNG"</span> );
+  <span class="gm">GM_addStyle</span>(<span class="string">`
+
+  .icon.png { background-image: url( "${png}" ); }
+
+  `</span>);
+})();</pre>
+
+<p class="caption">Recommendation for above</p>
+<pre>
+<span class="comment">// ==UserScript==
+// @name         SVG test
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       You
+// @match        *://*/a.html
+// @grant        GM_addStyle
+// ==/UserScript==</span>
+
+(<span class="keyword">function</span>() {
+  <span class="string">'use strict';</span>
+
+  <span class="comment">// no real need for @resource & GM_getResourceURL
+  // more efficient to combine GM_addStyle values</span>
+  <span class="keyword">const</span> svg = <span class="string">'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f36d.svg'</span>;
+  <span class="keyword">const</span> png = <span class="string">'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f36d.png'</span>;
+  <span class="gm">GM_addStyle</span>(<span class="string">`
+    .icon.svg { background-image: url('${svg}'); }
+    .icon.png { background-image: url('${png}'); }
+  `</span>);
+})();</pre>
 
 
   <h2 id="addValueChangeListener">addValueChangeListener</h2>
@@ -2960,10 +3037,10 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 <span class="gm">GM_removeValueChangeListener</span>(key);
 </pre>
 
-  <p class="caption">Example</p>
+  <!-- <p class="caption">Example</p>
 <pre>
 <span class="gm">GM_removeValueChangeListener</span>(<span class="string">'test-key'</span>);
-</pre>
+</pre> -->
 
 
   <h2 id="download">download</h2>
@@ -3121,7 +3198,7 @@ popup.addStyle(css);
 }`</span>;
 popup.addStyle(css);
 </pre>
-  <div class="popup">
+  <div class="popup grid-2">
 
     <div class="center">
       <p>Background with CSS selector <i>:host</i></p>
@@ -3236,7 +3313,7 @@ popup.addStyle(css);
 
 
   <h2 id="log">log</h2>
-  <p>The API is added for convenience and compatibility and is no longer supported by Greasemonkey or Violentmonkey but Tampermonkey still has it. Multiple parameters can be passed e.g. <code>GM_log('one', 'two', 'three')</code>. You can also use <code>console.log()</code> instead.</p>
+  <p>The API is no longer supported by <i>Greasemonkey</i> or <i>Violentmonkey</i> but <i>Tampermonkey</i> still has it. Multiple parameters can be passed. You can also use <code>console.log()</code> instead.</p>
 
   <p><b>Return value:</b> <code>undefined</code></p>
 
@@ -3255,7 +3332,7 @@ popup.addStyle(css);
   <h2 id="unsafeWindow">⚠️ unsafeWindow</h2>
   <p><code>unsafeWindow</code> in <i>FireMonkey</i> is an alias for <code>window.wrappedJSObject</code>. You can also use <code>window.wrappedJSObject</code> or <code>window.eval()</code> to access page JavaScript <b>globals</b> or to create function & objects in `page` context.</p>
 
-  <p><b>Return value:</b> <code>window.wrappedJSObjec</code></p>
+  <p><b>Return value:</b> <code>window.wrappedJSObject</code></p>
 
   <p class="warning"><code>window.eval()</code> makes the object available to the page script as well while <code>unsafeWindow</code>, <code>window.wrappedJSObject</code> does not.</p>
 
@@ -3267,31 +3344,53 @@ popup.addStyle(css);
         <th>Context</th>
         <th>FireMonkey</th>
         <th>Greasemonkey</th>
-        <th>Tampermonkey</th>
-        <th>Violentmonkey</th>
+        <th style="width: 30%;">Tampermonkey</th>
+        <th style="width: 30%;">Violentmonkey</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <th>UserScript</th>
-        <td class="code">window.wrappedJSObjec</td>
+        <td>window.wrappedJSObject<br>
+          <span class="pass">access page DOM</span><br>
+          <span class="pass">access page JS</span>
+        </td>
         <td class="fail"></td>
-        <td class="fail"></td>
+        <td class="unknown">
+          <blockquote>FWIW: Tampermonkey lately uses the userScripts API as content script replacement to allow userscripts to overcome (all remaining) CSP issues without executing them in the content script world and to allow userscripts to run in a clean execution environment if wanted. TM also uses <code>&lt;all_urls&gt;</code> to support <code>@include</code>.
+            <cite><a href="https://github.com/w3c/webextensions/issues/279#issuecomment-1312094550" target="_blank">User scripts in Manifest V3</a></cite>
+          </blockquote>
+        </td>
         <td class="fail"></td>
       </tr>
       <tr>
         <th>content</th>
         <td class="fail"></td>
-        <td class="code">window.wrappedJSObjec</td>
-        <td class="code">ret.window</td>
-        <td class="code">global vm object</td>
+        <td>window.wrappedJSObject <a href="https://github.com/greasemonkey/greasemonkey/blob/11e340b4dadee868191e72a3ef888f75c6eabbc1/src/user-script-obj.js#L327" target="_blank">ⓘ</a><br>
+          <span class="pass">access page DOM</span><br>
+          <span class="pass">access page JS</span></td>
+        <td>ret.window<br>
+          <span class="pass">access page DOM</span><br>
+          <span class="pass">access page JS</span></td>
+        <td>global VM object<br>
+          <span class="pass">access page DOM</span><br>
+          <span class="fail">access page JS</span>
+        <blockquote>In this mode, <code>unsafeWindow</code> refers to the <code>global</code> object in content script. As a result, the script can access and modify the page's DOM, but cannot access JavaScript objects of the web page.
+        <cite><a href="https://violentmonkey.github.io/api/metadata-block/#inject-into" target="_blank">Violentmonkey @inject-into</a></cite></blockquote></td>
       </tr>
       <tr>
         <th>page</th>
-        <td class="code">window</td>
+        <td>window<br>
+          <span class="pass">access page DOM</span><br>
+          <span class="pass">access page JS</span></td>
         <td class="fail"></td>
         <td class="fail"></td>
-        <td class="code">window</td>
+        <td>window<br>
+          <span class="pass">access page DOM</span><br>
+          <span class="pass">access page JS</span>
+        <blockquote>In this mode, <code>unsafeWindow</code> refers to the <code>window</code> object, allowing the script to access JavaScript objects of the web page, just like normal page scripts can.
+        <cite><a href="https://violentmonkey.github.io/api/metadata-block/#inject-into" target="_blank">Violentmonkey @inject-into</a></cite></blockquote>
+        </td>
       </tr>
 
     </tbody>
@@ -3307,7 +3406,7 @@ popup.addStyle(css);
   <span class="property">console</span>.<span class="method">log</span>(foo);
 }
 
-<span class="comment">// content-script.js</span>
+<span class="comment">// user-script.js</span>
 <span class="property">console</span>.<span class="method">log</span>(window.foo);                  <span class="comment">// undefined</span>
 <span class="property">console</span>.<span class="method">log</span>(<span class="gm">unsafeWindow</span>.foo);            <span class="comment">// "I'm defined in a page script!"</span>
 <span class="property">console</span>.<span class="method">log</span>(window.wrappedJSObject.foo);  <span class="comment">// "I'm defined in a page script!"</span>
@@ -3922,6 +4021,10 @@ script.<span class="method">remove</span>();
 
 
   <blockquote>
+    <p><a href="https://www.w3.org/TR/2012/WD-css3-conditional-20120911/#at-document" target="_blank">Initially</a> in Level 3, <code>@document</code> was <a href="https://www.w3.org/TR/2012/WD-css3-conditional-20121213/#changes" target="_blank">postponed</a> to Level 4, but then subsequently removed.</p>
+
+    <p>...</p>
+
     <p>-x- Implemented with the vendor prefix: `-moz-`</p>
 
     <p>* Notes Disabled by default in web pages, except for an empty <code>url-prefix()</code> value, which is supported due to its use in Firefox browser detection. Still supported in user stylesheets.</p>
@@ -4079,7 +4182,7 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
       <tr>
         <th>2.68</th>
         <td>93 <span class="dim">(2021-10-05)</span></td>
-        <td>To benefit from ECMAScript 2022 aka ES13<br>Statistics: 4 users below Firefox 95</td>
+        <td>To benefit from ECMAScript 2022 aka ES13<br>Statistics: 2 users below Firefox 95</td>
         </td>
       </tr>
       <tr>

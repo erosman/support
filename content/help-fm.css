@@ -63,12 +63,6 @@ input[type="color"] {
 
 /* ----- popup ----- */
 .popup {
-  display: grid;
-  grid-template-columns: repeat(2, max-content);
-  column-gap: 1em;
-  row-gap: 1em;
-  justify-content: center;
-  padding-right: 2rem;
   color: #000;
 }
 
