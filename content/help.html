@@ -61,6 +61,8 @@
           <ul>
             <!-- <li><a href="#forbidden-header-name">Forbidden header name</a></li> -->
             <li><a href="#storage">Script Storage</a></li>
+            <li><a href="#import">import</a></li>
+
             <li><a href="#addElement">addElement</a></li>
             <li><a href="#addScript">addScript</a></li>
             <li><a href="#addStyle">addStyle</a></li>
@@ -69,7 +71,6 @@
             <li><a href="#fetch">fetch</a></li>
             <li><a href="#getResourceText">getResourceText</a></li>
             <li><a href="#getResourceUrl">getResourceUrl</a></li>
-            <li><a href="#import">import</a></li>
             <li><a href="#info">info</a></li>
             <li><a href="#log">log</a></li>
             <li><a href="#notification">notification</a></li>
@@ -236,11 +237,11 @@
   <p>The future of <code>GM xmlHttpRequest</code> in Chrome for <i>Tampermonkey</i> & <i>Violentmonkey</i> will be subject to change.</p>
 
   <blockquote>
-    <p>An example of a cross-origin request: the front-end JavaScript code served from <code>https://domain-a.com</code> uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest" target="_blank">XMLHttpRequest</a> to make a request for <code>https://domain-b.com/data.json</code>.</p>
+    <p>An example of a cross-origin request: the front-end JavaScript code served from <code>https://domain-a.com</code> uses <a href="https://developer.mozilla.org/docs/Web/API/XMLHttpRequest" target="_blank">XMLHttpRequest</a> to make a request for <code>https://domain-b.com/data.json</code>.</p>
 
-    <p>For security reasons, browsers restrict cross-origin HTTP requests initiated from scripts. For example, <code>XMLHttpRequest</code> and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" target="_blank">Fetch API</a> follow the <a href="https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy" target="_blank">same-origin policy</a>. This means that a web application using those APIs can only request resources from the same origin the application was loaded from unless the response from other origins includes the right CORS headers.</p>
+    <p>For security reasons, browsers restrict cross-origin HTTP requests initiated from scripts. For example, <code>XMLHttpRequest</code> and the <a href="https://developer.mozilla.org/docs/Web/API/Fetch_API" target="_blank">Fetch API</a> follow the <a href="https://developer.mozilla.org/docs/Web/Security/Same-origin_policy" target="_blank">same-origin policy</a>. This means that a web application using those APIs can only request resources from the same origin the application was loaded from unless the response from other origins includes the right CORS headers.</p>
 
-    <cite><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank">Cross-Origin Resource Sharing (CORS)</a></cite>
+    <cite><a href="https://developer.mozilla.org/docs/Web/HTTP/CORS" target="_blank">Cross-Origin Resource Sharing (CORS)</a></cite>
   </blockquote>
 
 
@@ -2298,9 +2299,9 @@ body {
 
 
   <h2 id="import" class="experimental">import <span>(v2.68)</span></h2>
-  <p>Asynchronous <code>import</code> of an available <code>module</code>
+  <p>Asynchronous <code>import</code> of available modules
 
-  <p class="note">The current format is due to the limitations in <code>userScripts</code> context. The API may change once MV3 <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting" target="_blank">scripting</a> is finalised.</p>
+  <p class="note">The current format is due to the limitations in <code>userScripts</code> context. The API may change once MV3 <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/scripting" target="_blank">scripting</a> is finalised.</p>
 
   <p><b>Return value:</b> <code>Boolean</code> <code>true/false</code></p>
 
@@ -2313,10 +2314,12 @@ body {
   <h3>module: PSL (Public Suffix List)</h3>
   <p><a href="https://github.com/erosman/psl" target="_blank">PSL (Public Suffix List)</a> was created for the multi-site "Find scripts for this site", and has been made available to userscripts.</p>
 
+  <p><b>Return value:</b> <code>object</code> || <code>undefined</code> <i>(on error)</i></p>
+
   <p class="caption">Example</p>
 <pre>
 <span class="keyword">await</span> <span class="gm">GM.import</span>('PSL');
-<span class="keyword">const</span> result = <span class="gm">GM.PSL.parse</span>('mail.yahoo.co.uk');
+<span class="keyword">const</span> result = <span class="gm">GM.PSL.parse</span>(<span class="string">'mail.yahoo.co.uk'</span>);
 <span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span>
 
 
@@ -2327,6 +2330,42 @@ if (<span class="keyword">typeof</span> <span class="gm">GM.PSL</span> === <span
 <span class="comment">// ... or ...</span>
 if (<span class="keyword">typeof</span> <span class="gm">GM.PSL?.parse</span> === <span class="string">'function'</span>) { }
 </pre>
+
+
+  <h3>ℹ️ import remote module</h3>
+  <p>Userscripts can dynamically <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/import" target="_blank">import()</a> (returns a Promise <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/import#module_namespace_object" target="_blank">module namespace object</a>) remote modules</p>
+
+  <p class="note">GM getResourceText is updated in v2.68.</p>
+
+  <p class="caption">Example</p>
+<pre>
+<span class="comment">// ==UserScript==
+// @name            dynamic import Test
+// @description     FireMonkey test script
+// @match           *://*.example.com/*
+// @resource        psl https://raw.githubusercontent.com/erosman/psl/main/psl.js
+// @grant           GM_getResourceText
+// ==/UserScript==</span>
+
+(<span class="keyword">async</span>() => {
+
+  <span class="comment">// get the module as text</span>
+  <span class="keyword">const</span> psl = <span class="gm">GM_getResourceText</span>(<span class="string">'psl'</span>);
+  <span class="comment">// convert text to blob URL</span>
+  <span class="keyword">const</span> blob = <span class="keyword">new</span> <span class="object">Blob</span>([psl], {type: <span class="string">'text/javascript'</span>});
+  <span class="keyword">const</span> url = <span class="object">URL</span>.createObjectURL(blob);
+  <span class="comment">// must use 'await' for the promise</span>
+  <span class="comment">// variable must match module exports</span>
+  <span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(url);
+  <span class="comment">// releases the object URL</span>
+  <span class="object">URL</span>.revokeObjectURL(url);
+
+  <span class="keyword">const</span> result = PSL.parse(<span class="string">'mail.yahoo.co.uk'</span>);
+  <span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span>
+
+})();
+</pre>
+
 
 
 
@@ -2678,7 +2717,7 @@ xhr.send(<span class="keyword">null</span>);
 
     <p>• the user script sandbox has an expanded principal but it doesn't include the extension principal and so the imported fetch and XMLHttpRequest can't do cross site requests based on the extension host permission (and this part is actually intended, the single userScript is not supposed to silently inherit expanded permission that the userScript manager extension does have)</p>
 
-    <cite>Luca Greco <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1715249#c6" title="scripts running using userScripts API seem to block all cross-origin requests" target="_blank">Bug 1715249</a></cite>
+    <cite>Luca Greco <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1715249#c6" target="_blank">scripts running using userScripts API seem to block all cross-origin requests</a></cite>
   </blockquote>
 
   <h4>See also</h4>
@@ -3782,7 +3821,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
 
 
   <table>
-    <caption>Context Layers: MV3 <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/ExecutionWorld" target="_blank">scripting.ExecutionWorld</a></caption>
+    <caption>Context Layers: MV3 <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/scripting/ExecutionWorld" target="_blank">scripting.ExecutionWorld</a></caption>
     <thead>
       <tr>
         <th style="width: 20em;">Type</th>
