@@ -2318,6 +2318,14 @@ body {
 <span class="keyword">await</span> <span class="gm">GM.import</span>('PSL');
 <span class="keyword">const</span> result = <span class="gm">GM.PSL.parse</span>('mail.yahoo.co.uk');
 <span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span>
+
+
+<span class="comment">// ----- Test support</span>
+if (<span class="keyword">typeof</span> <span class="gm">GM.import</span> === <span class="string">'function'</span>) { }
+<span class="comment">// ... or ...</span>
+if (<span class="keyword">typeof</span> <span class="gm">GM.PSL</span> === <span class="string">'object'</span>) { }
+<span class="comment">// ... or ...</span>
+if (<span class="keyword">typeof</span> <span class="gm">GM.PSL?.parse</span> === <span class="string">'function'</span>) { }
 </pre>
 
 
