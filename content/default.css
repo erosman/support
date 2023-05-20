@@ -1,5 +1,6 @@
 /* ----- Dark Theme ----- */
-:root, body.dark {
+:root,
+body.dark {
   --color: #fff;
   --bg: #000;
   --hover: #888;
@@ -101,21 +102,9 @@ button > * {
   font-style: italic;
 }
 
-/* .grid {
+.grid {
   display: grid;
-} */
-/*
-.flex {
-  display: flex;
 }
-
-.flex > * {
-  flex: 1;
-}
-
-.spacer {
-  flex-grow: 1;
-} */
 
 .invalid, input:invalid {
   box-shadow: 1px 1px 4px #f20, -1px -1px 4px #f20;

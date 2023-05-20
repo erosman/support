@@ -96,6 +96,12 @@ dt {
   margin-bottom: 0.2em;
 }
 
+dl.plain dt {
+  color: var(--color);
+  background-color: unset;
+  font-weight: bold;
+}
+
 dd + dt {
   margin-top: 0.5em;
 }
@@ -162,8 +168,8 @@ a[href*=".github.io/"]::before {
   content: '';
   background: url('../image/dino.svg') no-repeat center / contain;
   display: inline-block;
-  height: 1.1em;
-  width: 1.1em;
+  height: 0.9em;
+  width: 0.9em;
   margin-right: 0.3em;
   vertical-align: text-bottom;
   filter: var(--img-filter);
