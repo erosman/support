@@ -49,9 +49,10 @@
             <li><a href="#var">@var</a></li>
             <li><a href="#antifeature">@antifeature</a></li>
             <li><a href="#matchAboutBlank">@matchAboutBlank</a></li>
+            <li><a href="#icon">@icon</a></li>
             <li><a href="#require">@require</a></li>
             <li><a href="#Match-Patterns">Match Patterns</a></li>
-            <li><a href="#include-exclude">@include & @exclude</a></li>
+            <li><a href="#include-exclude">@include - @exclude</a></li>
 
             <!-- <li><a href="#"></a></li> -->
           </ul>
@@ -63,6 +64,7 @@
             <li><a href="#storage">Script Storage</a></li>
             <li><a href="#createObjectURL">createObjectURL</a></li>
             <li><a href="#import">import</a></li>
+            <li><a href="#Dynamic-import">Dynamic import()</a></li>
 
             <li><a href="#addElement">addElement</a></li>
             <li><a href="#addScript">addScript</a></li>
@@ -86,7 +88,7 @@
           </ul>
         </li>
         <li><a href="#Cookie-Isolation">Cookie Isolation</a></li>
-        <li><a href="#Detecting_JavaScript_Navigation">Detecting JavaScript Navigation</a></li>
+        <li><a href="#Detecting-JavaScript-Navigation">Detecting JavaScript Navigation</a></li>
         <li><a href="#xray-vision">Xray Vision & Sharing objects with page scripts</a></li>
         <li><a href="#UserCSS">UserCSS</a></li>
         <li><a href="#UserStyle">UserStyle</a></li>
@@ -106,7 +108,7 @@
 
   <p class="note">Injection into <code>page</code> context are prevented by Firefox on sites with restrictive Content Security Policy (CSP) e.g. github.com, gitee.com, twitter.com, mail.google.com (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1411641" title="CSP 'sandbox' directive prevents content scripts from matching, due to unique origin, breaking also browser features" target="_blank">Bug 1411641</a>), as well as certain <a href="#blocked">domains</a>.</p>
 
-  <p><i>FireMonkey</i> v2.44 is expected to be fully compatible with all <i>Greasemonkey</i> compatible userscripts, and 90% of other userscripts. (You can post issues to <a href="https://github.com/erosman/support/issues/429" target="_blank">FireMonkey Userscript Compatibility</a>.)</p>
+  <p><i>FireMonkey</i> v2.44 is expected to be fully compatible with all <i>Greasemonkey</i> compatible userscripts, and 90% of other userscripts. (You can post issues to <a href="#Support">Support</a>.)</p>
 
 
   <table>
@@ -459,7 +461,7 @@
 <pre class="scroll">
 <span class="comment">/* DEFAULT THEME */</span>
 
-.cm-s-default .cm-header {<span class="property">color</span>: <span class="color">blue</span>;}
+.cm-s-default .cm-header {<span class="property">color</span>: <span class="value">blue</span>;}
 .cm-s-default .cm-quote {<span class="property">color</span>: <span class="value">#090</span>;}
 .cm-negative {<span class="property">color</span>: <span class="value">#d44</span>;}
 .cm-positive {<span class="property">color</span>: <span class="value">#292</span>;}
@@ -537,34 +539,41 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 <pre>
 {
   <span class="comment">// CodeMirror Options</span>
-  <span class="string">"indentWithTabs"</span>: <span class="keyword">true</span>,
-  <span class="string">"indentUnit"</span>: <span class="value">4</span>,
-  <span class="string">"tabSize"</span>: <span class="value">4</span>,
+  "indentWithTabs": <span class="value">true</span>,
+  "indentUnit": <span class="value">4</span>,
+  "tabSize": <span class="value">4</span>,
 
   <span class="comment">// JSHint Options</span>
-  <span class="string">"jshint"</span>: {
-    <span class="string">"curly"</span>: <span class="keyword">false</span>,
-    <span class="string">"varstmt"</span>: <span class="keyword">false</span>
+  "jshint": {
+    "curly": <span class="value">false</span>,
+    "varstmt": <span class="value">false</span>
   },
 
   <span class="comment">// match-highlighter examples</span>
-  <span class="string">"highlightSelectionMatches"</span>: <span class="keyword">true</span>,
-  <span class="string">"highlightSelectionMatches"</span>: {<span class="string">"showToken"</span>: <span class="value">/\w/</span>, <span class="string">"annotateScrollbar"</span>: <span class="keyword">true</span>},
+  "highlightSelectionMatches": <span class="value">true</span>,
+  "highlightSelectionMatches": {
+    "showToken": <span class="value">true</span>,
+    "annotateScrollbar": <span class="value">true</span>
+  },
 
   <span class="comment">// Tab to indent with spaces</span>
-  <span class="string">"extraKeys"</span>: {
-    <span class="string">"Tab"</span>: <span class="string">"indentMore"</span>,
-    <span class="string">"Shift-Tab"</span>: <span class="string">"indentLess"</span>
+  "extraKeys": {
+    "Tab": <span class="string">"indentMore"</span>,
+    "Shift-Tab": <span class="string">"indentLess"</span>
   },
 
   <span class="comment">// Key Maps</span>
-  <span class="string">"keyMap"</span>: <span class="string">"emacs"</span>,
-  <span class="string">"keyMap"</span>: <span class="string">"sublime"</span>,
-  <span class="string">"keyMap"</span>: <span class="string">"vim"</span>,
+  "keyMap": <span class="string">"emacs"</span>,
+  "keyMap": <span class="string">"sublime"</span>,
+  "keyMap": <span class="string">"vim"</span>,
 
   <span class="comment">// rulers</span>
-  <span class="string">"rulers"</span>: [
-    {<span class="string">"color"</span>: <span class="string">"#f50"</span>, <span class="string">"column"</span>: <span class="value">30</span>, <span class="string">"lineStyle"</span>: <span class="string">"solid"</span>}
+  "rulers": [
+    {
+      "color": <span class="string">"#f50"</span>,
+      "column": <span class="value">30</span>,
+      "lineStyle": <span class="string">"solid"</span>
+    }
   ],
 }
 </pre>
@@ -879,7 +888,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 @version            <i>needed for updates</i>
 @updateURL          <i>needed for updates</i>
-@metaURL            <i>meta.js/meta.css URL</i>
+@metaURL            <i>meta.js/meta.css URL (v2.8)</i>
 
 @match
 @exclude-match
@@ -980,7 +989,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-  <h3 id="defaults">defaults</h3>
+  <h2 id="defaults">defaults</h2>
   <p><i>FireMonkey</i> conforms to the Firefox (& Chrome) <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_scripts" target="_blank">content_scripts</a> API defaults. In most cases, it would be sufficient and prevents unnecessary overheads of injecting into sub-frames needlessly. However, Captcha, Disqus, etc are usually included as <code>iframes</code>, therefore, userscript dealing with them should be set to inject into all frames.</p>
 
 
@@ -1004,7 +1013,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-  <h3 id="name">@name</h3>
+  <h2 id="name">@name</h2>
   <p><i>FireMonkey</i> uses the <code>name</code> (case-sensitive) as ID for Scripts & CSS, therefore names must be unique. A shorter & concise name is recommended.</p>
 
 
@@ -1014,7 +1023,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-  <h3 id="run-at">@run-at</h3>
+  <h2 id="run-at">@run-at</h2>
   <p><i>FireMonkey</i> default <code>run-at</code> is <code>document_idle</code> for Scripts, therefore there is no need for event listeners such as <code>'load'</code> or <code>'DOMContentLoaded'</code> as they may not apply. If script has to run earlier, then the <code>run-at</code> has to be set accordingly.</p>
   <p><i>Greasemonkey</i> uses hyphen separated words (<code>document-start|document-end|document-idle</code>), while the API uses underscore separated words (<code>document_start|document_end|document_idle</code>). <i>FireMonkey</i> converts the hyphen so both can be used.</p>
 
@@ -1051,7 +1060,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
 
 
-  <h3 id="grant" class="experimental">@grant</h3>
+  <h2 id="grant" class="experimental">@grant</h2>
 
   <p>Userscripts will have access to all available APIs and therefore <code>@grant</code> is not needed, however the following has been implemented.</p>
 
@@ -1068,27 +1077,27 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <div class="grid-2">
   <pre><span class="comment">// ==UserScript==
 // @name            Script A
-// @match           http://www.example.com/*
+// @match           https://*.example.com/*
 // @grant           GM.xmlHttpRequest
 // ==/UserScript==</span>
 
 <span class="gm">GM.xmlHttpRequest</span>({
   url: <span class="string">'https://abcd.com/'</span>,
-  <span class="property">onload</span>: response =&gt; {
-    <span class="property">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
+  <span class="method">onload</span>: response =&gt; {
+    <span class="object">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
   }
 });</pre>
 
     <pre><span class="comment">// ==UserScript==
   // @name            Script B
-  // @match           http://www.example.com/*
+  // @match           https://*.example.com/*
   // ==/UserScript==</span>
 
 
   <span class="gm">GM.xmlHttpRequest</span>({
     url: <span class="string">'https://abcd.com/'</span>,
-    <span class="property">onload</span>: response =&gt; {
-      <span class="property">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
+    <span class="method">onload</span>: response =&gt; {
+      <span class="object">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
     }
   });</pre>
   </div>
@@ -1097,9 +1106,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
 
     <p class="caption">🛡️ Examples of Security Concerns</p>
 <pre><span class="comment">// @resource        remoteCode http://www.someSite.com/badJS.js
-// @resource        remoteDom http://www.someSite.com/htmlWithBadJS.html
+// @resource        remoteDom http://www.someSite.com/htmlWithBadJS.html</span>
 
-</span>
 <span class="keyword">const</span> js = <span class="gm">GM_getResourceText</span>(<span class="string">'remoteCode'</span>);
 <span class="method">eval</span>(js);
 
@@ -1109,8 +1117,10 @@ element.<span class="property">innerHTML</span> = dom;
 
 
 
-  <h3 id="container" class="experimental">@container <span>(UserCSS Firefox 97, UserScript Firefox 98)</span></h3>
-  <p>Setting one or more entries will further limit the script/CSS to certain contextual identity containers e.g. <code>default|private|container-1|container-2|...</code> after URL matching. (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1470651" title="Contextual Identities: Allow matching on cookieStoreId for browser.contentScripts.register" target="_blank">Bug 1470651</a> & <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1738567" title="Support cookieStoreId option in userScripts.register" target="_blank">Bug 1738567</a>)</p>
+  <h2 id="container" class="experimental">@container</h2>
+  <p>Setting one or more entries will further limit the script/CSS to certain contextual identity containers e.g. <code>default|private|container-1|container-2|...</code> after URL matching.<br>
+  UserCSS Firefox 97: <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1470651" title="Contextual Identities: Allow matching on cookieStoreId for browser.contentScripts.register" target="_blank">Bug 1470651</a>,
+  UserScript Firefox 98: <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1738567" title="Support cookieStoreId option in userScripts.register" target="_blank">Bug 1738567</a></p>
 
 <pre class="comment">
 @container          default
@@ -1127,14 +1137,14 @@ element.<span class="property">innerHTML</span> = dom;
 
     <dt>private</dt>
     <dd>inject only into private tabs</dd>
-      <dd class="note">`private` only works if user has allowed the extension to run in private mode.</dd>
+      <dd class="note">'private' only works if user has allowed the extension to run in private mode.</dd>
 
     <dt>container-N</dt>
     <dd>inject only into Firefox container-N tabs</dd>
   </dl>
 
 
-  <h3 id="inject-into" class="experimental">@inject-into</h3>
+  <h2 id="inject-into" class="experimental">@inject-into</h2>
   <p>Setting the value <code>page</code> will inject the entire userscript into the <code>page</code> context (more: <a href="#xray-vision">Extension JavaScript Context</a>).</p>
 
   <ul>
@@ -1143,8 +1153,8 @@ element.<span class="property">innerHTML</span> = dom;
     <li>In <code>page</code> mode, userscript injection might get blocked by page <a href="https://developer.mozilla.org/docs/Web/HTTP/CSP" target="_blank">Content Security Policy (CSP)</a></li>
     <li>In <code>page</code> mode, userscripts have no access to GM functions however ...
       <ul>
-        <li><code>unsafeWindow</code> is available to userscript for <i>Violentmonkey</i> compatibility</li>
-        <li><code>GM.info|GM_info</code> is available to userscript for <i>Tampermonkey/Violentmonkey</i> compatibility</li>
+        <li><code>unsafeWindow</code> is available to userscript (not @require scripts) for <i>Violentmonkey</i> compatibility</li>
+        <li><code>GM.info|GM_info</code> is available to userscript (not @require scripts) for <i>Tampermonkey/Violentmonkey</i> compatibility</li>
       </ul>
     </li>
   </ul>
@@ -1318,7 +1328,7 @@ element.<span class="property">innerHTML</span> = dom;
 
 
 
-  <h3 id="var" class="experimental">@var</h3>
+  <h2 id="var" class="experimental">@var</h2>
   <p>Configurable User variables for userScript & userCSS (one per line)</p>
   <p>Values are saved according to JavaScript types e.g. <code>boolean</code> (not suitable for useCSS), <code>number</code>, & <code>string</code>. Number strings are converted to <code>number</code>.</p>
 
@@ -1411,7 +1421,8 @@ body {
     <li><a href="https://developer.mozilla.org/docs/Web/CSS/Using_CSS_custom_properties" target="_blank">Using CSS custom properties (variables)</a></li>
   </ul>
 
-  <h3 id="antifeature">@antifeature</h3>
+
+  <h2 id="antifeature">@antifeature</h2>
   <p>Under-development feature on <i>GreasyFork</i> (<a href="https://github.com/JasonBarnabe/greasyfork/issues/604" title="Monetization disclosure" target="_blank">#604</a>) to mark possibly undesirable behaviour e.g. miners, ads etc.</p>
 
   <blockquote>
@@ -1424,7 +1435,7 @@ body {
 
 
 
-  <h3 id="matchAboutBlank">@matchAboutBlank</h3>
+  <h2 id="matchAboutBlank">@matchAboutBlank</h2>
   <p>The code cannot be inserted in top-level <code>about:</code> frames.</p>
 
   <blockquote>
@@ -1459,8 +1470,8 @@ body {
   </blockquote>
 
 
-  <h3 id="icon">@icon</h3>
-  <p>Icons can be used to track users e.g.</p>
+  <h2 id="icon">@icon</h2>
+  <p>Icons (@icon, @icon64, @icon64URL, @iconURL, @defaulticon) are not process. Remote icons can be used to track users e.g.</p>
 
   <pre class="comment">// @icon            https://tracking-site.com/.../x-userscript.png</pre>
 
@@ -1492,11 +1503,11 @@ body {
 // ==/UserScript==</span>
 
 <span class="keyword">function</span> someFunc(id) {
-<span class="comment">// some code </span>
+  <span class="comment">// some code </span>
 }
 
 <span class="keyword">function</span> otherFunc(text) {
-<span class="comment">// some code </span>
+  <span class="comment">// some code </span>
 }</pre>
 
 
@@ -1558,11 +1569,11 @@ body {
 
 <span class="property">@import</span> <span class="string">'https://fonts.googleapis.com/css?family=Tangerine'</span>;
 <span class="comment">/* --- or --- */</span>
-<span class="property">@import</span> <span class="value">url</span>(<span class="string">'https://fonts.googleapis.com/css?family=Tangerine'</span>);
+<span class="property">@import</span> <span class="function">url</span>(<span class="string">'https://fonts.googleapis.com/css?family=Tangerine'</span>);
 
 <span class="html">body</span> {
-<span class="property">font-family</span>: <span class="string">'Tangerine'</span>, <span class="font">serif</span>;
-<span class="property">font-size</span>: <span class="value">48px</span>;
+  <span class="property">font-family</span>: <span class="string">'Tangerine'</span>, <span class="value">serif</span>;
+  <span class="property">font-size</span>: <span class="value">48px</span>;
 }</pre>
 
 
@@ -1803,7 +1814,7 @@ body {
   </div>
 
 
-  <h2 id="include-exclude">@include & @exclude</h2>
+  <h2 id="include-exclude">@include - @exclude</h2>
 
   <p>They are the old and error-prone method of matching which has been superseded by <code>@match</code>/<code>@exclude-match</code>.</p>
 
@@ -1976,8 +1987,8 @@ body {
 
       <tr><th><b>Module</b></th><td colspan="5"></td></tr>
 
-      <tr><th class="experimental">GM.createObjectURL<span>(v2.68)</span> <a href="#createObjectURL" target="_blank">ⓘ</a></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
       <tr><th class="experimental">GM.import <span>(v2.68)</span> <a href="#import" target="_blank">ⓘ</a></th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
+      <tr><th class="experimental">GM.createObjectURL<span> (v2.68)</span> <a href="#createObjectURL" target="_blank">ⓘ</a></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
 
       <tr><th><b>Other</b></th><td colspan="5"></td></tr>
 
@@ -2002,6 +2013,7 @@ body {
       <tr><th>&nbsp;</th><td colspan="5"></td></tr>
 
       <tr><th><b>Storage</b></th><td colspan="5"></td></tr>
+
       <tr><th>GM_getValue</th><td class="pass sync"><a href="#storage">ⓘ</a></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>5,837</td></tr>
       <tr><th>GM_setValue</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>3,782</td></tr>
       <tr><th>GM_deleteValue</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>1,577</td></tr>
@@ -2022,7 +2034,7 @@ body {
 
       <tr><th><b>Module</b></th><td colspan="5"></td></tr>
 
-      <tr><th class="experimental">GM_createObjectURL<span>(v2.68)</span> <a href="#createObjectURL" target="_blank">ⓘ</a></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
+      <tr><th class="experimental">GM_createObjectURL<span> (v2.68)</span> <a href="#createObjectURL" target="_blank">ⓘ</a></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
 
 
       <tr><th><b>Other</b></th><td colspan="5"></td></tr>
@@ -2066,7 +2078,7 @@ body {
         <td>3,057</td>
       </tr>
 
-      <tr><th>window.close <sup>2</sup></th><td class="fail"></td><td class="fail"><a href="https://github.com/greasemonkey/greasemonkey/issues/2538" title ="Add support for @grant window.close (Tampermonkey parity)" target="_blank">ⓘ</a></td><td class="pass async"></td><td class="pass async">v2.6.2 <a href="https://violentmonkey.github.io/api/metadata-block/#grant" target="_blank">ⓘ</a></td><td>279</td></tr>
+      <tr><th>window.close <sup>2</sup></th><td class="fail">limited support</td><td class="fail"><a href="https://github.com/greasemonkey/greasemonkey/issues/2538" title ="Add support for @grant window.close (Tampermonkey parity)" target="_blank">ⓘ</a></td><td class="pass async"></td><td class="pass async">v2.6.2 <a href="https://violentmonkey.github.io/api/metadata-block/#grant" target="_blank">ⓘ</a></td><td>279</td></tr>
       <tr><th>window.focus <sup>3</sup></th><td class="fail"></td><td class="fail"></td><td class="pass async"></td><td class="pass async">v2.12.10 <a href="https://violentmonkey.github.io/api/metadata-block/#grant" target="_blank">ⓘ</a></td><td>135</td></tr>
       <tr><th>window.onurlchange <sup>4</sup></th><td class="fail"></td><td class="fail"></td><td class="pass callback">v4.11 <a href="https://www.tampermonkey.net/changelog.php?ext=dhdg&show=fire" target="_blank">ⓘ</a></td><td class="fail"></td><td>69</td></tr>
 
@@ -2149,7 +2161,7 @@ body {
   <p><sup>2</sup> <code>window.close</code> grant results is overwriting the global <a href="https://developer.mozilla.org/docs/Web/API/Window/close" target="_blank">window.close()</a> and bypassing the safeguard to close a window that it has not opened. Such grant would allow malware userscripts to run code and hide the result by closing the window before user has a change to notice. Furthermore, the choice to close a window/tab opened by the user, should remain with the user. Tabs opened with GM <a href="#openInTab">openInTab</a> can be closed with JavaScript <code>window.close()</code> <span class="small">(v2.45)</span>.  </p>
   <p><sup>3</sup> <code>window.focus</code> grant results is overwriting the global <a href="https://developer.mozilla.org/docs/Web/API/Window/focus" target="_blank">window.focus()</a>. Such grant could be disruptive in cases where user is playing a game or in the middle of something in another window/tab and the userscript in the background causes its window/tab to become active and come to the foreground. Furthermore, the choice to focus a window/tab, should remain with the user.</p>
   <p><sup>4</sup> <code>window.onurlchange</code> is an experimental implementation in Tampermonkey 4.11.6120 (2020-09-17).</p>
-  <p class="note">Alternative: <a href="#Detecting_JavaScript_Navigation">Detecting JavaScript Navigation</a></p>
+  <p class="note">Alternative: <a href="#Detecting-JavaScript-Navigation">Detecting JavaScript Navigation</a></p>
 
 
 
@@ -2297,30 +2309,25 @@ body {
 <span class="keyword">await</span> <span class="gm">GM.deleteValues</span>([key, key2, ...]);
 </pre>
 
-<!--
-<p class="dim" style="text-decoration: line-through;">Partial compatibility has been implemented. Please note:</p>
-<ul class="dim" style="text-decoration: line-through;">
-  <li>Scripts that run <code>GM_getValue</code> & <code>GM_listValues</code> immediately will get the values at the start of the session which is the browser start-up time or script enabled time, whichever later</li>
-  <li>Scripts that run <code>GM_getValue</code> & <code>GM_listValues</code> on an <code>event</code> will get the values at page load time</li>
-</ul>
--->
 
 
   <h2 id="createObjectURL" class="experimental">createObjectURL <span>(v2.68)</span></h2>
-  <p>Utility function to convert JavaScript <code>string</code> to object URL</p>
+  <p>Utility function based on <a href="https://developer.mozilla.org/docs/Web/API/URL/createObjectURL_static" target="_blank">URL: createObjectURL()</a> to first convert JavaScript <code>string</code> to a <code>blob</code> and then to a string containing a URL representing the object given in the parameter. The API was created to facilitate GM import.</p>
+  <p>The default for <code>type</code> <i>(optional)</i> is set as <code>'text/javascript'</code> (to use with GM import) but any <a href="https://developer.mozilla.org/docs/Glossary/MIME_type" target="_blank">MIME type</a> can be set.</p>
 
   <p><b>Return value:</b> object URL || <code>undefined</code></p>
 
 <pre>
-<span class="keyword">const</span> url = <span class="gm">GM.createObjectURL</span>(str);
-<span class="keyword">const</span> url = <span class="gm">GM_createObjectURL</span>(str);
+<span class="keyword">const</span> url = <span class="gm">GM.createObjectURL</span>(str [, type]);
+<span class="keyword">const</span> url = <span class="gm">GM_createObjectURL</span>(str [, type]);
 </pre>
 
 
   <h2 id="import" class="experimental">import <span>(v2.68)</span></h2>
-  <p>Asynchronous <code>import</code> of available modules
+  <p>Asynchronous <code>GM.import</code> returns an object URL which can then be used in JavaScript dynamic <code>import()</code></p>
+  <p>The API was created to enable sharing of internal modules, and overcome limitations of <code>import()</code>.</p>
 
-  <p class="note">The current format is due to the limitations in <code>userScripts</code> context. The API may change once MV3 <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/scripting" target="_blank">scripting</a> is finalised.</p>
+  <p class="note">The current format is due to the limitations in <code>userScripts</code> context, as it is not possible to pass the <code>class</code> to the <code>userScripts</code> context. The API may change once MV3 <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/scripting" target="_blank">scripting</a> is finalised.</p>
 
   <p><b>Return value:</b> object URL || <code>undefined</code></p>
 
@@ -2329,31 +2336,122 @@ body {
 </pre>
 
 
-
-  <h3>module: PSL (Public Suffix List)</h3>
+  <h3>Internal module: PSL (Public Suffix List)</h3>
   <p><a href="https://github.com/erosman/psl" target="_blank">PSL (Public Suffix List)</a> was created for the multi-site "Find scripts for this site", and has been made available to userscripts.</p>
 
   <p class="caption">Example</p>
 <pre>
 <span class="comment">// get object URL</span>
 <span class="keyword">const</span> url = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'PSL'</span>);
-<span class="comment">// convert to module</span>
+<span class="comment">// import as module</span>
 <span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(url);
+<span class="comment">// optional release the object URL for optimal performance and memory usage</span>
+<span class="object">URL</span>.<span class="method">revokeObjectURL</span>(url);
 
-<span class="keyword">const</span> result = PSL.parse(<span class="string">'mail.yahoo.co.uk'</span>);
+<span class="keyword">const</span> result = PSL.<span class="method">parse</span>(<span class="string">'mail.yahoo.co.uk'</span>);
 <span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span>
 </pre>
 
 
-  <h3>ℹ️ import remote module</h3>
-  <p>Userscripts can dynamically <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/import" target="_blank">import()</a> (returns a Promise <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/import#module_namespace_object" target="_blank">module namespace object</a>) remote modules</p>
 
-  <p class="note">GM getResourceText is updated in v2.68.</p>
+<h2 id="Dynamic-import">Dynamic import()</h2>
+<p>JavaScript ECMAScript 2020 (ES11) dynamic <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/import" target="_blank">import()</a> can be used in a userscript but there are considerations.</p>
 
-  <p class="caption">Example with getResourceText</p>
+<dl>
+  <dt>MIME type</dt>
+  <dd><code>import()</code> expects JavaScript MIME type e.g. 'text/javascript'</dd>
+  <dd>CDN providers usually set the proper headers, however, other sites may not, which results in an error</dd>
+  <dd>See also: <a href="https://developer.mozilla.org/docs/Learn/Server-side/Configuring_server_MIME_types#javascript_legacy_mime_types" target="_blank">JavaScript legacy MIME types</a></dd>
+  <dd>
+<pre><code>https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js
+content-type: application/javascript; charset=utf-8
+
+https://code.jquery.com/jquery-3.7.0.slim.min.js
+content-type: application/javascript; charset=utf-8
+
+https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js
+content-type: text/javascript; charset=UTF-8</code>
+
+<code class="deprecated"><span class="comment">// https://raw.githubusercontent.com/erosman/psl/main/psl.js</span>
+<span class="comment">// content-type: text/plain; charset=utf-8</span>
+
+<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">'https://raw.githubusercontent.com/erosman/psl/main/psl.js'</span>);
+<span class="error">// TypeError: error loading dynamically imported module
+// Loading module from “https://raw.githubusercontent.com/erosman/psl/main/psl.js” was blocked because of a disallowed MIME type (“text/plain”).</span></code>
+
+<code><span class="comment">// https://cdn.jsdelivr.net/gh/erosman/psl@main/psl.js
+// content-type: application/javascript; charset=utf-8</span>
+
+<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">'https://cdn.jsdelivr.net/gh/erosman/psl@main/psl.js'</span>);
+<span class="keyword">const</span> result = PSL.<span class="method">parse</span>(<span class="string">'mail.yahoo.co.uk'</span>);
+<span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span></code>
+</pre>
+  </dd>
+
+  <dt>CORS</dt>
+  <dd><code>import()</code> may also fail due to <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank">Cross-Origin Resource Sharing (CORS)</a></dd>
+  <dd>
+    <pre class="error">Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource</pre>
+  </dd>
+
+  <dt>CSP</dt>
+  <dd><code>import()</code> may also fail due to <a href="https://developer.mozilla.org/docs/Web/HTTP/CSP" target="_blank">Content Security Policy (CSP)</a></dd>
+  <dd>
+    <pre class="error">Content-Security-Policy: The page's settings blocked the loading of a resource at https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js (“script-src”).</pre>
+  </dd>
+
+</dl>
+
+<p class="caption">Example of loading jQuery</p>
+
+<pre>
+<span class="keyword">import</span>(<span class="string">'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js'</span>)
+.<span class="keyword">then</span>(() => {
+  <span class="comment">// jQuery is only available in this block statement</span>
+  jQuery(<span class="string">'&lt;div&gt;Hello, World!&lt;/div&gt;'</span>).<span class="method">appendTo</span>(<span class="string">'body'</span>);
+});
+
+<span class="comment">// --- or ---</span>
+
+(<span class="keyword">async</span>() => {
+  <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js'</span>)
+  <span class="comment">// jQuery is only available in this block statement</span>
+  jQuery(<span class="string">'&lt;div&gt;Hello, World!&lt;/div&gt;'</span>).<span class="method">appendTo</span>(<span class="string">'body'</span>);
+})();
+</pre>
+
+  <p class="caption">Example with GM.import</p>
+<pre>
+<span class="comment">// get object URL</span>
+<span class="keyword">const</span> url = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://raw.githubusercontent.com/erosman/psl/main/psl.js'</span>);
+<span class="comment">// variables must match module exports</span>
+<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(url);
+<span class="comment">// optional release the object URL for optimal performance and memory usage</span>
+<span class="object">URL</span>.<span class="method">revokeObjectURL</span>(url);
+
+<span class="keyword">const</span> result = PSL.<span class="method">parse</span>(<span class="string">'mail.yahoo.co.uk'</span>);
+<span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span>
+</pre>
+
+<p class="caption">Example with GM fetch & GM createObjectURL</p>
+<pre>
+<span class="comment">// get the module as text</span>
+<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM.fetch</span>(<span class="string">'https://raw.githubusercontent.com/erosman/psl/main/psl.js'</span>);
+<span class="keyword">const</span> psl = response.text;
+<span class="comment">// convert text to object URL</span>
+<span class="keyword">const</span> url = <span class="gm">GM.createObjectURL</span>(psl);
+<span class="comment">// variables must match module exports</span>
+<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(url);
+<span class="comment">// optional release the object URL for optimal performance and memory usage</span>
+<span class="object">URL</span>.<span class="method">revokeObjectURL</span>(url);
+</pre>
+
+<p class="note">GM getResourceText is updated in v2.68.</p>
+
+<p class="caption">Example with GM getResourceText & GM createObjectURL</p>
 <pre>
 <span class="comment">// ==UserScript==
-// @name            dynamic import Test
+// @name            Dynamic import Test
 // @description     FireMonkey test script
 // @match           *://*.example.com/*
 // @resource        psl https://raw.githubusercontent.com/erosman/psl/main/psl.js
@@ -2364,74 +2462,51 @@ body {
 
   <span class="comment">// get the module as text</span>
   <span class="keyword">const</span> psl = <span class="gm">GM_getResourceText</span>(<span class="string">'psl'</span>);
-  <span class="comment">// convert text to blob URL</span>
+  <span class="comment">// convert text to object URL</span>
+  <span class="keyword">const</span> url = <span class="gm">GM_createObjectURL</span>(psl);
+  <span class="comment">// variables must match module exports</span>
+  <span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(url);
+  <span class="comment">// optional release the object URL for optimal performance and memory usage</span>
+  <span class="object">URL</span>.<span class="method">revokeObjectURL</span>(url);
+})();
+</pre>
+
+
+
+<p class="caption">Example with GM getResourceText & plain JavaScript</p>
+<pre>
+<span class="comment">// ==UserScript==
+// @name            Dynamic import Test
+// @description     FireMonkey test script
+// @match           *://*.example.com/*
+// @resource        psl https://raw.githubusercontent.com/erosman/psl/main/psl.js
+// @grant           GM_getResourceText
+// ==/UserScript==</span>
+
+(<span class="keyword">async</span>() => {
+
+  <span class="comment">// get the module as text</span>
+  <span class="keyword">const</span> psl = <span class="gm">GM_getResourceText</span>(<span class="string">'psl'</span>);
+  <span class="comment">// convert text to object URL</span>
   <span class="keyword">const</span> blob = <span class="keyword">new</span> <span class="object">Blob</span>([psl], {type: <span class="string">'text/javascript'</span>});
-  <span class="keyword">const</span> url = <span class="object">URL</span>.createObjectURL(blob);
-  <span class="comment">// must use 'await' for the promise</span>
-  <span class="comment">// variable must match module exports</span>
+  <span class="keyword">const</span> url = <span class="object">URL</span>.<span class="method">createObjectURL</span>(blob);
+  <span class="comment">// variables must match module exports</span>
   <span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(url);
-  <span class="comment">// releases the object URL</span>
-  <span class="object">URL</span>.revokeObjectURL(url);
-
-  <span class="keyword">const</span> result = PSL.parse(<span class="string">'mail.yahoo.co.uk'</span>);
-  <span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span>
+  <span class="comment">// optional release the object URL for optimal performance and memory usage</span>
+  <span class="object">URL</span>.<span class="method">revokeObjectURL</span>(url);
 
 })();
 </pre>
 
-<p class="caption">Example with createObjectURL</p>
-<pre>
-<span class="comment">// ==UserScript==
-// @name            dynamic import Test
-// @description     FireMonkey test script
-// @match           *://*.example.com/*
-// @resource        psl https://raw.githubusercontent.com/erosman/psl/main/psl.js
-// @grant           GM_getResourceText
-// ==/UserScript==</span>
 
-(<span class="keyword">async</span>() => {
 
-  <span class="comment">// get the module as text</span>
-  <span class="keyword">const</span> psl = <span class="gm">GM_getResourceText</span>(<span class="string">'psl'</span>);
-  <span class="comment">// convert text to blob URL</span>
-  <span class="keyword">const</span> url = <span class="gm">GM.createObjectURL</span>(psl);
-  <span class="comment">// must use 'await' for the promise</span>
-  <span class="comment">// variable must match module exports</span>
-  <span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(url);
 
-  <span class="keyword">const</span> result = PSL.parse(<span class="string">'mail.yahoo.co.uk'</span>);
-  <span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span>
 
-})();
-</pre>
-
-<p class="caption">Example with fetch</p>
-<pre>
-<span class="comment">// ==UserScript==
-// @name            dynamic import Test
-// @description     FireMonkey test script
-// @match           *://*.example.com/*
-// ==/UserScript==</span>
-
-(<span class="keyword">async</span>() => {
-
-  <span class="comment">// get the module as text</span>
-  <span class="keyword">const</span> psl = <span class="keyword">await</span> <span class="gm">GM.fetch</span>(<span class="string">'https://raw.githubusercontent.com/erosman/psl/main/psl.js'</span>);
-  <span class="comment">// convert text to blob URL</span>
-  <span class="keyword">const</span> url = <span class="gm">GM.createObjectURL</span>(psl);
-  <span class="comment">// must use 'await' for the promise</span>
-  <span class="comment">// variable must match module exports</span>
-  <span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(url);
-
-  <span class="keyword">const</span> result = PSL.parse(<span class="string">'mail.yahoo.co.uk'</span>);
-  <span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span>
-
-})();
-</pre>
 
 
 
   <h2 id="addElement" class="experimental">addElement</h2>
+
   <p>Compatibility API with <i>Tampermonkey</i> <a href="https://www.tampermonkey.net/documentation.php#GM_addElement" title="this feature is experimental and the API may change" target="_blank">ⓘ</a> & <i>Violentmonkey</i> <a href="https://violentmonkey.github.io/api/gm/#gm_addelement" title="This API is experimental in Tampermonkey, and hence subject to change" target="_blank">ⓘ</a> (experimental and subject to change).</p>
   <p><b>Return value:</b> created element || <code>undefined</code> <i>(on error)</i></p>
 
@@ -2463,7 +2538,7 @@ body {
 <pre>
 <span class="comment">// loading an external script</span>
 <span class="keyword">const</span> elem = <span class="gm">GM.addElement</span>(<span class="string">'script'</span>, {src: <span class="string">'https://....'</span>});
-elem.<span class="property">onload</span> = () =&gt; <span class="property">console</span>.<span class="method">log</span>(elem, <span class="string">'loaded'</span>);
+elem.<span class="method">onload</span> = () =&gt; <span class="object">console</span>.<span class="method">log</span>(elem, <span class="string">'loaded'</span>);
 
 <span class="comment">// appending to shadowRoot</span>
 <span class="keyword">const</span> elem = <span class="gm">GM_addElement</span>(parentElement.<span class="property">shadowRoot</span>, <span class="string">'iframe'</span>, {src: <span class="string">'https://....'</span>});
@@ -2578,52 +2653,54 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
   <p class="caption">Response</p>
 <pre>
 {
-  <span class="property">headers</span>: {
-    <span class="property">age</span>: <span class="string">"52512"</span>,
-    <span class="property">"cache-control"</span>: <span class="string">"max-age=86400, public"</span>,
-    <span class="property">"content-encoding"</span>: <span class="string">"br"</span>,
-    <span class="property">"content-type"</span>: <span class="string">"text/html; charset=utf-8"</span>,
-    <span class="property">date</span>: <span class="string">"Wed, 24 Mar 2021 16:25:31 GMT"</span>,
-    <span class="property">"last-modified"</span>: <span class="string">"Wed, 24 Mar 2021 02:02:53 GMT"</span>,
+  headers: {
+    age: <span class="string">"52512"</span>,
+    "cache-control": <span class="string">"max-age=86400, public"</span>,
+    "content-encoding": <span class="string">"br"</span>,
+    "content-type": <span class="string">"text/html; charset=utf-8"</span>,
+    date: <span class="string">"Wed, 24 Mar 2021 16:25:31 GMT"</span>,
+    "last-modified": <span class="string">"Wed, 24 Mar 2021 02:02:53 GMT"</span>,
     <span class="comment">// ... etc</span>
   },
-  <span class="property">bodyUsed</span>: <span class="keyword">false</span>,
-  <span class="property">ok</span>: <span class="keyword">true</span>,
-  <span class="property">redirected</span>: <span class="keyword">true</span>,
-  <span class="property">status</span>: <span class="value">200</span>,
-  <span class="property">statusText</span>: <span class="string">"OK"</span>,
-  <span class="property">type</span>: <span class="string">"basic"</span>,
-  <span class="property">url</span>: <span class="string">"https://developer.mozilla.org/docs/Web/API/Fetch_API/Using_Fetch"</span>,
+  bodyUsed: <span class="value">false</span>,
+  ok: <span class="value">true</span>,
+  redirected: <span class="value">true</span>,
+  status: <span class="value">200</span>,
+  statusText: <span class="string">"OK"</span>,
+  type: <span class="string">"basic"</span>,
+  url: <span class="string">"https://developer.mozilla.org/docs/Web/API/Fetch_API/Using_Fetch"</span>,
 
   <span class="comment">// plus one of the following properties based on responseType, if method is not HEAD</span>
-  <span class="property">text</span>: ...,
-  <span class="property">json</span>: ...,
-  <span class="property">blob</span>: ...,
-  <span class="property">arrayBuffer</span>: ...,
-  <span class="property">formData</span>: ...,
+  text: ...,
+  json: ...,
+  blob: ...,
+  arrayBuffer: ...,
+  formData: ...,
 }
 </pre>
 
   <p class="caption">Example</p>
 <pre>
 <span class="comment">// HEAD request</span>
-<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM</span>.<span class="method">fetch</span>(<span class="string">'https://example.com/etc'</span>, {method: <span class="string">'HEAD'</span>});
+<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM.fetch</span>(<span class="string">'https://example.com/etc'</span>, {method: <span class="string">'HEAD'</span>});
 
 
 <span class="comment">// simplest, returns response text</span>
-<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM</span>.<span class="method">fetch</span>(<span class="string">'https://example.com/etc'</span>);
+<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM.fetch</span>(<span class="string">'https://example.com/etc'</span>);
 <span class="keyword">const</span> text = response.text;
 
+<span class="comment">// if need to check response</span>
+<span class="keyword">if</span> (response.ok) { ... }
 
 <span class="comment">// returns response JSON</span>
-<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM</span>.<span class="method">fetch</span>(<span class="string">'https://example.com/etc'</span>, {responseType: <span class="string">'json'</span>});
+<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM.fetch</span>(<span class="string">'https://example.com/etc'</span>, {responseType: <span class="string">'json'</span>});
 <span class="keyword">const</span> obj = response.json;
 
 
 <span class="comment">// with init, returns response text</span>
-<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM</span>.<span class="method">fetch</span>(<span class="string">'https://example.com/etc'</span>, {
+<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM.fetch</span>(<span class="string">'https://example.com/etc'</span>, {
   method: <span class="string">'POST'</span>,
-  <span class="property">body</span>: <span class="object">JSON</span>.<span class="method">stringify</span>(data), <span class="comment">// data can be `string` or {object}!</span>
+  body: <span class="object">JSON</span>.<span class="method">stringify</span>(data), <span class="comment">// data can be `string` or {object}!</span>
   headers:{
     <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span>
 });
@@ -2631,9 +2708,9 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
 
 <span class="comment">// if you don't need to wait for the response</span>
-<span class="gm">GM</span>.<span class="method">fetch</span>(<span class="string">'https://example.com/etc'</span>)
+<span class="gm">GM.fetch</span>(<span class="string">'https://example.com/etc'</span>)
 .<span class="method">then</span>(response =&gt; callback(response))
-.<span class="keyword">catch</span>(<span class="method">error</span> =&gt; <span class="property">console</span>.<span class="method">error</span>(<span class="method">error</span>.message));
+.<span class="keyword">catch</span>(error =&gt; <span class="object">console</span>.<span class="method">error</span>(error.message));
 </pre>
 
 
@@ -2707,8 +2784,8 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 <pre><span class="comment">// simplest</span>
 <span class="gm">GM.xmlHttpRequest</span>({
   url: <span class="string">'https://example.com/etc'</span>,
-  <span class="property">onload</span>: response =&gt; {
-    <span class="property">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
+  <span class="method">onload</span>: response =&gt; {
+    <span class="object">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
   }
 });
 
@@ -2719,13 +2796,13 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
   method: <span class="string">'POST'</span>,
   data: <span class="object">JSON</span>.<span class="method">stringify</span>(data), <span class="comment">// data can be `string` or {object}!</span>
   headers:{
-    <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span>
+    'Content-Type': <span class="string">'application/json'</span>
   }
-  <span class="property">onload</span>: response =&gt; {
-    <span class="property">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
+  <span class="method">onload</span>: response =&gt; {
+    <span class="object">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
   },
-  <span class="property">onerror</span>: response =&gt; {
-    <span class="property">console</span>.<span class="method">log</span>(`${response.<span class="property">status</span>}  ${response.<span class="property">statusText</span>}`);
+  <span class="method">onerror</span>: response =&gt; {
+    <span class="object">console</span>.<span class="method">log</span>(`${response.<span class="property">status</span>}  ${response.<span class="property">statusText</span>}`);
   },
 );
 
@@ -2734,8 +2811,8 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 <span class="gm">GM.xmlHttpRequest</span>({
   url: <span class="string">'https://example.com/etc'</span>,
   method: <span class="string">'HEAD'</span>,
-  <span class="property">onload</span>: response =&gt; {
-    <span class="property">console</span>.<span class="method">log</span>(response.<span class="property">responseHeaders</span>);
+  <span class="method">onload</span>: response =&gt; {
+    <span class="object">console</span>.<span class="method">log</span>(response.<span class="property">responseHeaders</span>);
   }
 });</pre>
 
@@ -2747,23 +2824,23 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
   <p class="caption">xmlHttpRequest from Page Context</p>
 <pre>
-<span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="object">window</span>.XMLHttpRequest();
+<span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="object">window</span>.<span class="method">XMLHttpRequest</span>();
 xhr.<span class="method">open</span>(<span class="string">'GET'</span>, <span class="string">'https://example.com/'</span>);
-xhr.withCredentials = <span class="keyword">true</span>;
-xhr.<span class="property">onload</span> = response =&gt; {
- <span class="property">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
+xhr.withCredentials = <span class="value">true</span>;
+xhr.<span class="method">onload</span> = response =&gt; {
+ <span class="object">console</span>.<span class="method">log</span>(response.<span class="property">responseText</span>);
 };
-xhr.<span class="property">onerror</span> = response =&gt; {
- <span class="property">console</span>.<span class="method">log</span>(`${response.<span class="property">status</span>}  ${response.<span class="property">statusText</span>}`);
+xhr.<span class="method">onerror</span> = response =&gt; {
+ <span class="object">console</span>.<span class="method">log</span>(`${response.<span class="property">status</span>}  ${response.<span class="property">statusText</span>}`);
 };
-xhr.send(<span class="keyword">null</span>);
+xhr.<span class="method">send</span>(<span class="keyword">null</span>);
 
 <span class="comment">// or fetch</span>
-<span class="object">window</span>.fetch(<span class="string">'https://example.com/'</span>, {
-  credentials: 'include'
+<span class="object">window</span>.<span class="method">fetch</span>(<span class="string">'https://example.com/'</span>, {
+  credentials: <span class="string">'include'</span>
 })
-.<span class="keyword">then</span>(response =&gt; response.json())
-.<span class="keyword">catch</span>(<span class="method">error</span> =&gt; <span class="property">console</span>.<span class="method">error</span>(<span class="method">error</span>.message));
+.<span class="keyword">then</span>(response =&gt; response.<span class="method">json</span>())
+.<span class="keyword">catch</span>(error =&gt; <span class="object">console</span>.<span class="method">error</span>(error.message));
 </pre>
 
 
@@ -3039,10 +3116,10 @@ xhr.send(<span class="keyword">null</span>);
 
 <div class="grid-2">
 <code class="deprecated"><span class="comment">// instead of this code</span>
-(<span class="keyword">async</span> () =&gt; {
+(<span class="keyword">async</span>() =&gt; {
   <span class="keyword">const</span> link = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'link'</span>);
   link.<span class="property">href</span> = <span class="keyword">await</span> <span class="gm">GM.getResourceUrl</span>(<span class="string">'CSS'</span>);
-  link.rel = <span class="string">'stylesheet'</span>;
+  link.<span class="property">rel</span> = <span class="string">'stylesheet'</span>;
   <span class="property">document</span>.<span class="property">body</span>.<span class="method">appendChild</span>(<span class="property">style</span>);
 })();</code>
 
@@ -3050,11 +3127,11 @@ xhr.send(<span class="keyword">null</span>);
 
 <span class="keyword">const</span> link = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'link'</span>);
 link.<span class="property">href</span> = <span class="string">'http://www.example.com/example.css'</span>;
-link.rel = <span class="string">'stylesheet'</span>;
+link.<span class="property">rel</span> = <span class="string">'stylesheet'</span>;
 <span class="property">document</span>.<span class="property">head</span>.<span class="method">appendChild</span>(link);</code>
 
 <code class="deprecated"><span class="comment">// instead of this code</span>
-(<span class="keyword">async</span> () =&gt; {
+(<span class="keyword">async</span>() =&gt; {
   <span class="keyword">const</span> img = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'img'</span>);
   img.<span class="property">src</span> = <span class="keyword">await</span> <span class="gm">GM.getResourceUrl</span>(<span class="string">'logo'</span>);
   <span class="property">document</span>.<span class="property">body</span>.<span class="method">appendChild</span>(<span class="property">img</span>);
@@ -3092,18 +3169,14 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 (<span class="keyword">function</span>() {
   <span class="string">'use strict';</span>
 
-  <span class="keyword">const</span> svg = <span class="gm">GM_getResourceUrl</span>( <span class="string">"EMOJI_SVG"</span> );
+  <span class="keyword">const</span> svg = <span class="gm">GM_getResourceUrl</span>(<span class="string">"EMOJI_SVG"</span>);
   <span class="gm">GM_addStyle</span>(<span class="string">`
-
-  .icon.svg { background-image: url( "${svg}" ); }
-
+    .icon.svg { background-image: url("${svg}"); }
   `</span>);
 
-  <span class="keyword">const</span> png = <span class="gm">GM_getResourceUrl</span>( <span class="string">"EMOJI_PNG"</span> );
+  <span class="keyword">const</span> png = <span class="gm">GM_getResourceUrl</span>(<span class="string">"EMOJI_PNG"</span>);
   <span class="gm">GM_addStyle</span>(<span class="string">`
-
-  .icon.png { background-image: url( "${png}" ); }
-
+    .icon.png { background-image: url("${png}"); }
   `</span>);
 })();</pre>
 
@@ -3122,10 +3195,10 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 (<span class="keyword">function</span>() {
   <span class="string">'use strict';</span>
 
-  <span class="comment">// no real need for @resource & GM_getResourceURL
-  // more efficient to combine GM_addStyle values</span>
+  <span class="comment">// no real need for @resource & GM_getResourceURL</span>
   <span class="keyword">const</span> svg = <span class="string">'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f36d.svg'</span>;
   <span class="keyword">const</span> png = <span class="string">'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f36d.png'</span>;
+  <span class="comment">// more efficient to combine GM_addStyle values</span>
   <span class="gm">GM_addStyle</span>(<span class="string">`
     .icon.svg { background-image: url('${svg}'); }
     .icon.png { background-image: url('${png}'); }
@@ -3157,10 +3230,10 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
   <p class="caption">Example</p>
 <pre>
 <span class="comment">// anonymous function</span>
-<span class="gm">GM_addValueChangeListener</span>(<span class="string">'test-key'</span>, <span class="keyword">function</span>(...arg) { <span class="property">console</span>.<span class="method">log</span>(...arg); });
+<span class="gm">GM_addValueChangeListener</span>(<span class="string">'test-key'</span>, <span class="keyword">function</span>(...arg) { <span class="object">console</span>.<span class="method">log</span>(...arg); });
 
 <span class="comment">// anonymous arrow function</span>
-<span class="gm">GM_addValueChangeListener</span>(<span class="string">'test-key'</span>, (key, oldValue, newValue, remote) =&gt; { <span class="property">console</span>.<span class="method">log</span>(key, oldValue, newValue, remote); });
+<span class="gm">GM_addValueChangeListener</span>(<span class="string">'test-key'</span>, (key, oldValue, newValue, remote) =&gt; { <span class="object">console</span>.<span class="method">log</span>(key, oldValue, newValue, remote); });
 </pre>
 
 
@@ -3232,36 +3305,36 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 <span class="keyword">const</span> css = <span class="string">`p {
   border: 2px solid #000;
 }`</span>;
-popup.addStyle(css);
+popup.<span class="method">addStyle</span>(css);
 
 <span class="comment">// add content as string</span>
 <span class="keyword">const</span> str = <span class="string">'&lt;p&gt;Good &lt;span&gt;Morning&lt;/span&gt;&lt;/p&gt;'</span>;
-popup.append(str);
+popup.<span class="method">append</span>(str);
 
 <span class="comment">// add content as single node</span>
 <span class="keyword">const</span> div = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'div'</span>);
 <span class="keyword">const</span> p = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'p'</span>);
 p.<span class="method">setAttribute</span>(<span class="string">'style'</span>,<span class="string">'color: #fff; text-align: center; font-weight: bold;'</span>); <span class="comment">// add inline style if needed</span>
 div.<span class="method">appendChild</span>(p);
-popup.append(div);
+popup.<span class="method">append</span>(div);
 
 <span class="comment">// add content as several nodes (a, b, c, ...)</span>
 <span class="keyword">const</span> input = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'input'</span>);
-popup.append(div, p, input);
+popup.<span class="method">append</span>(div, p, input);
 
 <span class="comment">// add JavaScript if needed</span>
 p.<span class="method">addEventListener</span>(<span class="string">'click'</span>, someFunc);
 input.<span class="method">addEventListener</span>(<span class="string">'change'</span>, otherFunc);
 
 <span class="comment">// show & hide</span>
-popup.show();
-popup.hide();
+popup.<span class="method">show</span>();
+popup.<span class="method">hide</span>();
 
 <span class="comment">// remove (from document)</span>
-popup.remove();
+popup.<span class="method">remove</span>();
 
 <span class="comment">// example with registerMenuCommand</span>
-<span class="gm">GM_registerMenuCommand</span>(<span class="string">'Configuration'</span>, <span class="keyword">function</span>() { popup.show(); });
+<span class="gm">GM_registerMenuCommand</span>(<span class="string">'Configuration'</span>, <span class="keyword">function</span>() { popup.<span class="method">show</span>(); });
 </pre>
 
 
@@ -3323,7 +3396,7 @@ popup.content.<span class="method">appendChild</span>(button);
 <span class="keyword">const</span> css = <span class="string">`:host {
   background: transparent;
 }`</span>;
-popup.addStyle(css);
+popup.<span class="method">addStyle</span>css);
 
 <span class="comment">// styling content with .content</span>
 <span class="keyword">const</span> css = <span class="string">`.content {
@@ -3334,7 +3407,7 @@ popup.addStyle(css);
   text-align: center;
   border: 2px solid #aaa;
 }`</span>;
-popup.addStyle(css);
+popup.<span class="method">addStyle</span>(css);
 </pre>
   <div class="popup grid-2">
 
@@ -3381,32 +3454,32 @@ popup.addStyle(css);
 
   <p class="caption">Return Object</p>
 <pre>{
-  <span class="property">scriptHandler</span>:    <span class="string">'FireMonkey'</span>,
-  <span class="property">version</span>:          <span class="string">'e.g. 2.68'</span>,
-  <span class="property">scriptMetaStr</span>:    <span class="string">''</span>,       <span class="comment">// empty string (v2.68)</span>
-  <span class="property">platform</span>: {
-    <span class="property">arch</span>:           <span class="string">'e.g. arm x86-32 x86-64'</span>,
-    <span class="property">os</span>:             <span class="string">'e.g. mac win android cros linux openbsd'</span>
+  scriptHandler:    <span class="string">'FireMonkey'</span>,
+  version:          <span class="string">'e.g. 2.68'</span>,
+  scriptMetaStr:    <span class="string">''</span>,       <span class="comment">// empty string (v2.68)</span>
+  platform: {
+    arch:           <span class="string">'e.g. arm x86-32 x86-64'</span>,
+    os:             <span class="string">'e.g. mac win android cros linux openbsd'</span>
   },
-  <span class="property">browser</span>: {
-    <span class="property">name</span>:           <span class="string">'Firefox'</span>,
-    <span class="property">vendor</span>:         <span class="string">'Mozilla'</span>,
-    <span class="property">version</span>:        <span class="string">'e.g. 114.0a1'</span>,
-    <span class="property">buildID</span>:        <span class="string">'e.g. 20230421211246'</span>
+  browser: {
+    name:           <span class="string">'Firefox'</span>,
+    vendor:         <span class="string">'Mozilla'</span>,
+    version:        <span class="string">'e.g. 114.0a1'</span>,
+    buildID:        <span class="string">'e.g. 20230421211246'</span>
   },
-  <span class="property">script</span>: {
-    <span class="property">name</span>:           <span class="string">'script name'</span>,
-    <span class="property">version</span>:        <span class="string">'script version'</span>,
-    <span class="property">description</span>:    <span class="string">'script description'</span>,
-    <span class="property">matches</span>:        <span class="value">[array of match]</span>,
-    <span class="property">excludeMatches</span>: <span class="value">[array of exclude-match]</span>,
-    <span class="property">includes</span>:       <span class="value">[array of regex include]</span>,
-    <span class="property">excludes</span>:       <span class="value">[array of regex exclude]</span>,
-    <span class="property">includeGlobs</span>:   <span class="value">[array of include/includeGlob]</span>,
-    <span class="property">excludeGlobs</span>:   <span class="value">[array of exclude/excludeGlob]</span>,
-    <span class="property">'run-at'</span>:       <span class="string">'e.g. document-idle'</span>,
-    <span class="property">namespace</span>:      <span class="string">''</span>,       <span class="comment">// empty string (v2.68)</span>
-    <span class="property">resources</span>:      <span class="value">{object of name: url}</span>
+  script: {
+    name:           <span class="string">'script name'</span>,
+    version:        <span class="string">'script version'</span>,
+    description:    <span class="string">'script description'</span>,
+    matches:        <span class="value">[array of match]</span>,
+    excludeMatches: <span class="value">[array of exclude-match]</span>,
+    includes:       <span class="value">[array of regex include]</span>,
+    excludes:       <span class="value">[array of regex exclude]</span>,
+    includeGlobs:   <span class="value">[array of include/includeGlob]</span>,
+    excludeGlobs:   <span class="value">[array of exclude/excludeGlob]</span>,
+    'run-at':       <span class="string">'e.g. document-idle'</span>,
+    namespace:      <span class="string">''</span>,       <span class="comment">// empty string (v2.68)</span>
+    resources:      <span class="value">{object of name: url}</span>
   }
 }</pre>
 
@@ -3547,24 +3620,24 @@ popup.addStyle(css);
 <span class="comment">// page-script.js</span>
 <span class="keyword">var</span> foo = <span class="string">"I'm defined in a page script!"</span>;
 <span class="keyword">function</span> runTest() {
-  <span class="property">console</span>.<span class="method">log</span>(foo);
+  <span class="object">console</span>.<span class="method">log</span>(foo);
 }
 
 <span class="comment">// user-script.js</span>
-<span class="property">console</span>.<span class="method">log</span>(window.foo);                  <span class="comment">// undefined</span>
-<span class="property">console</span>.<span class="method">log</span>(<span class="gm">unsafeWindow</span>.foo);            <span class="comment">// "I'm defined in a page script!"</span>
-<span class="property">console</span>.<span class="method">log</span>(window.wrappedJSObject.foo);  <span class="comment">// "I'm defined in a page script!"</span>
+<span class="object">console</span>.<span class="method">log</span>(window.foo);                  <span class="comment">// undefined</span>
+<span class="object">console</span>.<span class="method">log</span>(<span class="gm">unsafeWindow</span>.foo);            <span class="comment">// "I'm defined in a page script!"</span>
+<span class="object">console</span>.<span class="method">log</span>(<span class="object">window</span>.<span class="property">wrappedJSObject</span>.foo);  <span class="comment">// "I'm defined in a page script!"</span>
 <span class="gm">unsafeWindow</span>.runTest();                   <span class="comment">// "I'm defined in a page script!"</span>
-<span class="object">window</span>.wrappedJSObject.runTest();         <span class="comment">// "I'm defined in a page script!"</span>
+<span class="object">window</span>.<span class="property">wrappedJSObject</span>.runTest();         <span class="comment">// "I'm defined in a page script!"</span>
 
 
 <span class="comment">// overriding window functions</span>
-<span class="keyword">let</span> <span class="method">hasFocus</span> = <span class="keyword">new</span> <span class="object">window</span>.<span class="object">Function</span>(<span class="string">'return true'</span>);
-<span class="gm">unsafeWindow</span>.<span class="property">document</span>.<span class="method">hasFocus</span> = <span class="method">hasFocus</span>;
+<span class="keyword">let</span> hasFocus = <span class="keyword">new</span> <span class="object">window</span>.<span class="method">Function</span>(<span class="string">'return true'</span>);
+<span class="gm">unsafeWindow</span>.<span class="property">document</span>.<span class="method">hasFocus</span> = hasFocus;
 
 
 <span class="comment">// another example</span>
-<span class="object">Object</span>.defineProperty(<span class="gm">unsafeWindow</span>.<span class="property">document</span>, <span class="string">'hidden'</span>, {<span class="property">value</span>: <span class="keyword">false</span>});
+<span class="object">Object</span>.<span class="method">defineProperty</span>(<span class="gm">unsafeWindow</span>.<span class="property">document</span>, <span class="string">'hidden'</span>, {value: <span class="value">false</span>});
 </pre>
 
 
@@ -3595,15 +3668,15 @@ popup.addStyle(css);
 
   <p class="caption">Example</p>
 <pre>
-<span class="gm">unsafeWindow</span>.setTimeout = exportFunction(<span class="property">setTimeout</span>, <span class="gm">unsafeWindow</span>);
+<span class="gm">unsafeWindow</span>.<span class="method">setTimeout</span> = <span class="method">exportFunction</span>(<span class="method">setTimeout</span>, <span class="gm">unsafeWindow</span>);
 
-exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'});
+<span class="method">exportFunction</span>(notify, <span class="object">window</span>, {defineAs: <span class="string">'notify'</span>});
 
 <span class="comment">// object without methods</span>
-<span class="gm">unsafeWindow</span>.messenger = cloneInto(obj, <span class="gm">unsafeWindow</span>);
+<span class="gm">unsafeWindow</span>.messenger = <span class="method">cloneInto</span>(obj, <span class="gm">unsafeWindow</span>);
 
 <span class="comment">// object with methods</span>
-<span class="gm">unsafeWindow</span>.messenger = cloneInto(obj, <span class="gm">unsafeWindow</span>, {cloneFunctions: true});
+<span class="gm">unsafeWindow</span>.messenger = <span class="method">cloneInto</span>(obj, <span class="gm">unsafeWindow</span>, {cloneFunctions: <span class="value">true</span>});
 </pre>
 
 
@@ -3785,7 +3858,7 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
 
 
 
-  <h2 id="Detecting_JavaScript_Navigation">ℹ️ Detecting JavaScript Navigation</h2>
+  <h2 id="Detecting-JavaScript-Navigation">ℹ️ Detecting JavaScript Navigation</h2>
   <p>When sites use JavaScript to navigate, Firefox API does not detect the navigation and does not re-inject the userScript/userCSS. In case of userCSS it does not matter since the rules will continue to apply nonetheless, but in case of userScript, it needs to re-run. One way to detect JavaScript navigation is to use <a href="https://developer.mozilla.org/docs/Web/API/MutationObserver" target="_blank">MutationObserver</a> with appropriate <a href="https://developer.mozilla.org/docs/Web/API/MutationObserverInit" target="_blank">MutationObserverInit</a>.</p>
 
 
@@ -3793,12 +3866,13 @@ exportFunction(notify, <span class="object">window</span>, {defineAs: 'notify'})
 <pre>
 <span class="comment">// select a simple node that changes in navigation to attach a MutationObserver e.g. &lt;title&gt;
 // For better performance avoid using a node with a lot of children like &lt;body&gt; when childList: true  </span>
-<span class="keyword">new</span> MutationObserver((mutationsList) =&gt; {
-  <span class="property">console</span>.<span class="method">log</span>(mutationsList[0].target.<span class="property">textContent</span>);
+<span class="keyword">new</span> <span class="method">MutationObserver</span>(mutationsList =&gt; {
+  <span class="object">console</span>.<span class="method">log</span>(mutationsList[0].<span class="property">target</span>.<span class="property">textContent</span>);
   <span class="comment">// re-run the necessary function</span>
-}).<span class="method">observe</span>(
-  <span class="property">document</span>.<span class="method">querySelector</span>('title'),
-  {subtree: <span class="keyword">true</span>, childList: <span class="keyword">true</span>}
+})
+.<span class="method">observe</span>(
+  <span class="property">document</span>.<span class="method">querySelector</span>(<span class="string">'title'</span>),
+  {subtree: <span class="value">true</span>, childList: <span class="value">true</span>}
 );
 </pre>
 
@@ -3942,23 +4016,21 @@ script.<span class="method">remove</span>();
   <p class="caption">Example with &lt;script&gt;</p>
 <pre>
 <span class="comment">// inject a function that generates & dispatches a CustomEvent</span>
-<span class="keyword">const</span> script = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'script'</span>);
-script.<span class="property">textContent</span> = `function sendMessage(message) =&gt; {
-  <span class="object">window</span>.<span class="method">dispatchEvent</span>(<span class="keyword">new</span> CustomEvent(<span class="string">'sendMessage'</span>, {detail: message}));
+<span class="keyword">const</span> code = <span class="string">`function sendMessage(message) => {
+  window.dispatchEvent(new CustomEvent('sendMessage', {detail: message}));
 };
-
-<span class="comment">// run sendMessage when needed</span>
-<span class="keyword">if</span>(... condition ...) { sendMessage(data); }
-<span class="string">`</span>;
+// sendMessage when needed
+if(... condition ...) { sendMessage(data); }`</span>;
+<span class="keyword">const</span> script = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'script'</span>);
+script.<span class="property">textContent</span> = code;
 <span class="property">document</span>.<span class="property">head</span>.<span class="method">appendChild</span>(script);
 script.<span class="method">remove</span>();
 
 <span class="comment">// in user-script</span>
 <span class="object">window</span>.<span class="method">addEventListener</span>(<span class="string">'sendMessage'</span>, onMessage);
 <span class="keyword">function</span> onMessage(e) {
-
-  <span class="keyword">const</span> message = e.detail;
-  <span class="comment">// run some code</span>
+  <span class="keyword">const</span> message = e.<span class="property">detail</span>;
+  <span class="comment">// some code</span>
 }
 </pre>
 
@@ -3969,20 +4041,18 @@ script.<span class="method">remove</span>();
   <p class="caption">Example with window.eval()</p>
 <pre>
 <span class="comment">// inject a function that generates &amp; dispatches a CustomEvent</span>
-<span class="object">window</span>.<span class="method">eval</span>(`function sendMessage(message) =&gt; {
-  <span class="object">window</span>.<span class="method">dispatchEvent</span>(<span class="keyword">new</span> CustomEvent(<span class="string">'sendMessage'</span>, {detail: message}));
+<span class="keyword">const</span> code = <span class="string">`function sendMessage(message) => {
+  window.dispatchEvent(new CustomEvent('sendMessage', {detail: message}));
 };
-
-<span class="comment">// run sendMessage when needed</span>
-<span class="keyword">if</span>(... condition ...) { sendMessage(data); }
-<span class="string">`</span>);
+// sendMessage when needed
+if(... condition ...) { sendMessage(data); }`</span>;
+<span class="object">window</span>.<span class="method">eval</span>(code);
 
 <span class="comment">// in user-script</span>
 <span class="object">window</span>.<span class="method">addEventListener</span>(<span class="string">'sendMessage'</span>, onMessage);
 <span class="keyword">function</span> onMessage(e) {
-
-  <span class="keyword">const</span> message = e.detail;
-  <span class="comment">// run some code</span>
+  <span class="keyword">const</span> message = e.<span class="property">detail</span>;
+  <span class="comment">// some code</span>
 }
 </pre>
 
@@ -4002,11 +4072,8 @@ script.<span class="method">remove</span>();
 ==UserCSS==
 @name           YouTube
 @match          *://*.youtube.com/*
-@author         erosman
-@version        1.0
 ==/UserCSS==
 */</span>
-
 
 <span class="html">a</span>[href*="/watch?v="]<span class="pseudo">:visited</span>,
 <span class="html">a</span>[href*="/watch?v="]<span class="pseudo">:visited</span> <span class="html">h3</span>,
@@ -4067,7 +4134,7 @@ script.<span class="method">remove</span>();
 */</span>
 
 <span class="html">body</span> {
-  <span class="property">border-top</span>: <span class="value">2px solid</span> <span class="color">grey</span>;
+  <span class="property">border-top</span>: <span class="value">2px solid</span> <span class="value">grey</span>;
 }
 </pre>
 
@@ -4084,7 +4151,7 @@ script.<span class="method">remove</span>();
 */</span>
 
 <span class="html">body</span> {
-  <span class="property">border-top-color</span>: <span class="color">blue</span>;
+  <span class="property">border-top-color</span>: <span class="value">blue</span>;
 }
 </pre>
 
@@ -4129,7 +4196,7 @@ script.<span class="method">remove</span>();
 
 <span class="comment">// in userCSS</span>
 .lg\:mb-32 {
-  <span class="property">border</span>: <span class="value">1px</span> <span class="value">solid</span> <span class="color">blue</span>;
+  <span class="property">border</span>: <span class="value">1px</span> <span class="value">solid</span> <span class="value">blue</span>;
 }
 </pre>
 
@@ -4242,8 +4309,13 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
 </pre></dd>
 
     <dt>View Inserted UserScript</dt>
-    <dd>You can see the actual blob JavaScript in <a href="https://developer.mozilla.org/docs/Tools" target="_blank">Developer Tools</a> (<kbd>F12</kbd>) <b>Debugger</b> tab under <code>FireMonkey/userscript/</code> (v2.68) (<code>user-script://FireMonkey/</code> pre-2.68) (you may have to refresh the page)</dd>
-    <dd>See also: <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1824910" target="_blank">Display inconsistency of folder & file</a> (Fixed in FireFox 114)</dd>
+    <dd>You can see the actual blob JavaScript in <a href="https://developer.mozilla.org/docs/Tools" target="_blank">Developer Tools</a> (<kbd>F12</kbd>) <b>Debugger</b> tab under <code>FireMonkey://userscript/</code> (v2.68) (<code>user-script://FireMonkey/</code> pre-2.68) (you may have to refresh the page)</dd>
+    <dd>See also:
+      <ul>
+        <li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1824910" target="_blank">Display inconsistency of folder & file</a> (Fixed in FireFox 114)</li>
+        <li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1829460" target="_blank">Display inconsistency of sourceURL containing a URL</a></li>
+      </ul>
+      </dd>
 
     <dt>CSS Errors</dt>
     <dd>The CSS error can be checked in <b>Developer Tools</b> (<kbd>F12</kbd>) for the page that the CSS is injected into.</dd>

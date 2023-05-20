@@ -22,7 +22,7 @@ body.dark {
     --pre: #f2f1f1;
     --quote: #f4f6fa;
     --pass: #080;
-    --th: #f9f9fb;
+    --th: #f7f7fb;
     --td: #fbfbfd;
   }
 }
@@ -342,10 +342,9 @@ pre code.deprecated::after {
   color: #f00;
 }
 
-pre.error {
+.error {
   color: #800;
   background-color: #fff5f5;
-  border-left-color: #800;
   display: table;
 }
 
@@ -390,6 +389,7 @@ code {
 kbd {
   color: #333;
   padding: 0.1em 0.4em;
+  margin: auto 0.2em;
   background: transparent linear-gradient(to bottom, #eee, #fff 60%);
   border-radius: 4px;
   border: 1px solid #ccc;
