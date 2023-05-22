@@ -62,9 +62,11 @@
           <ul>
             <!-- <li><a href="#forbidden-header-name">Forbidden header name</a></li> -->
             <li><a href="#storage">Script Storage</a></li>
+
+            <li><a href="#Dynamic-import">Dynamic import()</a></li>
             <li><a href="#createObjectURL">createObjectURL</a></li>
             <li><a href="#import">import</a></li>
-            <li><a href="#Dynamic-import">Dynamic import()</a></li>
+            <li><a href="#import-option">import Option</a></li>
 
             <li><a href="#addElement">addElement</a></li>
             <li><a href="#addScript">addScript</a></li>
@@ -108,7 +110,7 @@
 
   <p class="note">Injection into <code>page</code> context are prevented by Firefox on sites with restrictive Content Security Policy (CSP) e.g. github.com, gitee.com, twitter.com, mail.google.com (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1411641" title="CSP 'sandbox' directive prevents content scripts from matching, due to unique origin, breaking also browser features" target="_blank">Bug 1411641</a>), as well as certain <a href="#blocked">domains</a>.</p>
 
-  <p><i>FireMonkey</i> v2.44 is expected to be fully compatible with all <i>Greasemonkey</i> compatible userscripts, and 90% of other userscripts. (You can post issues to <a href="#Support">Support</a>.)</p>
+  <p><i>FireMonkey</i> v2.44 is expected to be fully compatible with all <i>Greasemonkey</i> GM4 compatible userscripts, and 90% of other userscripts. (You can post issues to <a href="#Support">Support</a>.)</p>
 
 
   <table>
@@ -121,9 +123,9 @@
       </tr>
     </thead>
     <tbody class="slim">
-      <!-- <tr><th>GM_getResourceText</th><td>If loading anything other than CSS<br>e.g. JavaScript/JSON/HTML <a href="#getResourceText">ⓘ</a></td><td>954 / 63,435 (1.5%) scripts use the API<br>127 / 63,435 (<b>0.2%</b>) scripts incompatible</td></tr> -->
+      <!-- <tr><th>GM_getResourceText</th><td>If loading anything other than CSS<br>e.g. JavaScript/JSON/HTML <a href="#getResourceText">ⓘ</a></td><td>954 / 63,435 (1.5%) scripts use the API<br>127 / 63,435 (<b>0.2%</b>) scripts incompatible</td></tr>
       <tr><th>GM.getResourceUrl</th><td>If userscript processes the result before applying it <a href="#getResourceUrl">ⓘ</a></td><td>30 / 63,435 (0.05%) scripts use the API<br>all are compatible</td></tr>
-      <tr><th>GM_getResourceURL</th><td>if userscript processes the result before applying it <a href="#getResourceUrl">ⓘ</a></td><td>355 / 63,435 (0.56%) scripts use the API<br>24 / 63,435 (<b>0.03%</b>) scripts incompatible</td></tr>
+      <tr><th>GM_getResourceURL</th><td>if userscript processes the result before applying it <a href="#getResourceUrl">ⓘ</a></td><td>355 / 63,435 (0.56%) scripts use the API<br>24 / 63,435 (<b>0.03%</b>) scripts incompatible</td></tr> -->
       <tr><th>uncommon @grant</th><td><code>GM_cookie</code>, <code>GM_getTab</code>, <code>GM_getTabs</code>, <code>GM_saveTab</code> <a href="#api">ⓘ</a></td><td>55 / 63,435 (<b>0.08%</b>) scripts use these APIs</td></tr>
       <tr><th>uncommon @grant</th><td><code>window.close</code>, <code>window.focus</code>, <code>window.onurlchange</code> <a href="#api">ⓘ</a></td><td>483 / 63,435 (<b>0.76%</b>) scripts use these APIs<br>Probably a lot less as there would be duplicates</td></tr>
       <tr><th>Content Security Policy (CSP)</th><td><code>unsafeWindow</code> or <code>page</code> context injection on pages with strict CSP that only work with <i>Tampermonkey</i> since <i>Tampermonkey</i> alters CSP <a href="#inject-into">ⓘ</a></td><td class="unknown"></td></tr>
@@ -201,65 +203,75 @@
     <cite><a href="https://github.com/violentmonkey/violentmonkey/issues/505" target="_blank">Violentmonkey and manifest V3</a></cite>
   </blockquote>
 
-  <h3>Executing arbitrary strings</h3>
-  <p>Chrome MV3 initially removed the option to execute arbitrary strings which is needed to inject userscripts.</p>
 
-  <blockquote>
-    <p>In Manifest V2, it was possible to execute an arbitrary string of code using <code>tabs.executeScript()</code> and the code property on the options object. Manifest V3 does not allow arbitrary code execution. In order to adapt to this requirement, extension developers can use the <code>scripting.executeScript()</code> method to either inject a static file or a function.</p>
+  <dl class="plain">
+    <dt>1. Executing arbitrary strings</dt>
+    <dd><p>Chrome MV3 initially removed the option to execute arbitrary strings which is needed to inject userscripts.</p>
 
-    <cite><a href="https://developer.chrome.com/docs/extensions/mv3/mv3-migration/#executing-arbitrary-strings" target="_blank">Executing arbitrary strings</a></cite>
-  </blockquote>
+      <blockquote>
+        <p>In Manifest V2, it was possible to execute an arbitrary string of code using <code>tabs.executeScript()</code> and the code property on the options object. Manifest V3 does not allow arbitrary code execution. In order to adapt to this requirement, extension developers can use the <code>scripting.executeScript()</code> method to either inject a static file or a function.</p>
 
-  <p>Chrome has since changed its position on supporting userscript managers.</p>
+        <cite><a href="https://developer.chrome.com/docs/extensions/mv3/mv3-migration/#executing-arbitrary-strings" target="_blank">Executing arbitrary strings</a></cite>
+      </blockquote>
 
-  <blockquote>
-    <p><b>Summary:</b> Userscript managers cannot inject scripts that are not included in the extension's package due to platform and policy changes that prevent arbitrary code execution. To address this, the Manifest V3 platform will be expanded to specifically support user-authored scripts and styles.</p>
+      <p>Chrome has since changed its position on supporting userscript managers.</p>
 
-    <p><b>Estimated timeline:</b> <s>Canary support around October, 2022.</s> Targeting Canary support in the first quarter of 2023.</p>
-    <cite><a href="https://developer.chrome.com/docs/extensions/mv3/known-issues/#userscript-managers-support" target="_blank">Known issues when migrating to Manifest V3</a></cite>
-  </blockquote>
+      <blockquote>
+        <p><b>Summary:</b> Userscript managers cannot inject scripts that are not included in the extension's package due to platform and policy changes that prevent arbitrary code execution. To address this, the Manifest V3 platform will be expanded to specifically support user-authored scripts and styles.</p>
 
-  <h4>See also</h4>
-  <ul>
-    <li><a href="https://github.com/w3c/webextensions/issues/279" target="_blank">User scripts in Manifest V3</a></li>
-    <li><a href="https://github.com/w3c/webextensions/issues/284" target="_blank">Main world User Script shared params</a></li>
-  </ul>
+        <p><b>Estimated timeline:</b> <s>Canary support around October, 2022.</s> Targeting Canary support in the first quarter of 2023.</p>
+        <cite><a href="https://developer.chrome.com/docs/extensions/mv3/known-issues/#userscript-managers-support" target="_blank">Known issues when migrating to Manifest V3</a></cite>
+      </blockquote>
 
+      <h4>See also</h4>
+      <ul>
+        <li><a href="https://github.com/w3c/webextensions/issues/279" target="_blank">User scripts in Manifest V3</a></li>
+        <li><a href="https://github.com/w3c/webextensions/issues/284" target="_blank">Main world User Script shared params</a></li>
+      </ul>
+    </dd>
 
-  <h3>includeGlobs/excludeGlobs</h3>
-  <p>Chrome MV3 has removed <code>includeGlobs/excludeGlobs</code> parameters which affects the use of <code>include/exclude</code>. <a href="#include">ⓘ</a></p>
+    <dt>2. includeGlobs/excludeGlobs</dt>
+    <dd>Chrome MV3 has removed <code>includeGlobs/excludeGlobs</code> parameters which affects the use of <code>include/exclude</code>. <a href="#include">ⓘ</a></dd>
 
-  <h3>GM xmlHttpRequest</h3>
-  <p><code>GM xmlHttpRequest</code> was created to bypass CORS restrictions. The API is performed from the background script where CORS does not apply. Additionally, it can set a few <a href="#forbidden-header-name">Forbidden header name</a> which might not be possible in Chrome MV3 due to the removal of blocking version of the Web Request API. <a href="https://developer.chrome.com/docs/extensions/mv3/mv3-migration/#modifying-network-requests" target="_blank">ⓘ</a>.</p>
-
-  <ul>
-    <li><a href="https://wiki.greasespot.net/GM.xmlHttpRequest" target="_blank">Greasemonkey:</a> This method performs a similar function to the standard XMLHttpRequest object, but allows these requests to cross the same origin policy boundaries.</li>
-    <li><a href="https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest" target="_blank">Violentmonkey:</a> Makes a request like XMLHttpRequest, with some special capabilities, not restricted by same-origin policy.</li>
-  </ul>
-
-  <p>The future of <code>GM xmlHttpRequest</code> in Chrome for <i>Tampermonkey</i> & <i>Violentmonkey</i> will be subject to change.</p>
-
-  <blockquote>
-    <p>An example of a cross-origin request: the front-end JavaScript code served from <code>https://domain-a.com</code> uses <a href="https://developer.mozilla.org/docs/Web/API/XMLHttpRequest" target="_blank">XMLHttpRequest</a> to make a request for <code>https://domain-b.com/data.json</code>.</p>
-
-    <p>For security reasons, browsers restrict cross-origin HTTP requests initiated from scripts. For example, <code>XMLHttpRequest</code> and the <a href="https://developer.mozilla.org/docs/Web/API/Fetch_API" target="_blank">Fetch API</a> follow the <a href="https://developer.mozilla.org/docs/Web/Security/Same-origin_policy" target="_blank">same-origin policy</a>. This means that a web application using those APIs can only request resources from the same origin the application was loaded from unless the response from other origins includes the right CORS headers.</p>
-
-    <cite><a href="https://developer.mozilla.org/docs/Web/HTTP/CORS" target="_blank">Cross-Origin Resource Sharing (CORS)</a></cite>
-  </blockquote>
+    <dt>3. Setting Cookie, Host, Origin, Referer</dt>
+    <dd>UserScript managers have been using <code>webRequest.onBeforeSendHeaders</code> to implement setting, <i>Cookie, Host, Origin, Referer</i>. While Firefox continues to support <code>'blocking'</code> in <code>`webRequest`</code>, Chrome does not. It odes not appears to be achievable with DNR (<a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest" target="_blank">declarativeNetRequest</a>).</dd>
 
 
-  <blockquote>
-    <p>To improve security, cross-origin fetches will soon be disallowed from content scripts in Chrome Extensions. Such requests can be made from extension background pages instead, and relayed to content scripts when needed. [The document has been edited on 2020-09-17 to reflect that CORS-for-content-scripts has successfully launched in Chrome 85*.]</p>
+    <dt>4. GM xmlHttpRequest</dt>
+    <dd><p><code>GM xmlHttpRequest</code> was created to bypass CORS restrictions. The API is performed from the background script where CORS does not apply. Additionally, it can set a few <a href="#forbidden-header-name">Forbidden header name</a> which might not be possible in Chrome MV3 due to the removal of blocking version of the Web Request API. <a href="https://developer.chrome.com/docs/extensions/mv3/mv3-migration/#modifying-network-requests" target="_blank">ⓘ</a>.</p>
 
-    <cite><a href="https://www.chromium.org/Home/chromium-security/extension-content-script-fetches/" target="_blank">Changes to Cross-Origin Requests in Chrome Extension Content Scripts</a></cite>
-  </blockquote>
+      <ul>
+        <li><a href="https://wiki.greasespot.net/GM.xmlHttpRequest" target="_blank">Greasemonkey:</a> This method performs a similar function to the standard XMLHttpRequest object, but allows these requests to cross the same origin policy boundaries.</li>
+        <li><a href="https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest" target="_blank">Violentmonkey:</a> Makes a request like XMLHttpRequest, with some special capabilities, not restricted by same-origin policy.</li>
+      </ul>
 
-  <blockquote>
-    <p>⚠️ <b>Warning</b></p>
-    <p>In Manifest V3, <code>XMLHttpRequest</code> is not supported in background pages (provided by Service Workers). Please consider using its modern replacement, <code>fetch()</code>.</p>
+      <p>The future of <code>GM xmlHttpRequest</code> in Chrome for <i>Tampermonkey</i> & <i>Violentmonkey</i> will be subject to change.</p>
 
-    <cite><a href="https://developer.chrome.com/docs/extensions/mv3/xhr/" target="_blank">Cross-origin XMLHttpRequest</a></cite>
-  </blockquote>
+      <blockquote>
+        <p>An example of a cross-origin request: the front-end JavaScript code served from <code>https://domain-a.com</code> uses <a href="https://developer.mozilla.org/docs/Web/API/XMLHttpRequest" target="_blank">XMLHttpRequest</a> to make a request for <code>https://domain-b.com/data.json</code>.</p>
+
+        <p>For security reasons, browsers restrict cross-origin HTTP requests initiated from scripts. For example, <code>XMLHttpRequest</code> and the <a href="https://developer.mozilla.org/docs/Web/API/Fetch_API" target="_blank">Fetch API</a> follow the <a href="https://developer.mozilla.org/docs/Web/Security/Same-origin_policy" target="_blank">same-origin policy</a>. This means that a web application using those APIs can only request resources from the same origin the application was loaded from unless the response from other origins includes the right CORS headers.</p>
+
+        <cite><a href="https://developer.mozilla.org/docs/Web/HTTP/CORS" target="_blank">Cross-Origin Resource Sharing (CORS)</a></cite>
+      </blockquote>
+
+
+      <blockquote>
+        <p>To improve security, cross-origin fetches will soon be disallowed from content scripts in Chrome Extensions. Such requests can be made from extension background pages instead, and relayed to content scripts when needed. [The document has been edited on 2020-09-17 to reflect that CORS-for-content-scripts has successfully launched in Chrome 85*.]</p>
+
+        <cite><a href="https://www.chromium.org/Home/chromium-security/extension-content-script-fetches/" target="_blank">Changes to Cross-Origin Requests in Chrome Extension Content Scripts</a></cite>
+      </blockquote>
+
+      <blockquote>
+        <p>⚠️ <b>Warning</b></p>
+        <p>In Manifest V3, <code>XMLHttpRequest</code> is not supported in background pages (provided by Service Workers). Please consider using its modern replacement, <code>fetch()</code>.</p>
+
+        <cite><a href="https://developer.chrome.com/docs/extensions/mv3/xhr/" target="_blank">Cross-origin XMLHttpRequest</a></cite>
+      </blockquote>
+    </dd>
+
+  </dl>
+
 
 
   <h4>See also</h4>
@@ -1985,7 +1997,7 @@ body {
       <tr><th>GM.addStyle</th><td class="pass sync"></td><td class="fail"><a href="https://wiki.greasespot.net/GM_addStyle" title="As of Greasemonkey 4.0, this method has been removed. " target="_blank">ⓘ</a></td><td class="pass sync"></td><td class="pass sync"></td><td>102</td></tr>
       <tr><th>GM.popup</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
 
-      <tr><th><b>Module</b></th><td colspan="5"></td></tr>
+      <!-- <tr><th><b>Module</b></th><td colspan="5"></td></tr> -->
 
       <tr><th class="experimental">GM.import <span>(v2.68)</span> <a href="#import" target="_blank">ⓘ</a></th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
       <tr><th class="experimental">GM.createObjectURL<span> (v2.68)</span> <a href="#createObjectURL" target="_blank">ⓘ</a></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
@@ -2032,7 +2044,7 @@ body {
       <tr><th>GM_addStyle</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>5,452</td></tr>
       <tr><th>GM_popup</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
 
-      <tr><th><b>Module</b></th><td colspan="5"></td></tr>
+      <!-- <tr><th><b>Module</b></th><td colspan="5"></td></tr> -->
 
       <tr><th class="experimental">GM_createObjectURL<span> (v2.68)</span> <a href="#createObjectURL" target="_blank">ⓘ</a></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
 
@@ -2268,6 +2280,31 @@ body {
   <p>The recommended async <code>GM.getValue</code> & <code>GM.listValues</code> will get the most up-to-date values at that moment.</p>
 
 
+  <table>
+    <caption>Storage Comparison</caption>
+    <thead>
+      <tr>
+        <th></th>
+        <th>FireMonkey</th>
+        <th>Greasemonkey</th>
+        <th>Tampermonkey</th>
+        <th>Violentmonkey</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <th>Storage</th>
+        <td>extension storage</td>
+        <td>IndexedDB</td>
+        <td>extension storage</td>
+        <td>extension storage</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+
   <h3>New APIs: getValues, setValues, deleteValues <span>(v2.68)</span></h3>
   <p>Userscripts often need to get/set multiple values. Each storage operation result in costly asynchronous read/write which means resources, time, and hard disk wear (especially for SSDs). These new APIs aim to alleviate the aforementioned.</p>
 
@@ -2311,8 +2348,137 @@ body {
 
 
 
+
+<h2 id="Dynamic-import">Dynamic import()</h2>
+<p>JavaScript ECMAScript 2020 (ES11) dynamic <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/import" target="_blank">import()</a> can be used in a userscript but there are caveats.</p>
+
+<dl>
+  <dt>MIME type</dt>
+  <dd><code>import()</code> expects JavaScript MIME type e.g. 'text/javascript'</dd>
+  <dd>CDN providers usually set the proper headers, however, some sites may not, which results in an error</dd>
+  <dd>See also: <a href="https://developer.mozilla.org/docs/Learn/Server-side/Configuring_server_MIME_types#javascript_legacy_mime_types" target="_blank">JavaScript legacy MIME types</a></dd>
+  <dd>
+<pre class="grid" style="row-gap: 1em;"><code>https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js
+https://code.jquery.com/jquery-3.7.0.slim.min.js
+https://www.unpkg.com/react@16.7.0/umd/react.production.min.js
+---------------------------------------------------
+content-type: application/javascript; charset=utf-8
+
+
+https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js
+--------------------------------------------
+content-type: text/javascript; charset=UTF-8</code>
+
+<code class="deprecated"><span class="comment">// https://raw.githubusercontent.com/erosman/psl/main/psl.js</span>
+<span class="comment">// content-type: text/plain; charset=utf-8</span>
+
+<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">'https://raw.githubusercontent.com/erosman/psl/main/psl.js'</span>);
+<span class="error">// TypeError: error loading dynamically imported module
+// Loading module from “https://raw.githubusercontent.com/erosman/psl/main/psl.js” was blocked because of a disallowed MIME type (“text/plain”).</span></code>
+
+<code><span class="comment">// https://cdn.jsdelivr.net/gh/erosman/psl@main/psl.js
+// content-type: application/javascript; charset=utf-8</span>
+
+<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">'https://cdn.jsdelivr.net/gh/erosman/psl@main/psl.js'</span>);
+<span class="keyword">const</span> result = PSL.<span class="method">parse</span>(<span class="string">'mail.yahoo.co.uk'</span>);
+<span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span></code>
+</pre>
+  </dd>
+
+  <dt>CORS</dt>
+  <dd><code>import()</code> may also fail due to <a href="https://developer.mozilla.org/docs/Web/HTTP/CORS" target="_blank">Cross-Origin Resource Sharing (CORS)</a></dd>
+  <dd>
+    <pre class="error">Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource.</pre>
+  </dd>
+
+  <dt>CSP</dt>
+  <dd><code>import()</code> may also fail due to <a href="https://developer.mozilla.org/docs/Web/HTTP/CSP" target="_blank">Content Security Policy (CSP)</a></dd>
+  <dd>
+    <pre class="error">Content-Security-Policy: The page's settings blocked the loading of a resource at https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js (“script-src”).</pre>
+  </dd>
+
+</dl>
+
+<p class="caption">Example of loading jQuery</p>
+
+<pre>
+<span class="keyword">import</span>(<span class="string">'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js'</span>)
+.<span class="keyword">then</span>(() => {
+  <span class="comment">// jQuery is only available in this block statement</span>
+  jQuery(<span class="string">'&lt;div&gt;Hello, World!&lt;/div&gt;'</span>).<span class="method">appendTo</span>(<span class="string">'body'</span>);
+});</pre>
+
+<p>or ...</p>
+
+<pre>(<span class="keyword">async</span> () => {
+  <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js'</span>);
+  <span class="comment">// jQuery is only available in this block statement</span>
+  jQuery(<span class="string">'&lt;div&gt;Hello, World!&lt;/div&gt;'</span>).<span class="method">appendTo</span>(<span class="string">'body'</span>);
+})();
+</pre>
+
+
+<h3>Alternative import()</h3>
+<!-- <p>if direct <code>import()</code> fails:</p> -->
+
+<dl class="plain">
+  <dt>Get the module as text</dt>
+  <dd>
+<pre>
+<span class="comment">// @resource        psl https://raw.githubusercontent.com/erosman/psl/main/psl.js
+// @grant           GM_getResourceText</span>
+
+<span class="keyword">const</span> psl = <span class="gm">GM_getResourceText</span>(<span class="string">'psl'</span>);
+<span class="note">GM getResourceText is updated in v2.68.</span></pre>
+  </dd>
+  <dd>or ...</dd>
+  <dd>
+<pre>
+<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM.fetch</span>(<span class="string">'https://raw.githubusercontent.com/erosman/psl/main/psl.js'</span>);
+<span class="keyword">const</span> psl = response.text;
+</pre>
+  </dd>
+
+  <dt>Create object URL from the text</dt>
+  <dd>
+<pre><span class="keyword">const</span> url = <span class="gm">GM.createObjectURL</span>(psl);</pre>
+  </dd>
+  <dd>or ...</dd>
+  <dd>
+<pre>
+<span class="keyword">const</span> blob = <span class="keyword">new</span> <span class="object">Blob</span>([psl], {type: <span class="string">'text/javascript'</span>});
+<span class="keyword">const</span> url = <span class="object">URL</span>.<span class="method">createObjectURL</span>(blob);
+<!-- <span class="comment">// release later for optimal performance and memory usage</span> -->
+</pre>
+  </dd>
+
+
+  <dt>import()</dt>
+  <dd>
+<pre>
+<span class="comment">// variables must match module exports</span>
+<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(url);
+</pre>
+  </dd>
+
+<!--
+  <dt>Release the object URL</dt>
+  <dd>
+<pre>
+<span class="comment">// optional release the object URL for optimal performance and memory usage</span>
+<span class="object">URL</span>.<span class="method">revokeObjectURL</span>(url);
+</pre>
+  </dd> -->
+
+
+</dl>
+
+
+
+
+
   <h2 id="createObjectURL" class="experimental">createObjectURL <span>(v2.68)</span></h2>
-  <p>Utility function based on <a href="https://developer.mozilla.org/docs/Web/API/URL/createObjectURL_static" target="_blank">URL: createObjectURL()</a> to first convert JavaScript <code>string</code> to a <code>blob</code> and then to a string containing a URL representing the object given in the parameter. The API was created to facilitate GM import.</p>
+  <p>Utility function based on <a href="https://developer.mozilla.org/docs/Web/API/URL/createObjectURL_static" target="_blank">URL: createObjectURL()</a> to first convert the <code>string/object</code> to a <code>blob</code> and then to a string containing a URL representing the object given in the parameter. The API was created to facilitate GM import.</p>
   <p>The default for <code>type</code> <i>(optional)</i> is set as <code>'text/javascript'</code> (to use with GM import) but any <a href="https://developer.mozilla.org/docs/Glossary/MIME_type" target="_blank">MIME type</a> can be set.</p>
 
   <p><b>Return value:</b> object URL || <code>undefined</code></p>
@@ -2359,117 +2525,38 @@ body {
 </pre>
 
 
+<h2 id="import-option" class="experimental">import Option<span>(v2.68)</span></h2>
+<p>Experimental <a href="https://github.com/tc39/proposal-import-attributes" target="_blank">Import Attributes</a> is supported but the proposal is not finalised yet.</p>
 
-<h2 id="Dynamic-import">Dynamic import()</h2>
-<p>JavaScript ECMAScript 2020 (ES11) dynamic <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/import" target="_blank">import()</a> can be used in a userscript but there are caveats.</p>
+<p><b>Return value:</b> based on option type</p>
+<ul>
+  <li>json: <code>object</code></li>
+  <li>css: <code>string</code></li>
+  <li>html: <code>DocumentFragment</code> <a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment" target="_blank">ⓘ</a></li>
+</ul>
 
-<dl>
-  <dt>MIME type</dt>
-  <dd><code>import()</code> expects JavaScript MIME type e.g. 'text/javascript'</dd>
-  <dd>CDN providers usually set the proper headers, however, other sites may not, which results in an error</dd>
-  <dd>See also: <a href="https://developer.mozilla.org/docs/Learn/Server-side/Configuring_server_MIME_types#javascript_legacy_mime_types" target="_blank">JavaScript legacy MIME types</a></dd>
-  <dd>
-<pre class="grid" style="row-gap: 1em;"><code>https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js
-content-type: application/javascript; charset=utf-8
 
-https://code.jquery.com/jquery-3.7.0.slim.min.js
-content-type: application/javascript; charset=utf-8
 
-https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js
-content-type: text/javascript; charset=UTF-8</code>
-
-<code class="deprecated"><span class="comment">// https://raw.githubusercontent.com/erosman/psl/main/psl.js</span>
-<span class="comment">// content-type: text/plain; charset=utf-8</span>
-
-<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">'https://raw.githubusercontent.com/erosman/psl/main/psl.js'</span>);
-<span class="error">// TypeError: error loading dynamically imported module
-// Loading module from “https://raw.githubusercontent.com/erosman/psl/main/psl.js” was blocked because of a disallowed MIME type (“text/plain”).</span></code>
-
-<code><span class="comment">// https://cdn.jsdelivr.net/gh/erosman/psl@main/psl.js
-// content-type: application/javascript; charset=utf-8</span>
-
-<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">'https://cdn.jsdelivr.net/gh/erosman/psl@main/psl.js'</span>);
-<span class="keyword">const</span> result = PSL.<span class="method">parse</span>(<span class="string">'mail.yahoo.co.uk'</span>);
-<span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span></code>
-</pre>
-  </dd>
-
-  <dt>CORS</dt>
-  <dd><code>import()</code> may also fail due to <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank">Cross-Origin Resource Sharing (CORS)</a></dd>
-  <dd>
-    <pre class="error">Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource</pre>
-  </dd>
-
-  <dt>CSP</dt>
-  <dd><code>import()</code> may also fail due to <a href="https://developer.mozilla.org/docs/Web/HTTP/CSP" target="_blank">Content Security Policy (CSP)</a></dd>
-  <dd>
-    <pre class="error">Content-Security-Policy: The page's settings blocked the loading of a resource at https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js (“script-src”).</pre>
-  </dd>
-
-</dl>
-
-<p class="caption">Example of loading jQuery</p>
-
+<p class="caption">Example</p>
 <pre>
-<span class="keyword">import</span>(<span class="string">'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js'</span>)
-.<span class="keyword">then</span>(() => {
-  <span class="comment">// jQuery is only available in this block statement</span>
-  jQuery(<span class="string">'&lt;div&gt;Hello, World!&lt;/div&gt;'</span>).<span class="method">appendTo</span>(<span class="string">'body'</span>);
-});</pre>
-
-<p>or ...</p>
-
-<pre>(<span class="keyword">async</span> () => {
-  <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js'</span>)
-  <span class="comment">// jQuery is only available in this block statement</span>
-  jQuery(<span class="string">'&lt;div&gt;Hello, World!&lt;/div&gt;'</span>).<span class="method">appendTo</span>(<span class="string">'body'</span>);
-})();
+<span class="keyword">const</span> obj = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'http://country.io/currency.json'</span>, {type: <span class="string">'json'</span>});
+<span class="object">console</span>.<span class="method">log</span>(obj);
+<span class="comment">// {"BD": "BDT", "BE": "EUR", ... }</span>
 </pre>
 
-
-<h3>Alternative import()</h3>
-<p>if direct <code>import()</code> fails:</p>
-
-<dl class="plain">
-  <dt>Get the module as text</dt>
-  <dd>
 <pre>
-<span class="comment">// @resource        psl https://raw.githubusercontent.com/erosman/psl/main/psl.js
-// @grant           GM_getResourceText</span>
-
-<span class="keyword">const</span> psl = <span class="gm">GM_getResourceText</span>(<span class="string">'psl'</span>);
-<span class="note">GM getResourceText is updated in v2.68.</span></pre>
-  </dd>
-  <dd>or ...</dd>
-  <dd>
-<pre>
-<span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM.fetch</span>(<span class="string">'https://raw.githubusercontent.com/erosman/psl/main/psl.js'</span>);
-<span class="keyword">const</span> psl = response.text;
+<span class="keyword">const</span> css = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://raw.githubusercontent.com/erosman/support/FireMonkey/content/default.css'</span>, {type: <span class="string">'css'</span>});
+<span class="object">console</span>.<span class="method">log</span>(css);
+<span class="comment">// '/* ----- Dark Theme ----- */\r\n:root,\r\nbody.dark {\r\n  --color: #fff; ...</span>
 </pre>
-  </dd>
 
-  <dt>Convert text to object URL</dt>
-  <dd>
-<pre><span class="keyword">const</span> url = <span class="gm">GM.createObjectURL</span>(psl);</pre>
-  </dd>
-  <dd>or ...</dd>
-  <dd>
 <pre>
-<span class="keyword">const</span> blob = <span class="keyword">new</span> <span class="object">Blob</span>([psl], {type: <span class="string">'text/javascript'</span>});
-<span class="keyword">const</span> url = <span class="object">URL</span>.<span class="method">createObjectURL</span>(blob);
+<span class="keyword">const</span> docFrag = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://raw.githubusercontent.com/erosman/support/FireMonkey/content/help.html'</span>, {type: <span class="string">'html'</span>});
+<span class="keyword">const</span> div = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'div'</span>);
+div.<span class="property">appendChild</span>(docFrag);
+<span class="object">console</span>.<span class="method">log</span>(div.<span class="property">firstElementChild</span>);
+<span class="comment">// &lt;meta charset=&quot;utf-8&quot;&gt;</span>
 </pre>
-  </dd>
-
-
-  <dt>import()</dt>
-  <dd>
-<pre>
-<span class="comment">// variables must match module exports</span>
-<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="keyword">import</span>(url);
-</pre>
-  </dd>
-
-</dl>
 
 
 
@@ -2578,7 +2665,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
   <p class="warning">Since v2.33 successful GM.fetch returns an object in all cases.</p>
 
-  <p class="note"><i>FireMonkey</i> GM <code>fetch</code> fixes <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1405971" title="Webextension UUID leak via Fetch requests" target="_blank">Bug 1405971</a>.</p>
+  <!-- <p class="note"><i>FireMonkey</i> GM <code>fetch</code> fixes <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1405971" title="Webextension UUID leak via Fetch requests" target="_blank">Bug 1405971</a>.</p> -->
 
 <pre>
 <span class="comment">// Response Object</span>
@@ -3071,8 +3158,48 @@ xhr.<span class="method">send</span>(<span class="keyword">null</span>);
 
 <pre>
 <span class="keyword">const</span> url = <span class="keyword">await</span> <span class="gm">GM.getResourceUrl</span>(resourceName); <span class="comment">// returns a Promise, note Url camel-case</span>
-<span class="keyword">const</span> url = <span class="gm">GM_getResourceURL</span>(resourceName); <span class="comment">// note URL uppercase</span>
+<span class="keyword">const</span> url = <span class="gm">GM_getResourceURL</span>(resourceName);       <span class="comment">// note URL uppercase</span>
 </pre>
+
+<table>
+  <caption>getResourceUrl Comparison</caption>
+  <thead>
+    <tr>
+      <th></th>
+      <th>FireMonkey</th>
+      <th>Greasemonkey</th>
+      <th>Tampermonkey</th>
+      <th>Violentmonkey</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>return</th>
+      <td>actual URL</td>
+      <td>object URL</td>
+      <td>Data URL</td>
+      <td>object URL<br>
+        <span class="dim">(Data URL If isBlobUrl is false)</span></td>
+    </tr>
+
+
+    <tr>
+      <th>store data</th>
+      <td>no</td>
+      <td>Blob</td>
+      <td>Data URL</td>
+      <td>Data URL</td>
+    </tr>
+
+    <tr>
+      <th>GM.getResourceUrl return</th>
+      <td>Promise</td>
+      <td>Promise</td>
+      <td>Promise</td>
+      <td>Promise</td>
+    </tr>
+  </tbody>
+</table>
 
 
 
@@ -4033,7 +4160,7 @@ if(... condition ...) { sendMessage(data); }`</span>;
 
   <p>Standard <a href="https://developer.mozilla.org/docs/Web/CSS" target="_blank">CSS (Cascading Style Sheets)</a> can be injected directly into a page. If the goal is to inject CSS, it is by far more efficient to insert CSS as UserCSS, instead of using UserScript to inject CSS. Furthermore, CSS rules will apply to newly created elements in dynamically updated pages (e.g. on scroll) while JavaScript would need additional listeners to wait for new element to be created and then run then code again.</p>
 
-  <p><i>FireMonkey</i> like other CSS mangers (e.g. <i>Stylus</i>) injects CSS at <code>document-start</code> by default. The benefit of <code>document-start</code> for CSS is that the changes will display earlier. The drawback is that the page CSS may override these CSS and if so, it is better to inject later at <code>document-end</code> or <code>document-idle</code>.</p>
+  <p><i>FireMonkey</i> like other CSS managers (e.g. <i>Stylus</i>) injects CSS at <code>document-start</code> by default. The benefit of <code>document-start</code> for CSS is that the changes will display earlier. The drawback is that the page CSS may override these CSS and if so, it is better to inject later at <code>document-end</code> or <code>document-idle</code>.</p>
 
   <p>Here is an example of simple UserCSS that I use to mark watched/visited videos on YouTube.</p>
 
