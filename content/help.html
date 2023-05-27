@@ -62,20 +62,19 @@
           <ul>
             <!-- <li><a href="#forbidden-header-name">Forbidden header name</a></li> -->
             <li><a href="#storage">Script Storage</a></li>
-
             <li><a href="#Dynamic-import">Dynamic import()</a></li>
-            <li><a href="#createObjectURL">createObjectURL</a></li>
-            <li><a href="#import">import</a></li>
-            <li><a href="#import-option">import Option</a></li>
+            <!-- <li><a href="#import-option">import Option</a></li> -->
 
             <li><a href="#addElement">addElement</a></li>
             <li><a href="#addScript">addScript</a></li>
             <li><a href="#addStyle">addStyle</a></li>
             <li><a href="#addValueChangeListener">addValueChangeListener</a></li>
+            <li><a href="#createObjectURL">createObjectURL</a></li>
             <li><a href="#download">download</a></li>
             <li><a href="#fetch">fetch</a></li>
             <li><a href="#getResourceText">getResourceText</a></li>
             <li><a href="#getResourceUrl">getResourceUrl</a></li>
+            <li><a href="#import">import</a></li>
             <li><a href="#info">info</a></li>
             <li><a href="#log">log</a></li>
             <li><a href="#notification">notification</a></li>
@@ -1979,7 +1978,7 @@ body {
     </thead>
     <tbody class="slim">
       <tr><th><b>Storage</b></th><td colspan="5"></td></tr>
-      <tr><th>GM.getValue</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"> <a href="https://violentmonkey.github.io/api/gm/" title="GM.* Greasemonkey v4-compatible aliases were added in VM2.12.0." target="_blank">ⓘ</a></td><td>739</td></tr>
+      <tr><th>GM.getValue</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"> v2.12.0 <a href="https://violentmonkey.github.io/api/gm/" title="GM.* Greasemonkey v4-compatible aliases were added in VM2.12.0." target="_blank">ⓘ</a></td><td>739</td></tr>
       <tr><th>GM.setValue</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>727</td></tr>
       <tr><th>GM.deleteValue</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>208</td></tr>
       <tr><th>GM.listValues</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>77</td></tr>
@@ -1990,6 +1989,7 @@ body {
       <tr><th>GM.setValues <span>(v2.68)</span></th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td></td></tr>
       <tr><th>GM.deleteValues <span>(v2.68)</span></th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td></td></tr>
 
+
       <tr><th><b>DOM</b></th><td colspan="5"></td></tr>
 
       <tr><th>GM.addElement</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync">v4.12</td><td class="pass sync">v2.13.1</td><td>4</td></tr>
@@ -1997,17 +1997,14 @@ body {
       <tr><th>GM.addStyle</th><td class="pass sync"></td><td class="fail"><a href="https://wiki.greasespot.net/GM_addStyle" title="As of Greasemonkey 4.0, this method has been removed. " target="_blank">ⓘ</a></td><td class="pass sync"></td><td class="pass sync"></td><td>102</td></tr>
       <tr><th>GM.popup</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
 
-      <!-- <tr><th><b>Module</b></th><td colspan="5"></td></tr> -->
-
-      <tr><th class="experimental">GM.import <span>(v2.68)</span> <a href="#import" target="_blank">ⓘ</a></th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
-      <tr><th class="experimental">GM.createObjectURL<span> (v2.68)</span> <a href="#createObjectURL" target="_blank">ⓘ</a></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
-
       <tr><th><b>Other</b></th><td colspan="5"></td></tr>
 
+      <tr><th class="experimental">GM.createObjectURL<span> (v2.68)</span> <a href="#createObjectURL" target="_blank">ⓘ</a></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
       <tr><th>GM.download</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="fail"></td><td>18</td></tr>
       <tr><th>GM.fetch</th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
       <tr><th>GM.getResourceText</th><td class="pass async"></td><td class="fail"><a href="https://github.com/greasemonkey/greasemonkey/issues/2548" title="Add or replace GM.getResourceText" target="_blank">ⓘ</a></td><td class="pass async"></td><td class="fail"></td><td>11</td></tr>
       <tr><th>GM.getResourceUrl</th><td class="pass async">different <a href="#getResourceUrl">ⓘ</a></td><td class="pass async"><a href="https://wiki.greasespot.net/GM.getResourceUrl" target="_blank">ⓘ</a></td><td class="pass async"></td><td class="pass async">v2.13.1</td><td>30</td></tr>
+      <tr><th class="experimental">GM.import <span>(v2.68)</span> <a href="#import" target="_blank">ⓘ</a></th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
       <tr><th>GM.info</th><td class="pass sync"></td><td class="pass sync"></td><td class="pass sync"></td><td class="pass sync"></td><td>69</td></tr>
       <tr><th>GM.log</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="fail"></td><td>7</td></tr>
       <tr><th>GM.notification</th><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td class="pass async"></td><td>42</td></tr>
@@ -2044,13 +2041,10 @@ body {
       <tr><th>GM_addStyle</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>5,452</td></tr>
       <tr><th>GM_popup</th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
 
-      <!-- <tr><th><b>Module</b></th><td colspan="5"></td></tr> -->
-
-      <tr><th class="experimental">GM_createObjectURL<span> (v2.68)</span> <a href="#createObjectURL" target="_blank">ⓘ</a></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
-
 
       <tr><th><b>Other</b></th><td colspan="5"></td></tr>
 
+      <tr><th class="experimental">GM_createObjectURL<span> (v2.68)</span> <a href="#createObjectURL" target="_blank">ⓘ</a></th><td class="pass sync"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>0</td></tr>
       <tr><th>GM_download</th><td class="pass async"></td><td class="fail"></td><td class="pass async"></td><td class="pass async"></td><td>478</td></tr>
       <tr><th>GM_fetch</th><td class="pass async"></td><td class="fail"></td><td class="fail"></td><td class="fail"></td><td>3</td></tr>
       <tr><th>GM_getResourceText</th><td class="pass sync"></td><td class="fail"></td><td class="pass sync"></td><td class="pass sync"></td><td>954</td></tr>
@@ -2349,7 +2343,7 @@ body {
 
 
 
-<h2 id="Dynamic-import">Dynamic import()</h2>
+<h2 id="Dynamic-import">ℹ️ Dynamic import()</h2>
 <p>JavaScript ECMAScript 2020 (ES11) dynamic <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/import" target="_blank">import()</a> can be used in a userscript but there are caveats.</p>
 
 <dl>
@@ -2399,30 +2393,12 @@ content-type: text/javascript; charset=UTF-8</code>
 
 </dl>
 
-<p class="caption">Example of loading jQuery</p>
-
-<pre>
-<span class="keyword">import</span>(<span class="string">'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js'</span>)
-.<span class="keyword">then</span>(() => {
-  <span class="comment">// jQuery is only available in this block statement</span>
-  jQuery(<span class="string">'&lt;div&gt;Hello, World!&lt;/div&gt;'</span>).<span class="method">appendTo</span>(<span class="string">'body'</span>);
-});</pre>
-
-<p>or ...</p>
-
-<pre>(<span class="keyword">async</span> () => {
-  <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js'</span>);
-  <span class="comment">// jQuery is only available in this block statement</span>
-  jQuery(<span class="string">'&lt;div&gt;Hello, World!&lt;/div&gt;'</span>).<span class="method">appendTo</span>(<span class="string">'body'</span>);
-})();
-</pre>
-
 
 <h3>Alternative import()</h3>
 <!-- <p>if direct <code>import()</code> fails:</p> -->
 
 <dl class="plain">
-  <dt>Get the module as text</dt>
+  <dt>1. Get the module as text</dt>
   <dd>
 <pre>
 <span class="comment">// @resource        psl https://raw.githubusercontent.com/erosman/psl/main/psl.js
@@ -2439,7 +2415,7 @@ content-type: text/javascript; charset=UTF-8</code>
 </pre>
   </dd>
 
-  <dt>Create object URL from the text</dt>
+  <dt>2. Create object URL from the text</dt>
   <dd>
 <pre><span class="keyword">const</span> url = <span class="gm">GM.createObjectURL</span>(psl);</pre>
   </dd>
@@ -2448,12 +2424,12 @@ content-type: text/javascript; charset=UTF-8</code>
 <pre>
 <span class="keyword">const</span> blob = <span class="keyword">new</span> <span class="object">Blob</span>([psl], {type: <span class="string">'text/javascript'</span>});
 <span class="keyword">const</span> url = <span class="object">URL</span>.<span class="method">createObjectURL</span>(blob);
-<!-- <span class="comment">// release later for optimal performance and memory usage</span> -->
+<span class="comment">// optional release later for optimal performance and memory usage</span>
 </pre>
   </dd>
 
 
-  <dt>import()</dt>
+  <dt>3. import()</dt>
   <dd>
 <pre>
 <span class="comment">// variables must match module exports</span>
@@ -2461,20 +2437,156 @@ content-type: text/javascript; charset=UTF-8</code>
 </pre>
   </dd>
 
-<!--
-  <dt>Release the object URL</dt>
+
+  <dt>4. Release the object URL</dt>
   <dd>
 <pre>
 <span class="comment">// optional release the object URL for optimal performance and memory usage</span>
 <span class="object">URL</span>.<span class="method">revokeObjectURL</span>(url);
 </pre>
-  </dd> -->
-
+  </dd>
 
 </dl>
 
 
 
+
+
+
+
+  <h2 id="import" class="experimental">import <span>(v2.68)</span></h2>
+  <p>Asynchronous <code>GM.import</code> for importing internal or remote dependency-free modules</p>
+  <p>It returns a promise which fulfills to a <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/import#module_namespace_object" target="_blank">module namespace object</a>: an object containing all exports from <code>moduleName</code>.</p>
+
+  <p class="note">The current format is due to the limitations in <code>userScripts</code> context, as it is not possible to directly pass the <code>class</code> to the <code>userScripts</code> context. The API may change once MV3 <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/scripting" target="_blank">scripting</a> is finalised.</p>
+
+  <p><b>Return value:</b> <code>object</code> || <code>undefined</code></p>
+
+<pre>
+<span class="keyword">const</span> obj = <span class="keyword">await</span> <span class="gm">GM.import</span>(module [, option]);
+</pre>
+
+  <h3>Internal Module</h3>
+  <p><a href="https://github.com/erosman/psl" target="_blank">PSL (Public Suffix List)</a> was created for the multi-site "Find scripts for this site", and has been made available to userscripts.</p>
+
+  <h3 id="import-option" class="experimental">import Option</h3>
+  <p>Experimental option based on <a href="https://github.com/tc39/proposal-import-attributes" target="_blank">Import Attributes</a>, can be used to import various values.</p>
+
+
+  <p><b>Return value:</b> based on option type <i>(bold values are part of Import Attributes proposal)</i></p>
+  <dl>
+    <dt>module exports</dt>
+    <dd><b>javascript</b>, no type <i>(default)</i></dd>
+    <dd>cjs <i>(CommonJS Module)</i></dd>
+
+    <dt>JSON object</dt>
+    <dd><b>json</b></dd>
+
+    <dt>string</dt>
+    <dd><b>css</b>, text</dd>
+
+    <dt>object URL</dt>
+    <dd>gif, jpeg, jpg, png, webp</dd>
+    <dd><i>(Type will be taken from the target so any of the above will be the same)</i></dd>
+
+    <dt><a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment" target="_blank">DocumentFragment</a></dt>
+    <dd>html, xhtml, xml, svg</dd>
+    <dd><i>(Any of the above will be the same)</i></dd>
+
+    <dt>WebAssembly module exports <span>(not supported ATM)</span></dt>
+    <dd><b>webassembly</b>, wasm</dd>
+
+  </dl>
+
+
+  <p class="caption">Examples</p>
+<pre>
+<span class="comment">// import internal PSL as module</span>
+<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'PSL'</span>);
+<span class="keyword">const</span> result = PSL.<span class="method">parse</span>(<span class="string">'mail.yahoo.co.uk'</span>);
+<span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span>
+</pre>
+
+<pre>
+<span class="comment">// variables must match module exports</span>
+<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://raw.githubusercontent.com/erosman/psl/main/psl.js'</span>);
+<span class="keyword">const</span> result = PSL.<span class="method">parse</span>(<span class="string">'mail.yahoo.co.uk'</span>);
+<span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span>
+</pre>
+
+<pre>
+<span class="comment">// source: http://country.io/</span>
+<span class="keyword">const</span> obj = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'http://country.io/currency.json'</span>, {type: <span class="string">'json'</span>});
+<span class="object">console</span>.<span class="method">log</span>(obj);
+<span class="comment">// {"BD": "BDT", "BE": "EUR", ... }</span>
+</pre>
+
+<pre>
+<span class="keyword">const</span> css = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://raw.githubusercontent.com/erosman/support/FireMonkey/content/default.css'</span>, {type: <span class="string">'css'</span>});
+<span class="object">console</span>.<span class="method">log</span>(css);
+<span class="comment">// '/* ----- Dark Theme ----- */\r\n:root,\r\nbody.dark {\r\n  --color: #fff; ...</span>
+</pre>
+
+<pre>
+<span class="comment">// source: https://github.com/angus-c/just</span>
+
+<span class="comment">// ES Module</span>
+<span class="keyword">const</span> {default: unique} = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://raw.githubusercontent.com/angus-c/just/master/packages/array-unique/index.mjs'</span>);
+<span class="object">console</span>.<span class="method">log</span>(unique([1, 2, 3, 2, 3, 4, 3, 2, 1, 3]));
+<span class="comment">// Array(4) [ 1, 2, 3, 4 ]</span>
+
+<span class="comment">// CommonJS Module</span>
+<span class="keyword">const</span> unique = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://raw.githubusercontent.com/angus-c/just/master/packages/array-unique/index.cjs'</span>, {type: <span class="string">'cjs'</span>});
+<span class="object">console</span>.<span class="method">log</span>(unique([1, 2, 3, 2, 3, 4, 3, 2, 1, 3]));
+<span class="comment">// Array(4) [ 1, 2, 3, 4 ]</span>
+</pre>
+
+
+<pre>
+<span class="keyword">const</span> docFrag = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://raw.githubusercontent.com/erosman/support/FireMonkey/content/help.html'</span>, {type: <span class="string">'html'</span>});
+<span class="keyword">const</span> div = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'div'</span>);
+div.<span class="property">appendChild</span>(docFrag);
+<span class="object">console</span>.<span class="method">log</span>(div.<span class="property">firstElementChild</span>);
+<span class="comment">// &lt;meta charset=&quot;utf-8&quot;&gt;</span>
+</pre>
+
+<pre>
+<span class="keyword">const</span> objectURL = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://github.com/erosman/support/raw/master/image/firemonkey.png'</span>, {type: <span class="string">'png'</span>});
+<span class="keyword">const</span> img = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'img'</span>);
+img.<span class="property">src</span> = objectURL;
+<span class="property">document</span>.<span class="property">body</span>.<span class="method">appendChild</span>(img);
+
+<span class="comment">// in most cases, above should not be necessary, unless image hotlinking was blocked, or to avoid tracking
+// alternatively ...</span>
+<span class="keyword">const</span> img = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'img'</span>);
+img.<span class="property">src</span> = <span class="string">'https://github.com/erosman/support/raw/master/image/firemonkey.png'</span>;
+<span class="property">document</span>.<span class="property">body</span>.<span class="method">appendChild</span>(img);
+</pre>
+
+<p class="caption">Examples of importing jQuery</p>
+
+<pre><span class="comment">// importing jQuery as global variable</span>
+<span class="keyword">import</span>(<span class="string">'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js'</span>)
+.<span class="keyword">then</span>(() => {
+  <span class="comment">// jQuery is only available in this block statement</span>
+  jQuery(<span class="string">'&lt;div&gt;Hello, World!&lt;/div&gt;'</span>).<span class="method">appendTo</span>(<span class="string">'body'</span>);
+});</pre>
+
+<pre><span class="comment">// importing jQuery as global variable</span>
+(<span class="keyword">async</span> () => {
+  <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js'</span>);
+  <span class="comment">// jQuery is only available in this block statement</span>
+  jQuery(<span class="string">'&lt;div&gt;Hello, World!&lt;/div&gt;'</span>).<span class="method">appendTo</span>(<span class="string">'body'</span>);
+})();
+</pre>
+
+
+<pre>(<span class="keyword">async</span> () => {
+  <span class="comment">// importing jQuery as CommonJS module</span>
+  <span class="keyword">const</span> jq = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js'</span>, {type: <span class="string">'cjs'</span>});
+  jq(<span class="string">'&lt;div&gt;Hello, World!&lt;/div&gt;'</span>).<span class="method">appendTo</span>(<span class="string">'body'</span>);
+})();
+</pre>
 
 
   <h2 id="createObjectURL" class="experimental">createObjectURL <span>(v2.68)</span></h2>
@@ -2489,84 +2601,13 @@ content-type: text/javascript; charset=UTF-8</code>
 </pre>
 
 
-  <h2 id="import" class="experimental">import <span>(v2.68)</span></h2>
-  <p>Asynchronous <code>GM.import</code> for importing internal and remote modules</p>
-  <p>It returns a promise which fulfills to a <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/import#module_namespace_object" target="_blank">module namespace object</a>: an object containing all exports from <code>moduleName</code>.</p>
-
-  <p class="note">The current format is due to the limitations in <code>userScripts</code> context, as it is not possible to directly pass the <code>class</code> to the <code>userScripts</code> context. The API may change once MV3 <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/scripting" target="_blank">scripting</a> is finalised.</p>
-
-  <p><b>Return value:</b> <code>object</code> || <code>undefined</code></p>
-
-<pre>
-<span class="keyword">const</span> obj = <span class="keyword">await</span> <span class="gm">GM.import</span>(module);
-</pre>
-
-<p class="caption">Example</p>
-<pre>
-<span class="comment">// variables must match module exports</span>
-<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://raw.githubusercontent.com/erosman/psl/main/psl.js'</span>);
-
-<span class="keyword">const</span> result = PSL.<span class="method">parse</span>(<span class="string">'mail.yahoo.co.uk'</span>);
-<span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span>
-</pre>
-
-
-
-  <h3>Internal module: PSL (Public Suffix List)</h3>
-  <p><a href="https://github.com/erosman/psl" target="_blank">PSL (Public Suffix List)</a> was created for the multi-site "Find scripts for this site", and has been made available to userscripts.</p>
-
-  <p class="caption">Example</p>
-<pre>
-<span class="comment">// import as module</span>
-<span class="keyword">const</span> {PSL} = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'PSL'</span>);
-
-<span class="keyword">const</span> result = PSL.<span class="method">parse</span>(<span class="string">'mail.yahoo.co.uk'</span>);
-<span class="comment">// Object { subdomain: "mail", domain: "yahoo.co.uk", sld: "yahoo", tld: "co.uk" }</span>
-</pre>
-
-
-<h2 id="import-option" class="experimental">import Option<span>(v2.68)</span></h2>
-<p>Experimental <a href="https://github.com/tc39/proposal-import-attributes" target="_blank">Import Attributes</a> is supported but the proposal is not finalised yet.</p>
-
-<p><b>Return value:</b> based on option type</p>
-<ul>
-  <li>json: <code>object</code></li>
-  <li>css: <code>string</code></li>
-  <li>html: <code>DocumentFragment</code> <a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment" target="_blank">ⓘ</a></li>
-</ul>
-
-
-
-<p class="caption">Example</p>
-<pre>
-<span class="keyword">const</span> obj = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'http://country.io/currency.json'</span>, {type: <span class="string">'json'</span>});
-<span class="object">console</span>.<span class="method">log</span>(obj);
-<span class="comment">// {"BD": "BDT", "BE": "EUR", ... }</span>
-</pre>
-
-<pre>
-<span class="keyword">const</span> css = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://raw.githubusercontent.com/erosman/support/FireMonkey/content/default.css'</span>, {type: <span class="string">'css'</span>});
-<span class="object">console</span>.<span class="method">log</span>(css);
-<span class="comment">// '/* ----- Dark Theme ----- */\r\n:root,\r\nbody.dark {\r\n  --color: #fff; ...</span>
-</pre>
-
-<pre>
-<span class="keyword">const</span> docFrag = <span class="keyword">await</span> <span class="gm">GM.import</span>(<span class="string">'https://raw.githubusercontent.com/erosman/support/FireMonkey/content/help.html'</span>, {type: <span class="string">'html'</span>});
-<span class="keyword">const</span> div = <span class="property">document</span>.<span class="method">createElement</span>(<span class="string">'div'</span>);
-div.<span class="property">appendChild</span>(docFrag);
-<span class="object">console</span>.<span class="method">log</span>(div.<span class="property">firstElementChild</span>);
-<span class="comment">// &lt;meta charset=&quot;utf-8&quot;&gt;</span>
-</pre>
-
-
-
-
 
 
   <h2 id="addElement" class="experimental">addElement</h2>
 
   <p>Compatibility API with <i>Tampermonkey</i> <a href="https://www.tampermonkey.net/documentation.php#GM_addElement" title="this feature is experimental and the API may change" target="_blank">ⓘ</a> & <i>Violentmonkey</i> <a href="https://violentmonkey.github.io/api/gm/#gm_addelement" title="This API is experimental in Tampermonkey, and hence subject to change" target="_blank">ⓘ</a> (experimental and subject to change).</p>
-  <p><b>Return value:</b> created element || <code>undefined</code> <i>(on error)</i></p>
+
+  <p><b>Return value:</b> created element || <code>undefined</code> <i>(on error or for scripts)</i></p>
 
 <pre>
 <span class="keyword">const</span> elem = <span class="gm">GM.addElement</span>(tagName, attributes);
@@ -2608,7 +2649,7 @@ elem.<span class="method">onload</span> = () =&gt; <span class="object">console<
 
 
   <h2 id="addScript">addScript</h2>
-    <p><i>FireMonkey</i> only utility function to inject script element (code runs in page context).</p>
+    <p>Utility function to inject script element (code runs in page context).</p>
     <p><b>Return value:</b> <code>undefined</code></p>
 
   <p class="caption">Example</p>
@@ -2659,11 +2700,11 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 
   <p><i>FireMonkey</i> <code>fetch</code> API is based on the JavaScript <a href="https://developer.mozilla.org/docs/Web/API/WindowOrWorkerGlobalScope/fetch" target="_blank">Fetch API</a> which provides the new Promise based interface for fetching resources (including across the network). It will seem familiar to anyone who has used <code>XMLHttpRequest</code>, but it provides a more powerful and flexible feature set.</p>
   <p>For simplicity and compatibility, the same GM style naming is kept for <code>fetch</code> API although it is not available in <i>Greasemonkey</i>.</p>
-  <p><i>FireMonkey</i> <code>fetch</code> returns response <code>object</code> or <code>null</code> (check console & the log for errors e.g.: <i>TypeError: "NetworkError when attempting to fetch resource.</i>").</p>
+  <p>Check console & <i>FireMonkey</i> log in case of error e.g.: <i>TypeError: "NetworkError when attempting to fetch resource.</i>").</p>
 
-  <p><b>Return value:</b> response <code>object</code></p>
+  <p><b>Return value:</b> response <code>object</code> || <code>undefined</code></p>
 
-  <p class="warning">Since v2.33 successful GM.fetch returns an object in all cases.</p>
+  <p class="warning">Since v2.33 successful GM.fetch returns an object in all successful cases.</p>
 
   <!-- <p class="note"><i>FireMonkey</i> GM <code>fetch</code> fixes <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1405971" title="Webextension UUID leak via Fetch requests" target="_blank">Bug 1405971</a>.</p> -->
 
@@ -2747,7 +2788,7 @@ style.<span class="property">textContent</span> = <span class="string">`... css 
 <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="gm">GM.fetch</span>(<span class="string">'https://example.com/etc'</span>);
 <span class="keyword">const</span> text = response.text;
 
-<span class="comment">// if need to check response</span>
+<span class="comment">// if needed to check the response</span>
 <span class="keyword">if</span> (response.ok) { ... }
 
 <span class="comment">// returns response JSON</span>
@@ -3177,18 +3218,18 @@ xhr.<span class="method">send</span>(<span class="keyword">null</span>);
       <th>return</th>
       <td>actual URL</td>
       <td>object URL</td>
-      <td>Data URL</td>
+      <td>data URL</td>
       <td>object URL<br>
-        <span class="dim">(Data URL If isBlobUrl is false)</span></td>
+        <span class="dim">(data URL If isBlobUrl is false)</span></td>
     </tr>
 
 
     <tr>
       <th>store data</th>
       <td>no</td>
-      <td>Blob</td>
-      <td>Data URL</td>
-      <td>Data URL</td>
+      <td>blob</td>
+      <td>data URL</td>
+      <td>data URL</td>
     </tr>
 
     <tr>
@@ -3545,41 +3586,51 @@ popup.<span class="method">addStyle</span>(css);
 <span class="keyword">const</span> info = <span class="gm">GM_info</span>;
 </pre>
 
-<p class="note">The object properties in <code>GM info</code> is not unified among userscript managers.
+<p class="note">The object properties in <code>GM info</code> are not unified among userscript managers.
   <a href="https://wiki.greasespot.net/GM.info" target="_blank">ⓘ</a>
   <a href="https://www.tampermonkey.net/documentation.php#api:GM_info" target="_blank">ⓘ</a>
   <a href="https://violentmonkey.github.io/api/gm/#gm_info" target="_blank">ⓘ</a></p>
 
   <p class="caption">Return Object</p>
 <pre>{
+  <span class="comment">// application data</span>
   scriptHandler:    <span class="string">'FireMonkey'</span>,
   version:          <span class="string">'e.g. 2.68'</span>,
-  scriptMetaStr:    <span class="string">''</span>,       <span class="comment">// empty string (v2.68)</span>
-  platform: {
+  platform: {                                        <span class="comment">// FM|VM, VM: includes browserName, browserVersion</span>
     arch:           <span class="string">'e.g. arm x86-32 x86-64'</span>,
     os:             <span class="string">'e.g. mac win android cros linux openbsd'</span>
   },
-  browser: {
+  browser: {                                         <span class="comment">// FM only</span>
     name:           <span class="string">'Firefox'</span>,
     vendor:         <span class="string">'Mozilla'</span>,
     version:        <span class="string">'e.g. 114.0a1'</span>,
     buildID:        <span class="string">'e.g. 20230421211246'</span>
   },
+
+  <span class="comment">// script data</span>
+  scriptMetaStr:    <span class="string">'script metadata'</span>,               <span class="comment">// FM|GM|VM without start/end strings, TM with</span>
+                                                     <span class="comment">// since it is script data, it is better under info.script.metadata</span>
   script: {
     name:           <span class="string">'script name'</span>,
-    version:        <span class="string">'script version'</span>,
+    version:        <span class="string">'script version'</span>,                <span class="comment">// FM|TM|VM: string, GM: string|null</span>
     description:    <span class="string">'script description'</span>,
     matches:        <span class="value">[array of match]</span>,
-    excludeMatches: <span class="value">[array of exclude-match]</span>,
+    excludeMatches: <span class="value">[array of exclude-match]</span>,        <span class="comment">// FM|VM</span>
     includes:       <span class="value">[array of regex include]</span>,
     excludes:       <span class="value">[array of regex exclude]</span>,
-    includeGlobs:   <span class="value">[array of include/includeGlob]</span>,
-    excludeGlobs:   <span class="value">[array of exclude/excludeGlob]</span>,
-    'run-at':       <span class="string">'e.g. document-idle'</span>,
-    namespace:      <span class="string">''</span>,       <span class="comment">// empty string (v2.68)</span>
-    resources:      <span class="value">{object of name: url}</span>
+    includeGlobs:   <span class="value">[array of include/includeGlob]</span>,  <span class="comment">// FM only</span>
+    excludeGlobs:   <span class="value">[array of exclude/excludeGlob]</span>,  <span class="comment">// FM only</span>
+    grant:          <span class="value">[array]</span>,                         <span class="comment">// FM|TM|VM</span>
+    require:        <span class="value">[array]</span>,                         <span class="comment">// FM|VM</span>
+    resources:      <span class="value">{object of name: url}</span>,           <span class="comment">// GM: { {...} }, TM: {...}, VM: [ {...} ]</span>
+    'run-at':       <span class="string">'e.g. document-idle'</span>,            <span class="comment">// FM|TM</span>
+    runAt:          <span class="string">'e.g. document-idle'</span>,            <span class="comment">// VM|GM, GM: runAt: "end"</span>
+    injectInto:     <span class="string">'e.g. page'</span>,                     <span class="comment">// FM|VM, VM: info.injectInto</span>
+    namespace:      <span class="string">''</span>,                              <span class="comment">// FM|TM|VM: string, GM: string|null</span>
+    metadata:       <span class="string">'script metadata'</span>,               <span class="comment">// FM only</span>
   }
 }</pre>
+
 
 
   <h2 id="setClipboard">setClipboard</h2>
@@ -3633,8 +3684,8 @@ popup.<span class="method">addStyle</span>(css);
   <p><b>Return value:</b> <code>undefined</code></p>
 
 <pre>
-<span class="gm">GM.log</span>(text [, text2, ..., textN])
-<span class="gm">GM_log</span>(text [, text2, ..., textN])
+<span class="gm">GM.log</span>(text [, text2, ...])
+<span class="gm">GM_log</span>(text [, text2, ...])
 </pre>
 
   <p class="caption">Example</p>
