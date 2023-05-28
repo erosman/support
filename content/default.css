@@ -77,6 +77,13 @@ a {
   text-decoration: none;
 }
 
+code {
+  font-size: 1.2em;
+  padding: 0 0.3em;
+  background-color: var(--code);
+  white-space: break-spaces;
+}
+
 button {
   background: var(--btn-bg);
   color: inherit;

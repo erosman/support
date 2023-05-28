@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>Help</title>
-    <link rel="stylesheet" href="help.css">
-    <link rel="stylesheet" href="help-fm.css">
+    <link href="help.css" rel="stylesheet">
+    <link href="help-fm.css" rel="stylesheet">
     <script type="module" src="help.js"></script>
   </head>
   <body>
@@ -179,19 +179,19 @@
     <dd><a href="https://jshint.com/" target="_blank">JSHint</a> currently doesn't display the error</dd>
     <dd>See also: <a href="https://github.com/jshint/jshint/issues/3612" target="_blank">JavaScript: Mark return out of function</a></dd>
 
-    <dt><code>@grant none</code> & works in TM|VM</dt>
-    <dd>💡 Try setting <code>@inject-into &nbsp;&nbsp;&nbsp; page</code> in <a href="#User-Metadata">User Metadata</a></dd>
+    <dt><code>@grant   none</code> & works in TM|VM</dt>
+    <dd>💡 Try setting <code>@inject-into   page</code> in <a href="#User-Metadata">User Metadata</a></dd>
 
     <dt>Userscript needs to run in sub-frames</dt>
-    <dd>💡 Try setting <code>@allFrames &nbsp;&nbsp;&nbsp; true</code> in <a href="#User-Metadata">User Metadata</a></dd>
+    <dd>💡 Try setting <code>@allFrames   true</code> in <a href="#User-Metadata">User Metadata</a></dd>
     <dd>See also: <a href="#defaults">defaults</a></dd>
 
     <dt>No <code>@run-at</code> and script runs late</dt>
-    <dd>💡 Try setting <code>@run-at &nbsp;&nbsp;&nbsp; document-end</code> in <a href="#User-Metadata">User Metadata</a></dd>
+    <dd>💡 Try setting <code>@run-at   document-end</code> in <a href="#User-Metadata">User Metadata</a></dd>
     <dd>See also: <a href="#defaults">defaults</a></dd>
 
     <dt><code>window.addEventListener('load', ...)</code> (or <code>'DOMContentLoaded'</code>) does not fire</dt>
-    <dd>💡 Try setting <code>@run-at &nbsp;&nbsp;&nbsp; document-end</code> in <a href="#User-Metadata">User Metadata</a></dd>
+    <dd>💡 Try setting <code>@run-at   document-end</code> in <a href="#User-Metadata">User Metadata</a></dd>
     <dd>See also: <a href="#run-at">@run-at</a></dd>
   </dl>
 
@@ -1043,6 +1043,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {<span class="property">color<
   <dl>
     <dt>document_start</dt>
     <dd>Corresponds to <code>loading</code>. The DOM is still loading.</dd>
+    <dd class="warning">GM addElement/addScript/addStyle & <code>@inject-into   page</code>, fail in case of <code>@run-at   document-start</code> since the DOM is not available yet to inject into.</dd>
 
     <dt>document_end</dt>
     <dd>Corresponds to <code>interactive</code>. The DOM has finished loading, but resources such as scripts, images, stylesheets and frames may still be loading.</dd>
@@ -1213,7 +1214,7 @@ element.<span class="property">innerHTML</span> = dom;
       </tr>
 
       <tr>
-        <th>@grant <span style="margin: 0 2em;"></span> xyz<br>
+        <th>@grant <span style="margin: 0 2em;"></span> ***<br>
           @grant <span style="margin: 0 2em;"></span> none</th>
         <td>no change</td>
         <td>no change</td>
@@ -1221,7 +1222,6 @@ element.<span class="property">innerHTML</span> = dom;
           page <a href="https://www.tampermonkey.net/documentation.php#_grant" title="If @grant is followed by 'none' the sandbox is disabled and the script will run directly at the page context. In this mode no GM_* function but the GM_info property will be available." target="_blank">ⓘ</a></td>
         <td>no change</td>
       </tr>
-
 
       <tr>
         <th>unsafeWindow</th>
@@ -2478,6 +2478,7 @@ content-type: text/javascript; charset=UTF-8</code>
     <dt>module exports</dt>
     <dd><b>javascript</b>, no type <i>(default)</i></dd>
     <dd>cjs <i>(CommonJS Module)</i></dd>
+    <dd><i>(UMD Modules can be imported without type as global, or as 'cjs', e.g. jQuery)</i></dd>
 
     <dt>JSON object</dt>
     <dd><b>json</b></dd>
@@ -2563,7 +2564,7 @@ img.<span class="property">src</span> = <span class="string">'https://github.com
 <span class="property">document</span>.<span class="property">body</span>.<span class="method">appendChild</span>(img);
 </pre>
 
-<p class="caption">Examples of importing jQuery</p>
+<p class="caption">Examples of importing jQuery <span>(UMD module)</span></p>
 
 <pre><span class="comment">// importing jQuery as global variable</span>
 <span class="keyword">import</span>(<span class="string">'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.slim.min.js'</span>)
@@ -2605,7 +2606,9 @@ img.<span class="property">src</span> = <span class="string">'https://github.com
 
   <h2 id="addElement" class="experimental">addElement</h2>
 
-  <p>Compatibility API with <i>Tampermonkey</i> <a href="https://www.tampermonkey.net/documentation.php#GM_addElement" title="this feature is experimental and the API may change" target="_blank">ⓘ</a> & <i>Violentmonkey</i> <a href="https://violentmonkey.github.io/api/gm/#gm_addelement" title="This API is experimental in Tampermonkey, and hence subject to change" target="_blank">ⓘ</a> (experimental and subject to change).</p>
+  <p>Utility function compatibility API with <i>Tampermonkey</i> <a href="https://www.tampermonkey.net/documentation.php#GM_addElement" title="this feature is experimental and the API may change" target="_blank">ⓘ</a> & <i>Violentmonkey</i> <a href="https://violentmonkey.github.io/api/gm/#gm_addelement" title="This API is experimental in Tampermonkey, and hence subject to change" target="_blank">ⓘ</a> (experimental and subject to change).</p>
+
+  <p class="warning"><code>GM addElement</code> may fail in case of <code>@run-at   document-start</code> since the DOM is not available yet to inject into.</p>
 
   <p><b>Return value:</b> created element || <code>undefined</code> <i>(on error or for scripts)</i></p>
 
@@ -2649,8 +2652,11 @@ elem.<span class="method">onload</span> = () =&gt; <span class="object">console<
 
 
   <h2 id="addScript">addScript</h2>
-    <p>Utility function to inject script element (code runs in page context).</p>
-    <p><b>Return value:</b> <code>undefined</code></p>
+  <p>Utility function to inject script element (code runs in page context).</p>
+
+  <p class="warning"><code>GM addScript</code> may fail in case of <code>@run-at   document-start</code> since the DOM is not available yet to inject into.</p>
+
+  <p><b>Return value:</b> <code>undefined</code></p>
 
   <p class="caption">Example</p>
 <pre>
@@ -2679,6 +2685,9 @@ script.<span class="method">remove</span>();
 
   <h2 id="addStyle">addStyle</h2>
   <p>Utility function to inject style element</p>
+
+  <p class="warning"><code>GM addStyle</code> may fail in case of <code>@run-at   document-start</code> since the DOM is not available yet to inject into.</p>
+
   <p><b>Return value:</b> <code>undefined</code></p>
 
   <p class="caption">Example</p>
@@ -3414,6 +3423,49 @@ img.<span class="property">src</span> = <span class="string">'http://www.example
 
 
 
+<h2 id="setClipboard">setClipboard</h2>
+<p>Copy text (<i>default</i>) or data (must include <i>type</i>) to the clipboard</p>
+
+<p><b>Return value:</b> <code>undefined</code> or reject with error message</p>
+
+<pre>
+<span class="comment">// usually there is no need to wait for the following, but if needed, use await</span>
+<span class="gm">GM.setClipboard</span>(text);
+<span class="gm">GM_setClipboard</span>(data, type);
+</pre>
+
+<p class="note">The type support in <code>setClipboard</code> is not unified among userscript managers.</p>
+
+<table>
+  <caption>setClipboard Comparison</caption>
+  <thead>
+    <tr>
+      <th></th>
+      <th>FireMonkey</th>
+      <th>Greasemonkey</th>
+      <th>Tampermonkey</th>
+      <th>Violentmonkey</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><th>text</th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
+    <tr>
+      <th>type</th>
+      <td class="pass">v2.45<br>
+        <span class="small">object e.g. {mimetype: 'text/plain'}<br>
+        string MIME type e.g. 'text/plain'
+        </span>
+      </td>
+      <td class="fail"><a href="https://wiki.greasespot.net/GM.setClipboard" target="_blank">ⓘ</a></td>
+      <td class="pass"><a href="https://www.tampermonkey.net/documentation.php#GM_setClipboard" target="_blank">ⓘ</a><br>
+        <span class="small">object e.g. {type: 'text', mimetype: 'text/plain'}<br>
+        string e.g. 'text' or 'html'</span>
+      </td>
+      <td class="pass"><a href="https://violentmonkey.github.io/api/gm/#gm_setclipboard" target="_blank">ⓘ</a><br>
+        <span class="small">string MIME type e.g. 'text/plain'</span></td>
+      </tr>
+  </tbody>
+</table>
 
 
 
@@ -3576,6 +3628,9 @@ popup.<span class="method">addStyle</span>(css);
 
   </div>
 
+
+
+
   <h2 id="info">info</h2>
 
  <p><b>Return value:</b> <code>object</code></p>
@@ -3626,60 +3681,17 @@ popup.<span class="method">addStyle</span>(css);
     'run-at':       <span class="string">'e.g. document-idle'</span>,            <span class="comment">// FM|TM</span>
     runAt:          <span class="string">'e.g. document-idle'</span>,            <span class="comment">// VM|GM, GM: runAt: "end"</span>
     injectInto:     <span class="string">'e.g. page'</span>,                     <span class="comment">// FM|VM, VM: info.injectInto</span>
-    namespace:      <span class="string">''</span>,                              <span class="comment">// FM|TM|VM: string, GM: string|null</span>
-    metadata:       <span class="string">'script metadata'</span>,               <span class="comment">// FM only</span>
+    namespace:      <span class="string">''</span>,                              <span class="comment">// FM|VM: string, GM|TM: string|null</span>
+    metadata:       <span class="string">'script metadata'</span>,               <span class="comment">// FM only, TM under info.script.header</span>
   }
 }</pre>
 
 
 
-  <h2 id="setClipboard">setClipboard</h2>
-  <p>Copy text (<i>default</i>) or data (must include <i>type</i>) to the clipboard</p>
-
-  <p><b>Return value:</b> <code>undefined</code> or reject with error message</p>
-
-<pre>
-<span class="comment">// usually there is no need to wait for the following, but if needed, use await</span>
-<span class="gm">GM.setClipboard</span>(text);
-<span class="gm">GM_setClipboard</span>(data, type);
-</pre>
-
-  <p class="note">The type support in <code>setClipboard</code> is not unified among userscript managers.</p>
-
-  <table>
-    <caption>setClipboard Comparison</caption>
-    <thead>
-      <tr>
-        <th></th>
-        <th>FireMonkey</th>
-        <th>Greasemonkey</th>
-        <th>Tampermonkey</th>
-        <th>Violentmonkey</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><th>text</th><td class="pass"></td><td class="pass"></td><td class="pass"></td><td class="pass"></td></tr>
-      <tr>
-        <th>type</th>
-        <td class="pass">v2.45<br>
-          <span class="small">object e.g. {mimetype: 'text/plain'}<br>
-          string MIME type e.g. 'text/plain'
-          </span>
-        </td>
-        <td class="fail"><a href="https://wiki.greasespot.net/GM.setClipboard" target="_blank">ⓘ</a></td>
-        <td class="pass"><a href="https://www.tampermonkey.net/documentation.php#GM_setClipboard" target="_blank">ⓘ</a><br>
-          <span class="small">object e.g. {type: 'text', mimetype: 'text/plain'}<br>
-          string e.g. 'text' or 'html'</span>
-        </td>
-        <td class="pass"><a href="https://violentmonkey.github.io/api/gm/#gm_setclipboard" target="_blank">ⓘ</a><br>
-          <span class="small">string MIME type e.g. 'text/plain'</span></td>
-        </tr>
-    </tbody>
-  </table>
 
 
   <h2 id="log">log</h2>
-  <p>The API is no longer supported by <i>Greasemonkey</i> or <i>Violentmonkey</i> but <i>Tampermonkey</i> still has it. Multiple parameters can be passed. You can also use <code>console.log()</code> instead.</p>
+  <p>Utility function no longer supported by <i>Greasemonkey</i> or <i>Violentmonkey</i> but <i>Tampermonkey</i> still has it. Multiple parameters can be passed. You can also use <code>console.log()</code> instead.</p>
 
   <p><b>Return value:</b> <code>undefined</code></p>
 

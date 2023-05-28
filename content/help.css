@@ -171,7 +171,7 @@ a[href*=".github.io/"]::before {
   height: 0.9em;
   width: 0.9em;
   margin-right: 0.3em;
-  vertical-align: text-bottom;
+  /* vertical-align: text-bottom; */
   filter: var(--img-filter);
 }
 
@@ -386,11 +386,6 @@ cite::before {
   content: '— source: ';
 }
 
-code {
-  font-size: 1.2em;
-  padding: 0 0.3em;
-  background-color: var(--code);
-}
 
 kbd {
   color: #333;
@@ -441,7 +436,7 @@ kbd {
   width: 1em;
   height: 1em;
   margin-left: 0.5em;
-  vertical-align: text-top;
+  vertical-align: text-bottom;
 }
 
 /* ----- Table ----- */
