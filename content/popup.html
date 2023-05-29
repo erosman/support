@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Popup</title>
+    <link href="popup.css" rel="stylesheet">
+    <script type="module" src="popup.js"></script>
+
+    <!-- custom style -->
+    <style></style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <input type="radio" name="nav" id="main" checked>
+    <input type="radio" name="nav" id="info">
+    <input type="radio" name="nav" id="command">
+    <input type="radio" name="nav" id="scratchpad">
+    <input type="radio" name="nav" id="findScript">
+
+    <article>
+
+      <section class="main">
+        <!-- template -->
+        <template><li><span class="enable">✔</span><span class="name"></span></li></template>
+
+        <input type="checkbox" id="listJS" class="control" checked>
+        <input type="checkbox" id="listCSS" class="control" checked>
+
+        <h3 class="list">
+          <span data-i18n="tabScript"></span>
+          <label for="listJS"><img src="../image/js.svg" alt=""></label>
+          <label for="listCSS"><img src="../image/css.svg" alt=""></label>
+          <span class="frame">1</span>
+        </h3>
+        <ul class="tab"></ul>
+
+        <h3 data-i18n="otherScript"></h3>
+        <ul class="other"></ul>
+
+        <h3 class="menu"><label for="command" data-i18n="scriptCommands">📣 </label></h3>
+        <h3 class="menu"><label for="scratchpad" data-i18n="scratchpad">📝 </label></h3>
+        <h3 class="menu"><label for="findScript" data-i18n="findScript">🔍 </label></h3>
+
+        <div class="button">
+          <button type="button" data-i18n="options"><img src="../image/gear.svg" alt=""> </button>
+          <button type="button" data-i18n="newJS|title"><span class="plus">➕</span> <img src="../image/js.svg" alt=""></button>
+          <button type="button" data-i18n="newCSS|title"><span class="plus">➕</span> <img src="../image/css.svg" alt=""></button>
+          <button type="button" data-i18n="help"></button>
+        </div>
+      </section>
+
+      <section class="info">
+        <h3><label for="main" data-i18n="back"><img src="../image/back.svg" alt=""> </label></h3>
+
+        <div class="infoList">
+          <dl></dl>
+          <div class="button edit">
+            <button type="button" data-i18n="edit">🖌 </button>
+            <button type="button" id="infoRun" data-i18n="run">▷ </button>
+            <button type="button" id="infoUndo" data-i18n="undo">◁ </button>
+          </div>
+        </div>
+
+        <div class="commandList">
+          <dl></dl>
+        </div>
+
+        <div class="scratchpad">
+          <h2><img src="../image/js.svg" alt=""> JavaScript <img class="bin scratchpadJS" src="../image/bin.svg" data-i18n="delete|title" alt=""></h2>
+          <textarea id="js" rows="8" spellcheck="false"></textarea>
+
+          <div class="button">
+            <button type="button" id="jsBtn" data-i18n="run">▷ </button>
+          </div>
+
+          <h2><img src="../image/css.svg" alt=""> CSS <img class="bin scratchpadCSS" src="../image/bin.svg" data-i18n="delete|title" alt=""></h2>
+          <textarea id="css" rows="8" spellcheck="false"></textarea>
+
+          <div class="button">
+            <button type="button" id="cssBtn" data-i18n="run">▷ </button>
+            <button type="button" id="undo" data-i18n="undo">◁ </button>
+          </div>
+        </div>
+
+        <div class="findScript">
+          <dl>
+            <dt>Scripts</dt>
+            <dd><a href="https://greasyfork.org/en/scripts/by-site/;domain;" target="_blank"><img src="../image/greasyfork.svg" alt=""> GreasyFork</a></dd>
+            <dd><a href="https://sleazyfork.org/en/scripts/by-site/;domain;" target="_blank"><img src="../image/greasyfork.svg" alt=""> SleazyFork</a></dd>
+            <dd><a href="https://www.userscript.zone/search?q=;domain;" target="_blank"><img src="../image/userscript.zone.png" alt=""> Userscript.Zone</a></dd>
+            <dd><a href="https://openuserjs.org/?q=;domain;" target="_blank"><img src="../image/openuserjs.svg" alt=""> OpenUserJS</a></dd>
+
+            <dt>Styles</dt>
+            <dd><a href="https://greasyfork.org/en/scripts/by-site/;domain;?language=css" target="_blank"><img src="../image/greasyfork.svg" alt=""> GreasyFork</a></dd>
+            <dd><a href="https://sleazyfork.org/en/scripts/by-site/;domain;?language=css" target="_blank"><img src="../image/greasyfork.svg" alt=""> SleazyFork</a></dd>
+            <dd><a href="https://userstyles.org/styles/browse/;sld;" target="_blank"><img src="../image/stylish.svg" alt=""> userstyles.org</a></dd>
+            <dd><a href="https://userstyles.world/search?q=;sld;" target="_blank"><img src="../image/userstyles.world.svg" alt=""> UserStyles.world</a></dd>
+            <dd><a href="https://uso.kkx.one/browse/styles?search=;sld;" target="_blank"><img src="../image/uso.kkx.one.png" alt=""> UserStyles.org Archive</a></dd>
+          </dl>
+        </div>
+
+      </section>
+
+    </article>
+  </body>
+</html>

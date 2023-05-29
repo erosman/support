@@ -142,7 +142,7 @@ input[type="color"] {
 /* ----- Light Theme for Help Syntax Highlight ----- */
 .comment { color: #090; }
 .keyword, .html { color: blue; }
-.object, .font { color: red; }
+.object { color: red; }
 .string { color: #777; }
 .method, .function { color: darkviolet; }
 .gm { color: maroon; }
@@ -151,4 +151,3 @@ input[type="color"] {
 .value { color: dodgerblue; }
 .pseudo { color: #060; }
 .important { color: brown; }
-.color { color: orchid; }

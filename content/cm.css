@@ -1,0 +1,120 @@
+/* ----- Dark Theme ----- */
+:root,
+body.dark {
+  --trailingspace-bg: #234;
+  --trailingspace-border: #555;
+  --gm: gold;
+  --focused: #eee;
+  --selection-scrollbar: #cfc;
+}
+
+/* ----- Light Theme ----- */
+@media screen and (prefers-color-scheme: light) {
+  :root {
+    --trailingspace-bg: #f5f5f5;
+    --trailingspace-border: #ccc;
+    --focused: #fa5;
+    --gm: maroon;
+    --selection-scrollbar: #0a0;
+  }
+}
+
+/* ----- CodeMirror ----- */
+.CodeMirror {
+  height: 100%;
+}
+
+.CodeMirror-scroll {
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0.5em;
+}
+
+.CodeMirror-scrollbar-filler,
+.CodeMirror-gutter-filler {
+  background-color: inherit;
+  /* The little square between H and V scrollbars */
+}
+
+.cm-tab,
+.cm-trailingspace {
+  background: var(--trailingspace-bg);
+  border-bottom: 1px solid var(--trailingspace-border);
+  border-radius: 5px;
+  line-height: 0.5;
+}
+
+.cm-gm {
+  color: var(--gm) !important;
+}
+
+.CodeMirror-lint-marker {
+  cursor: help;
+}
+
+.CodeMirror-lint-tooltip {
+  color: #050;
+  border-color: #ccc;
+  box-shadow: 0px 8px 16px 0px var(--shadow);
+}
+
+div.CodeMirror-code > div:hover .CodeMirror-linenumber {
+  color: #f00;
+  font-weight: bold;
+}
+
+/* ----- CSS Colors ----- */
+span.cm-fm-color {
+  position: relative;
+  margin-left: 1.5em;
+}
+
+span.cm-fm-color::before {
+  content: '';
+  width: 0.9em;
+  height: 0.9em;
+  display: inline-block;
+  background-color: var(--fm-color);
+  user-select: none;
+  cursor: pointer;
+  border: 1px solid #999;
+  border-radius: 5em;
+  position: absolute;
+  top: 0;
+  left: -1.4em;
+  ;
+}
+
+/* ----- Lint ----- */
+.CodeMirror-lint-mark-info {
+  border-bottom: 2px dotted #7cf;
+}
+
+.CodeMirror-lint-marker-info,
+.CodeMirror-lint-message-info {
+  padding-left: 0.2em;
+}
+
+.CodeMirror-lint-marker-info,
+.CodeMirror-lint-message-info::before {
+  content: 'ℹ️';
+  margin-left: 0;
+  margin-right: 0.2em;
+}
+
+li.CodeMirror-lint-message-info {
+  background-color: #eee;
+}
+
+/* ----- match-highlighter ----- */
+.CodeMirror-focused .cm-matchhighlight {
+  outline: 1px solid var(--focused);
+  border-radius: 3px;
+}
+
+.CodeMirror-selection-highlight-scrollbar {
+  background-color: var(--selection-scrollbar);
+}

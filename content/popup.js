@@ -1,98 +1,73 @@
-import {pref, App, Meta} from './app.js';
+import {pref, App} from './app.js';
+import {Meta} from './meta.js';
 import {Match} from './match.js';
+import {PSL} from './psl.js';
+import {Scratchpad} from './scratchpad.js';
 import './i18n.js';
 
-// ----------------- Popup ---------------------------------
+// ---------- User Preference ------------------------------
+await App.getPref();
+
+// ---------- Popup ----------------------------------------
 class Popup {
 
-  constructor() {
+  static {
     document.querySelectorAll('button').forEach(item => item.addEventListener('click', this.processButtons));
     this.docFrag = document.createDocumentFragment();
 
-    // ----- Scripts
+    // --- Scripts
     this.liTemplate = document.querySelector('template').content.firstElementChild;
     this.ulTab = document.querySelector('ul.tab');
     this.ulOther = document.querySelector('ul.other');
 
-    // ----- Info
-    this.info = document.querySelector('section.info');
-    this.info.querySelector('h3 span').addEventListener('click', () =>
-        this.info.parentNode.style.transform = 'translateX(0%)');
-
-    this.infoListDL = this.info.querySelector('.infoList dl');
-    this.commandList = this.info.querySelector('dl.commandList');
-    this.scratchpad = this.info.querySelector('div.scratchpad');
-    this.dtTemp = document.createElement('dt');
-    this.ddTemp = document.createElement('dd');
-    this.aTemp = document.createElement('a');
-    this.aTemp.target = '_blank';
-
-    // ----- Script Commands
-    document.querySelector('h3.command').addEventListener('click', () => {
-      this.toggleOn(this.commandList);
-      this.info.parentNode.style.transform = 'translateX(-50%)';
-    });
-
-    // ----- Scratchpad
-    this.js = document.querySelector('#js');
-    this.js.value = localStorage.getItem('scraptchpadJS') || ''; // recall last entry
-    this.css = document.querySelector('#css');
-    this.css.value = localStorage.getItem('scraptchpadCSS') || ''; // recall last entry
-
-    document.querySelector('h3.scratch').addEventListener('click', () => {
-      this.toggleOn(this.scratchpad);
-      this.info.parentNode.style.transform = 'translateX(-50%)';
-    });
-    document.querySelector('img.scraptchpadJS').addEventListener('click', () => {
-      this.js.value = '';
-      localStorage.setItem('scraptchpadJS', '');
-    });
-    document.querySelector('img.scraptchpadCSS').addEventListener('click', () => {
-      this.css.value = '';
-      localStorage.setItem('scraptchpadCSS', '');
-    });
-
-    // ----- Find Scripts
-    this.url = '';                                          // default
-    document.querySelector('h3.findScript').addEventListener('click', () => {
-      const [scheme, host, ...path] = this.url.split(/:\/{2,3}|\/+/);
-      if (scheme.startsWith('http') && host) {
-        browser.tabs.create({url: 'https://greasyfork.org/en/scripts/by-site/' + host.replace(/^www\./, '')});
-        window.close();
-      }
-    });
-
-    // ----- Theme
+    // --- Theme
     document.body.classList.toggle('dark', localStorage.getItem('dark') === 'true'); // defaults to false
 
-    // --- i18n
-    this.lang = navigator.language;
+    // --- add custom style
+    pref.customPopupCSS && (document.querySelector('style').textContent = pref.customPopupCSS);
+
+    this.process();
   }
 
-  processButtons() {
-    switch (this.dataset.i18n) {
-      case 'options': break;
-      case 'newJS|title': localStorage.setItem('nav', 'js'); break;
-      case 'newCSS|title': localStorage.setItem('nav', 'css'); break;
-      case 'help': localStorage.setItem('nav', 'help'); break;
-      case 'edit': localStorage.setItem('nav', this.parentNode.id); break;
-      case 'run':                                           // infoRun if not already injected in the tab
-        this.id === 'infoRun' ? popup.infoRun(this.parentNode.id) : popup.scratchpadRun(this.id);
+  static processButtons() {
+    const id = this.dataset.i18n;
+    switch (id) {
+      case 'options':
+        browser.runtime.openOptionsPage();
+        break;
+
+      case 'newJS|title':
+      case 'newCSS|title':
+        browser.tabs.create({url: '/content/options.html?' + id.slice(0, -6)});
+        break;
+
+      case 'help':
+        browser.tabs.create({url: '/content/options.html?help'});
+        break;
+
+      case 'edit':
+        browser.tabs.create({url: '/content/options.html?script=' + this.parentElement.id.substring(1)});
+        break;
+
+      case 'run':
+        this.id === 'infoRun' ? Info.run(this.parentElement.id) : Scratchpad.run(this.id);
         return;
+
       case 'undo':
-        this.id === 'infoUndo' ? popup.infoUndo(this.parentNode.id) : popup.scratchpadUndo();
+        this.id === 'infoUndo' ? Info.undo(this.parentElement.id) : Scratchpad.undo();
         return;
     }
-    browser.runtime.openOptionsPage();
     window.close();
   }
 
-  async process() {
+  static async process() {
     const tabs = await browser.tabs.query({currentWindow: true, active: true});
-    const tabId = tabs[0].id;                                 // active tab id
-    this.url = tabs[0].url;                                   // used in find scripts
+    const tabId = tabs[0].id;                               // active tab id
 
-    const [Tab, Other, frames] = await Match.process(tabs[0], App.getIds(), pref);
+    // make find script list
+    this.setSearch(tabs[0].url);
+
+    const [Tab, Other, frames] = await Match.process(tabs[0], pref);
     document.querySelector('h3 span.frame').textContent = frames; // display frame count
 
     Tab.forEach(item => this.docFrag.appendChild(this.addScript(pref[item])));
@@ -100,66 +75,109 @@ class Popup {
     Other.forEach(item => this.docFrag.appendChild(this.addScript(pref[item])));
     this.ulOther.appendChild(this.docFrag);
 
-    // --- check commands if there are active scripts in tab & has registerMenuCommand v2.45
-    if(Tab.some(item => pref[item].enabled &&
-      ['GM_registerMenuCommand', 'GM.registerMenuCommand'].some(i => pref[item].grant?.includes(i)))) {
-      browser.runtime.onMessage.addListener((message, sender) =>
-          sender.tab.id === tabId && this.addCommand(tabId, message));
-      browser.tabs.sendMessage(tabId, {listCommand: []});
+    // check commands if there are active scripts in tab & has registerMenuCommand FM 2.45
+    Info.getMenuCommand(Tab, tabId);
+
+    // add click listener if it has children
+    [this.ulTab, this.ulOther].forEach(item =>
+      item.children[0] && item.addEventListener('click', e => this.getClick(e)));
+  }
+
+  static getClick(e) {
+    const li = e.target.closest('li');
+    switch (true) {
+      case !li?.id:
+        break;
+
+      case e.target.classList.contains('enable'):
+        this.toggleState(li);
+        break;
+
+      case e.target.classList.contains('name'):
+        Info.show(li);
+        break;
     }
   }
 
-  addScript(item) {
+  static addScript(item) {
     const li = this.liTemplate.cloneNode(true);
+    li.id = '_' + item.name;
     li.classList.add(item.js ? 'js' : 'css');
     item.enabled || li.classList.add('disabled');
-    li.children[1].textContent = item.name;
-    li.id = '_' + item.name;
+    const sp = li.children;
+    sp[1].textContent = item.name;
 
     if (item.error) {
-      li.children[0].textContent = '\u2718';
-      li.children[0].style.color = '#f00';
+      sp[0].textContent = '✘';
+      sp[0].style.color = '#f00';
     }
-
-    li.children[0].addEventListener('click', this.toggleState);
-    li.children[1].addEventListener('click', e => this.showInfo(e));
     return li;
   }
 
-  toggleState() {
-    const li = this.parentNode;
+  static toggleState(li) {
     const id = li.id;
-    if (!id) { return; }
-
     li.classList.toggle('disabled');
     pref[id].enabled = !li.classList.contains('disabled');
     browser.storage.local.set({[id]: pref[id]});            // update saved pref
   }
 
-  toggleOn(node) {
-    [this.infoListDL.parentNode, this.commandList, this.scratchpad].forEach(item => item.classList.toggle('on', item === node));
+  static setSearch(url) {
+    try { url = new URL(url); }
+    catch { return; }                                       // unacceptable url
+
+    let domain = '';
+    let sld = '';
+    url.protocol.startsWith('http') && ({domain, sld} = PSL.parse(url.host)); // only for http/https
+    document.querySelectorAll('.findScript a').forEach(i =>
+      i.href = i.href.replace(/;domain;/, domain).replace(/;sld;/, sld));
+  }
+}
+// ---------- /Popup ---------------------------------------
+
+// ---------- Info + Run/Undo ------------------------------
+class Info {
+
+  static {
+    this.docFrag = document.createDocumentFragment();
+
+    // --- Info
+    this.navInfo = document.querySelector('input#info');
+    this.info = document.querySelector('section.info');
+
+    this.infoListDL = this.info.querySelector('.infoList dl');
+    this.commandList = this.info.querySelector('.commandList dl');
+
+    this.dtTemp = document.createElement('dt');
+    this.ddTemp = document.createElement('dd');
+    this.aTemp = document.createElement('a');
+    this.aTemp.target = '_blank';
+
+    // --- i18n
+    this.lang = navigator.language;
   }
 
-  showInfo(e) {
-    const li = e.target.parentNode;
+  static show(li) {
     const id = li.id;
     this.infoListDL.textContent = '';                       // clearing previous content
-    this.toggleOn(this.infoListDL.parentNode);
 
     this.infoListDL.className = '';                         // reset
     this.infoListDL.classList.add(...li.classList);
 
-    const script =  JSON.parse(JSON.stringify(pref[id]));   // deep clone pref object
-    const {homepage, support} = this.getMetadata(script);   // show homepage/support
+    const script = JSON.parse(JSON.stringify(pref[id]));    // deep clone pref object
+    const {homepage, support, license} = this.getMetadata(script); // show homepage/support
     script.homepage = homepage;
     script.support = support;
+    script.license = license;
+    script.require = [...script.require, ...script.requireRemote]; // merge together
     script.size = new Intl.NumberFormat().format(((script.js || script.css).length/1024).toFixed(1)) + ' KB';
-//    script.size = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format((script.js || script.css).length/1024) + ' KB';
+    // script.size = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format((script.js || script.css).length/1024) + ' KB';
 
-    const infoArray = ['name', 'description', 'author', 'version', 'size', 'homepage',
-                        'support', 'updateURL', 'matches', 'excludeMatches',
-                        'includes', 'excludes', 'includeGlobs', 'excludeGlobs',
-                        'container', 'require', 'injectInto', 'runAt', 'grant', 'error'];
+    const infoArray = [
+      'name', 'description', 'author', 'version', 'size', 'license', 'require',
+      'matches', 'excludeMatches', 'includes', 'excludes', 'includeGlobs', 'excludeGlobs',
+      'grant', 'container', 'injectInto', 'runAt', 'error',
+      'homepage', 'support', 'updateURL'
+    ];
 
     infoArray.forEach(item => {
       if (!script[item]) { return; }                        // skip to next
@@ -176,15 +194,11 @@ class Popup {
 
         case 'homepage':
         case 'support':
+        case 'updateURL':
           const a = this.aTemp.cloneNode();
           a.href = script[item];
-          a.textContent = script[item];
+          a.textContent = decodeURI(script[item]);
           arr[0] = a;
-          break;
-
-        case 'require':                                     // add requireRemote to require
-          arr = arr.map(item => item.startsWith('lib/') ? item.slice(4, -1) : item);
-          script.requireRemote && arr.push(...script.requireRemote);
           break;
 
         case 'matches':                                     // add UserStyle matches to matches
@@ -196,10 +210,8 @@ class Popup {
           break;
 
         case 'grant':
-          arr.includes('GM.xmlHttpRequest') && arr.push('GM.xmlhttpRequest');
-          arr.includes('GM.getResourceUrl') && arr.push('GM.getResourceURL');
-          arr = arr.filter(item => !item.startsWith('GM_') || !arr.includes(`GM.${item.substring(3)}`) )
-                .filter(item => !['GM.xmlhttpRequest', 'GM.getResourceURL'].includes(item)).sort();
+          const [grantKeep] = App.sortGrant(arr);
+          arr = grantKeep.sort();
           break;
 
         case 'runAt':
@@ -224,14 +236,13 @@ class Popup {
     this.infoListDL.appendChild(this.docFrag);
     const edit = document.querySelector('div.edit');
     edit.id = id;
-    const active = e.target.parentNode.parentNode.classList.contains('tab') && script.enabled;
-    edit.children[1].title = active ? browser.i18n.getMessage('runDisabled') : '';
-    edit.children[2].disabled = !!script.js;
-    edit.children[2].title = script.js ? browser.i18n.getMessage('undoDisabled') : '';
-    this.info.parentNode.style.transform = 'translateX(-50%)';
+    edit.children[2].disabled = !!script.js;                // only for CSS
+    edit.children[2].disabled && (edit.children[2].title = browser.i18n.getMessage('undoDisabled'));
+
+    this.navInfo.checked = true;                            // navigate slide to info page
   }
 
-  getMetadata(script) {
+  static getMetadata(script) {
     const url = script.updateURL;
     const meta = (script.js || script.css).match(Meta.regEx)[2];
 
@@ -240,6 +251,9 @@ class Popup {
 
     // look for @support @supportURL
     let support = meta.match(/@support(URL)?\s+(http\S+)/)?.[2];
+
+    // look for @license
+    let license = meta.match(/@license\s+(.+)/)?.[1];
 
     // make homepage from updateURL
     switch (true) {
@@ -268,12 +282,43 @@ class Popup {
         break;
     }
 
-    return {homepage, support};
+    return {homepage, support, license};
   }
-  // ----------------- Script Commands -----------------------
-  addCommand(tabId, message) {
-    //{name, command: Object.keys(command)}
-    if (!message.command || !message.command[0]) { return; }
+
+  static run(id) {
+    const item = pref[id];
+    const code = Meta.prepare(item.js || item.css);
+    if (!code.trim()) { return; }                           // e.g. in case of userStyle
+
+    (item.js ? browser.tabs.executeScript({code}) : browser.tabs.insertCSS({code}))
+    .catch(error => App.notify(id.substring(1) + '\n' + browser.i18n.getMessage('insertError') + '\n\n' + error.message));
+  }
+
+  static undo(id) {
+    const item = pref[id];
+    if (!item.css) { return; }                              // only for userCSS
+
+    const code = Meta.prepare(item.css);
+    if (!code.trim()) { return; }                           // e.g. in case of userStyle
+
+    browser.tabs.removeCSS({code})
+    .catch(error => App.notify(id.substring(1) + '\n\n' + error.message));
+  }
+
+  // ---------- Script Commands ----------------------------
+  static getMenuCommand(Tab, tabId) {
+    // --- check commands if there are active scripts in tab & has registerMenuCommand v2.45
+    if(Tab.some(item => pref[item].enabled &&
+      ['GM_registerMenuCommand', 'GM.registerMenuCommand'].some(i => pref[item].grant?.includes(i)))) {
+      browser.runtime.onMessage.addListener((message, sender) =>
+        sender.tab.id === tabId && this.addCommand(tabId, message));
+      browser.tabs.sendMessage(tabId, {listCommand: []});
+    }
+  }
+
+  static addCommand(tabId, message) {
+    // {name, command: Object.keys(command)}
+    if (!message.command?.[0]) { return; }
 
     const dl = this.commandList;
     const dt = this.dtTemp.cloneNode();
@@ -291,54 +336,5 @@ class Popup {
     });
     dl.appendChild(this.docFrag);
   }
-
-  // ----------------- Info Run/Undo -----------------------
-  infoRun(id) {
-    const item = pref[id];
-    const code = Meta.prepare(item.js || item.css);
-    if (!code.trim()) { return; }                           // e.g. in case of userStyle
-
-    (item.js ? browser.tabs.executeScript({code}) : browser.tabs.insertCSS({code}))
-    .catch(error => App.notify(id.substring(1) + '\n' + browser.i18n.getMessage('insertError') + '\n\n' + error.message));
-  }
-
-  infoUndo(id) {
-    const item = pref[id];
-    if (!item.css) { return; }                              // only for userCSS
-
-    const code =  Meta.prepare(item.css);
-    if (!code.trim()) { return; }                           // e.g. in case of userStyle
-
-    browser.tabs.removeCSS({code})
-    .catch(error => App.notify(id.substring(1) + '\n\n' + error.message));
-  }
-
-  // ----------------- Scratchpad --------------------------
-  scratchpadRun(id) {
-    const js = id === 'jsBtn';
-    const code = (js ? this.js : this.css).value.trim();
-    if (!code) { return; }
-    localStorage.setItem(js ? 'scraptchpadJS' : 'scraptchpadCSS', code); // save last entry
-
-    (js ? browser.tabs.executeScript({code}) : browser.tabs.insertCSS({code}))
-    .catch(error => App.notify((js ? 'JavaScript' : 'CSS') + '\n' + browser.i18n.getMessage('insertError') + '\n\n' + error.message));
-  }
-
-  scratchpadUndo() {
-    const code = this.css.value.trim();
-    if (!code) { return; }
-    browser.tabs.removeCSS({code})
-    .catch(error => App.notify('CSS\n' + error.message));
-  }
 }
-const popup = new Popup();
-// ----------------- /Popup --------------------------------
-
-// ----------------- User Preference -----------------------
-App.getPref().then(() => {
-  popup.process();
-
-  // --- add custom style
-  pref.customPopupCSS && (document.querySelector('style').textContent = pref.customPopupCSS);
-});
-// ----------------- /User Preference ----------------------
+// ---------- /Info + Run/Undo -----------------------------

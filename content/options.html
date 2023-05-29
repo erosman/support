@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="options">FireMonkey </title>
+    <link href="../image/icon.svg" rel="icon" type="image/png">
+
+    <!-- CodeMirror -->
+    <script src="../lib/codemirror/fm-codemirror.js" defer></script>
+    <link href="../lib/codemirror/codemirror.css" rel="stylesheet">
+
+    <!-- mode -->
+    <script src="../lib/codemirror/mode/fm-css.js" defer></script>
+    <script src="../lib/codemirror/mode/fm-javascript.js" defer></script>
+
+    <!-- addon -->
+    <script src="../lib/codemirror/addon/comment/comment.js" defer></script>
+    <script src="../lib/codemirror/addon/comment/continuecomment.js" defer></script>
+
+    <script src="../lib/codemirror/addon/dialog/dialog.js" defer></script>
+    <link href="../lib/codemirror/addon/dialog/dialog.css" rel="stylesheet">
+
+    <script src="../lib/codemirror/addon/display/rulers.js" defer></script>
+    <script src="../lib/codemirror/addon/display/fullscreen.js" defer></script>
+    <link href="../lib/codemirror/addon/display/fullscreen.css" rel="stylesheet">
+
+    <script src="../lib/codemirror/addon/edit/closebrackets.js" defer></script>
+    <script src="../lib/codemirror/addon/edit/matchbrackets.js" defer></script>
+    <script src="../lib/codemirror/addon/edit/trailingspace.js" defer></script>
+
+    <script src="../lib/codemirror/addon/fold/brace-fold.js" defer></script>
+    <script src="../lib/codemirror/addon/fold/comment-fold.js" defer></script>
+    <script src="../lib/codemirror/addon/fold/foldcode.js" defer></script>
+    <script src="../lib/codemirror/addon/fold/foldgutter.js" defer></script>
+    <link href="../lib/codemirror/addon/fold/foldgutter.css" rel="stylesheet">
+
+    <script src="../lib/codemirror/addon/hint/css-hint.js" defer></script>
+    <script src="../lib/codemirror/addon/hint/javascript-hint.js" defer></script>
+    <script src="../lib/codemirror/addon/hint/show-hint.js" defer></script>
+    <link href="../lib/codemirror/addon/hint/show-hint.css" rel="stylesheet">
+
+    <script src="../lib/codemirror/addon/lint/fm-lint.js" defer></script>
+    <script src="../lib/codemirror/addon/lint/css-lint.js" defer></script>
+    <script src="../lib/codemirror/addon/lint/javascript-lint.js" defer></script>
+    <link href="../lib/codemirror/addon/lint/lint.css" rel="stylesheet">
+
+    <script src="../lib/codemirror/addon/scroll/annotatescrollbar.js" defer></script>
+    <script src="../lib/codemirror/addon/search/jump-to-line.js" defer></script>
+    <script src="../lib/codemirror/addon/search/match-highlighter.js" defer></script>
+    <script src="../lib/codemirror/addon/search/matchesonscrollbar.js" defer></script>
+    <script src="../lib/codemirror/addon/search/search.js" defer></script>
+    <script src="../lib/codemirror/addon/search/searchcursor.js" defer></script>
+    <link href="../lib/codemirror/addon/search/matchesonscrollbar.css" rel="stylesheet">
+
+    <script src="../lib/codemirror/addon/selection/active-line.js" defer></script>
+
+    <!-- Key Maps -->
+    <script src="../lib/codemirror/keymap/emacs.js" defer></script>
+    <script src="../lib/codemirror/keymap/sublime.js" defer></script>
+    <script src="../lib/codemirror/keymap/vim.js" defer></script>
+
+    <!-- external -->
+    <script src="../lib/codemirror/external/csslint.js" defer></script>
+    <script src="../lib/codemirror/external/jshint.js" defer></script>
+    <!-- /CodeMirror -->
+
+    <!-- js-beautify -->
+    <script src="../lib/js-beautify/beautify.js" defer></script>
+    <script src="../lib/js-beautify/beautify-css.js" defer></script>
+
+    <link href="options.css" rel="stylesheet">
+    <script type="module" src="options.js"></script>
+
+    <!-- custom style -->
+    <style></style>
+  </head>
+  <body>
+
+    <!-- Navigation -->
+    <input type="radio" name="nav" id="nav1">
+    <input type="radio" name="nav" id="nav2">
+    <input type="radio" name="nav" id="nav3" checked>
+    <input type="radio" name="nav" id="nav4">
+    <input type="radio" name="nav" id="nav5">
+    <input type="radio" name="nav" id="nav6">
+
+    <input type="checkbox" id="sidebar" class="control" checked>
+
+    <nav>
+      <label for="sidebar" data-i18n="sidebar|title"><img src="../image/sidebars.svg" alt="" style="width: 1.2em;"></label>
+      <label for="nav3"><img src="../image/gear.svg" alt=""> <span data-i18n="options"></span></label>
+      <label for="nav4"><img src="../image/js.svg" alt=""> <span data-i18n="script"></span></label>
+      <label for="nav5">📄 <span data-i18n="log"></span></label>
+      <label for="nav1">🇭 <span data-i18n="help"></span></label>
+      <label for="nav2">🇮 <span data-i18n="about"></span></label>
+
+      <label><a href="../locale-maker/locale-maker.html" target="_blank"><img src="../locale-maker/locale-maker.svg" alt="">
+        <span>Locale Maker</span></a></label>
+    </nav>
+
+
+    <aside>
+      <input type="checkbox" id="listEnable" class="control" checked>
+      <input type="checkbox" id="listDisable" class="control" checked>
+      <input type="checkbox" id="listJS" class="control" checked>
+      <input type="checkbox" id="listCSS" class="control" checked>
+
+      <div class="list">
+        <label for="listEnable"><img src="../image/js.svg" alt=""><img src="../image/css.svg" alt=""></label>
+        <label for="listDisable"><img src="../image/js.svg" alt=""><img src="../image/css.svg" alt=""></label>
+        <label for="listJS"><img src="../image/js.svg" alt=""></label>
+        <label for="listCSS"><img src="../image/css.svg" alt=""></label>
+      </div>
+
+      <ul></ul>
+
+      <!-- counter -->
+      <div></div>
+
+      <div class="button">
+        <input type="file" id="fileScript" accept=".js, .css" multiple>
+        <label for="fileScript" class="flat" data-i18n="import"></label>
+        <button type="button" class="flat" data-i18n="exportAll"></button>
+      </div>
+    </aside>
+
+    <article>
+      <div class="progressBar"></div>
+
+      <!-- Help/About -->
+      <section><iframe src="help.html"></iframe></section>
+      <section><iframe src="about.html"></iframe></section>
+
+
+      <section class="options">
+        <!-- user options -->
+        <fieldset>
+          <legend data-i18n="options"></legend>
+
+          <label data-i18n="autoUpdateInterval">📅 </label> <input type="number" id="autoUpdateInterval" min="0" max="30">
+          <p class="description" data-i18n="autoUpdateIntervalDescription"></p>
+
+          <label class="pointer" data-i18n="enableSync"><input type="checkbox" id="sync"></label>
+          <label class="pointer" data-i18n="counter"><input type="checkbox" id="counter"></label>
+          <p></p>
+
+          <label data-i18n="globalScriptExcludeMatches">🌐 </label><span></span>
+          <p class="description" data-i18n="globalScriptExcludeMatchesDescription"></p>
+          <textarea id="globalScriptExcludeMatches" rows="6" spellcheck="false" autocomplete="off" placeholder="*://*.example.com/*"></textarea>
+
+          <details>
+            <summary data-i18n="advanced">⚙️ </summary>
+
+            <label data-i18n="customOptionsCSS"><img src="../image/css.svg" alt=""> </label>
+            <p class="description" data-i18n="customOptionsCSSDescription"></p>
+            <textarea id="customOptionsCSS" rows="6" spellcheck="false" autocomplete="off" placeholder=".CodeMirror {
+font-family: monospace;
+}"></textarea>
+
+            <label data-i18n="customPopupCSS"><img src="../image/css.svg" alt=""> </label>
+            <p class="description" data-i18n="customPopupCSSDescription"></p>
+            <textarea id="customPopupCSS" rows="6" spellcheck="false" autocomplete="off" placeholder="ul {
+height: 15em;
+}"></textarea>
+
+            <label><img src="../image/codemirror.svg" alt=""> CodeMirror</label>
+            <p class="description" data-i18n="cmOptionsDescription"></p>
+            <textarea id="cmOptions" rows="6" spellcheck="false" autocomplete="off" placeholder="{
+&quot;indentWithTabs&quot;: false,
+&quot;indentUnit&quot;: 2,
+&quot;tabSize&quot;: 2
+}"></textarea>
+
+          </details>
+
+        </fieldset>
+
+        <div class="button">
+          <input type="file" id="file" accept=".txt,.json">
+          <label for="file" class="flat" data-i18n="import"></label>
+          <button type="button" id="export" class="flat" data-i18n="export"></button>
+          <span></span>
+          <button type="button" class="flat" data-i18n="importFromUrl"></button>
+        </div>
+
+
+        <button type="submit" data-i18n="saveOptions"></button>
+
+        <!-- /user options -->
+      </section>
+
+
+      <section class="script">
+          <div class="menu">
+            <button type="button" data-i18n="saveScript">💾 </button>
+            <button type="button" data-i18n="update">🔄 </button>
+            <button type="button" data-i18n="export"></button>
+            &nbsp;
+            <label data-i18n="enable"><input type="checkbox" id="enable"></label>
+            <label data-i18n="autoUpdate"><input type="checkbox" id="autoUpdate"></label>
+            <button type="button" class="bin" data-i18n="delete|title"><img src="../image/bin.svg" alt=""></button>
+            <span></span>
+
+            <button type="button" data-i18n="newJS|title"><span class="plus">➕</span> <img src="../image/js.svg" alt=""></button>
+            <button type="button" data-i18n="newCSS|title"><span class="plus">➕</span> <img src="../image/css.svg" alt=""></button>
+            <button type="button" data-i18n="beautify|title"><img src="../lib/js-beautify/logo.svg" alt=""></button>
+
+            <details>
+              <summary data-i18n="userVar|title"><img src="../image/gear.svg" alt=""></summary>
+                <div class="userVar">
+                  <h4 data-i18n="userVar"></h4>
+                  <ul></ul>
+                  <div><button type="button" data-i18n="reset">⌫ </button></div>
+                </div>
+            </details>
+
+            <details>
+              <summary data-i18n="report|title">🗒</summary>
+                <div class="report">
+                  <h4 data-i18n="report"></h4>
+                  <ul><li>✅</li></ul>
+                </div>
+            </details>
+
+
+            <details>
+              <summary data-i18n="options|title"><img src="../image/menu-dot.svg" alt=""></summary>
+              <div class="user">
+                <ul>
+                  <li class="theme">
+                    <label data-i18n="theme"></label>
+                    <select id="theme">
+                      <optgroup data-type="light" data-i18n="light|label" label="">
+                        <option selected>default</option>
+                        <option>3024-day</option>
+                        <option>base16-light</option>
+                        <option>duotone-light</option>
+                        <option>eclipse</option>
+                        <option>elegant</option>
+                        <option>idea</option>
+                        <option>juejin</option>
+                        <option>mdn-like</option>
+                        <option>neat</option>
+                        <option>neo</option>
+                        <option>paraiso-light</option>
+                        <option>ssms</option>
+                        <option>ttcn</option>
+                        <option>xq-light</option>
+                        <option>yeti</option>
+                      </optgroup>
+                      <optgroup data-type="dark" data-i18n="dark|label" label="">
+                        <option>3024-night</option>
+                        <option>abbott</option>
+                        <option>abcdef</option>
+                        <option>ambiance</option>
+                        <option>ambiance-mobile</option>
+                        <option>ayu-dark</option>
+                        <option>ayu-mirage</option>
+                        <option>base16-dark</option>
+                        <option>bespin</option>
+                        <option>blackboard</option>
+                        <option>cobalt</option>
+                        <option>colorforth</option>
+                        <option>darcula</option>
+                        <option>dracula</option>
+                        <option>duotone-dark</option>
+                        <option>erlang-dark</option>
+                        <option>gruvbox-dark</option>
+                        <option>hopscotch</option>
+                        <option>icecoder</option>
+                        <option>isotope</option>
+                        <option>lesser-dark</option>
+                        <option>liquibyte</option>
+                        <option>lucario</option>
+                        <option>material</option>
+                        <option>material-darker</option>
+                        <option>material-ocean</option>
+                        <option>material-palenight</option>
+                        <option>mbo</option>
+                        <option>midnight</option>
+                        <option>monokai</option>
+                        <option>moxer</option>
+                        <option>night</option>
+                        <option>nord</option>
+                        <option>oceanic-next</option>
+                        <option>panda-syntax</option>
+                        <option>paraiso-dark</option>
+                        <option>pastel-on-dark</option>
+                        <option>railscasts</option>
+                        <option>rubyblue</option>
+                        <option>seti</option>
+                        <option>shadowfox</option>
+                        <option>the-matrix</option>
+                        <option>tomorrow-night-bright</option>
+                        <option>tomorrow-night-eighties</option>
+                        <option>twilight</option>
+                        <option>vibrant-ink</option>
+                        <option>xq-dark</option>
+                        <option>yonce</option>
+                        <option>zenburn</option>
+                      </optgroup>
+                    </select>
+                  </li>
+
+                  <li class="button" data-i18n="saveTemplate">💾 </li>
+                  <li class="separator"></li>
+
+                  <li class="button" data-i18n="tabToSpaces">➔ </li>
+                  <li class="button" data-i18n="toUpperCase">🔠 </li>
+                  <li class="button" data-i18n="toLowerCase">🔡 </li>
+                  <li class="button" data-i18n="wrapIIFE">🛠 </li>
+                  <li class="separator"></li>
+
+                  <li>
+                    <label data-i18n="userMeta">👤 </label><br>
+                    <textarea id="userMeta" rows="10" spellcheck="false"></textarea>
+                  </li>
+                  <li style="padding: 0 0.5em 0.8em;">
+                    <select id="userMetaSelect">
+                      <option disabled selected>&nbsp;</option>
+                      <option>@disable-match</option>
+                      <option>@disable-exclude-match</option>
+                      <option>@disable-include</option>
+                      <option>@disable-exclude</option>
+                      <option>@disable-container</option>
+                      <option value="@match               *://*/*">@match</option>
+                      <option value="@exclude-match       *://*/*">@exclude-match</option>
+                      <option value="@matchAboutBlank     true">@matchAboutBlank</option>
+                      <option value="@allFrames           true">@allFrames</option>
+                      <option value="@container           container-1">@container</option>
+                      <option value="@inject-into         page">@inject-into</option>
+                      <option value="@run-at              document-start">@run-at</option>
+                      <option>@updateURL</option>
+                      <option>@metaURL</option>
+                    </select>
+                  </li>
+                  <li>
+                    <label data-i18n="storage">💿 </label><br>
+                    <textarea id="storage" rows="6" spellcheck="false"></textarea>
+                  </li>
+
+                </ul>
+
+              </div>
+            </details>
+          </div>
+
+          <fieldset>
+            <legend class="js" data-i18n="script"></legend>
+            <input type="color" style="display: none;">
+            <textarea class="box" spellcheck="false" autocomplete="off" disabled></textarea>
+          </fieldset>
+
+          <footer></footer>
+
+      </section>
+
+
+      <!-- log -->
+      <section class="log">
+        <table>
+          <thead>
+            <tr><th data-i18n="time"></th><th data-i18n="reference"></th>
+              <th><span data-i18n="message"></span>
+                <div style="float: right;">
+                  <span data-i18n="log"></span>
+                  <input type="number" id="logSize" min="100" max="1000" step="100" value="100">
+                </div>
+              </th>
+             </tr>
+          </thead>
+          <tbody>
+            <!-- template -->
+            <template><tr><td></td><td></td><td></td></tr></template>
+          </tbody>
+        </table>
+      </section>
+
+    </article>
+  </body>
+</html>

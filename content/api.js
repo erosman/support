@@ -1,19 +1,136 @@
 browser.userScripts.onBeforeScript.addListener(script => {
   // --- globals
-  const {name, resource, info, id = `_${name}`, injectInto, grantRemove,
-    registerMenuCommand, requireRemote} = script.metadata;  // set id as _name
+  const {grantRemove, registerMenuCommand, remoteCSS, resourceData, info} = script.metadata;
+  const {name, id = `_${name}`, injectInto, resource} = info.script; // set id as _name
+  let {storage} = script.metadata;                          // storage at the time of registration
   const valueChange = {};
   const scriptCommand = {};
-  let {storage} = script.metadata;                          // storage at the time of registration
+  const FMUrl = browser.runtime.getURL('');                 // used for sourceURL & import
 
-  // ----- check @require CSS
-  const cssRegex = /^(http|\/\/).+(\.css\b|\/css\d*\?)/i;
-  requireRemote.forEach(item => cssRegex.test(item) && GM.addElement('link', {href: item, rel: 'stylesheet'}));
+  // --- check @require CSS
+  remoteCSS.forEach(item => GM.addElement('link', {href: item, rel: 'stylesheet'}));
+
+  const popupCSS =
+`:host, *, ::before, ::after {
+  box-sizing: border-box;
+}
+
+:host {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  margin: 0;
+  position: fixed;
+  z-index: 10000;
+  transition: all 0.5s ease-in-out;
+}
+
+:host(.on) {
+  display: grid;
+}
+
+.content {
+  background: #f9f9fb;
+  padding: 0.5em;
+}
+
+.content.center,
+.content[class*="slide-"] {
+  min-width: 10em;
+  min-height: 10em;
+}
+
+.close {
+  color: #ccc;
+  margin: 0.1em 0.3em;
+  float: right;
+  font-size: 1.5em;
+  border: 0px solid #ddd;
+  border-radius: 2em;
+  cursor: pointer;
+}
+
+.close:hover { color: #f70; }
+.panel-right .close { float: left; }
+.panel-top .close, .panel-bottom .close { margin-right: 0.5em; }
+
+:host(.panel-left), :host(.panel-right), .panel-left, .panel-right { min-width: 14em; height: 100%; }
+:host(.panel-top), :host(.panel-bottom), .panel-top, .panel-bottom { width: 100%; min-height: 4em; }
+
+:host(.panel-left)        { top: 0; left: 0; justify-content: start; }
+:host(.panel-right)       { top: 0; right: 0; justify-content: end; }
+:host(.panel-top)         { top: 0; left: 0; align-items: start; }
+:host(.panel-bottom)      { bottom: 0; left: 0; align-items: end; }
+
+:host(.on) .center        { animation: center 0.5s ease-in-out; }
+:host(.on) .slide-top     { animation: slide-top 0.5s ease-in-out; }
+:host(.on) .slide-bottom  { animation: slide-bottom 0.5s ease-in-out; }
+:host(.on) .slide-left    { animation: slide-left 0.5s ease-in-out; }
+:host(.on) .slide-right   { animation: slide-right 0.5s ease-in-out; }
+
+:host(.on) .panel-top     { animation: panel-top 0.5s ease-in-out; }
+:host(.on) .panel-bottom  { animation: panel-bottom 0.5s ease-in-out; }
+:host(.on) .panel-left    { animation: panel-left 0.5s ease-in-out; }
+:host(.on) .panel-right   { animation: panel-right 0.5s ease-in-out; }
+
+:host(.modal) {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+@keyframes center {
+    0% { transform: scale(0.8); }
+  100% { transform: scale(1); }
+}
+
+@keyframes slide-top {
+    0% { transform: translateY(-200%) scale(0.8); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes slide-bottom {
+    0% { transform: translateY(200%) scale(0.8); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes slide-left {
+    0% { transform: translateX(-200%) scale(0.8); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+@keyframes slide-right {
+    0% { transform: translateX(200%) scale(0.8); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+@keyframes panel-top {
+    0% { transform: translateY(-100%); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes panel-bottom {
+    0% { transform: translateY(100%); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes panel-left {
+    0% { transform: translateX(-100%); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes panel-right {
+    0% { transform: translateX(100%); }
+  100% { transform: translateX(0); }
+}`;
 
   class API {
 
-    constructor() {
-      // ----- Script Command registerMenuCommand
+    static {
+      // Script Command registerMenuCommand
       registerMenuCommand && browser.runtime.onMessage.addListener(message => {
         switch (true) {
           case message.hasOwnProperty('listCommand'):       // to popup.js
@@ -28,82 +145,78 @@ browser.userScripts.onBeforeScript.addListener(script => {
       });
     }
 
-    // ----- Script Storage
-    async setStorage() {
-      await browser.storage.local.get(id).then(result => storage = result[id].storage); // result always an object
+    // --- Script Storage: direct operation
+    static async getData() {
+      return (await browser.storage.local.get(id))[id];
     }
 
-    onChanged(changes) {
+    static async setStorage() {
+      const data = await API.getData();
+      storage = data.storage;
+    }
+
+    static onChanged(changes) {
       if (!changes[id]) { return; }                         // not this userscript
       const oldValue = changes[id].oldValue.storage;
       const newValue = changes[id].newValue.storage;
       // process addValueChangeListener (only for remote) (key, oldValue, newValue, remote)
       Object.keys(valueChange).forEach(item =>
-         !api.equal(oldValue[item], newValue[item]) &&
-          (valueChange[item])(item, oldValue[item], newValue[item], !api.equal(newValue[item], storage[item]))
+         !API.equal(oldValue[item], newValue[item]) &&
+          (valueChange[item])(item, oldValue[item], newValue[item], !API.equal(newValue[item], storage[item]))
       );
     }
 
-    equal(a, b) {
+    static equal(a, b) {
       return JSON.stringify(a) === JSON.stringify(b);
     }
 
-    // ----- synch APIs
-    GM_getValue(key, defaultValue) {
-      const response = storage.hasOwnProperty(key) ? storage[key] : defaultValue;
-      return api.prepare(response);
+    // --- synch APIs
+    static GM_getValue(key, defaultValue) {
+      const value = storage.hasOwnProperty(key) ? storage[key] : defaultValue;
+      return API.prepare(value);                            // object or string
     }
 
-    GM_listValues() {
+    static GM_listValues() {
       return script.export(Object.keys(storage));
     }
 
-    GM_getResourceText(resourceName) {
-      const url = resource[resourceName];
-      switch (true) {
-        case !url:
-          break;
-
-        case /\.json/i.test(url):
-          return '{}';
-
-        case cssRegex.test(url):
-          GM.addElement('link', {href: url, rel: 'stylesheet'});
-          break;
-
-        case url.endsWith('.js'):
-      //    GM.addElement('script', {src: url, 'data-src': `${name}.user.js`});
-          break;
-      }
-      return ' ';
+    static GM_getValues(array) {
+      const obj = {};
+      array.forEach(key => obj[key] = storage[key]);
+      return script.export(obj);
     }
 
-    getResourceUrl(resourceName) {
+    static GM_getResourceText(resourceName) {
+      return resourceData[resourceName] || '';
+    }
+
+    // --- sync return GM_getResourceURL
+    static getResourceUrl(resourceName) {
       return resource[resourceName];
     }
 
-    // ----- prepare return value
-    prepare(value) {
+    // --- prepare return value, check if it is primitive value
+    static prepare(value) {
       return ['object', 'function'].includes(typeof value) && value !== null ? script.export(value) : value;
     }
 
-    // ----- auxiliary regex include/exclude test function
-    matchURL() {
+    // --- auxiliary regex include/exclude test function
+    static matchURL() {
       const {includes, excludes} = info.script;
-      return (!includes[0] || api.arrayTest(includes)) && (!excludes[0] || !api.arrayTest(excludes));
+      return (!includes[0] || API.arrayTest(includes)) && (!excludes[0] || !API.arrayTest(excludes));
     }
 
-    arrayTest(arr, url = location.href) {
+    static arrayTest(arr, url = location.href) {
       return arr.some(item => new RegExp(item.slice(1, -1), 'i').test(url));
     }
 
-    // ----- cloneInto wrapper for object methods
-    cloneIntoFM(obj, target, options = {}) {
+    // --- cloneInto wrapper for object methods
+    static cloneIntoBridge(obj, target, options = {}) {
       return cloneInto(options.cloneFunctions ? obj.wrappedJSObject : obj, target, options);
     }
 
-    // ----- log from background
-    log(message, type) {
+    // --- log from background
+    static log(message, type = 'error') {
       browser.runtime.sendMessage({
         name,
         api: 'log',
@@ -111,30 +224,30 @@ browser.userScripts.onBeforeScript.addListener(script => {
       });
     }
 
-    checkURL(url) {
+    static checkURL(url) {
       try { url = new URL(url, location.href); }
       catch (error) {
-        api.log(`checkURL ${url} ➜ ${error.message}`, 'error');
+        API.log(`checkURL ${url} ➜ ${error.message}`);
         return;
       }
 
-      // --- check protocol
+      // check protocol
       if (!['http:', 'https:'].includes(url.protocol)) {
-        api.log(`checkURL ${url} ➜ Unsupported Protocol ${url.protocol}`, 'error');
+        API.log(`checkURL ${url} ➜ Unsupported Protocol ${url.protocol}`);
         return;
       }
       return url.href;
     }
 
     // --- prepare request headers
-    prepareInit(init) {
+    static prepareInit(init) {
       // --- remove forbidden headers (Attempt to set a forbidden header was denied: Referer), allow specialHeader
       const specialHeader = ['cookie', 'host', 'origin', 'referer'];
       const forbiddenHeader = ['accept-charset', 'accept-encoding', 'access-control-request-headers',
         'access-control-request-method', 'connection', 'content-length', 'cookie2', 'date', 'dnt', 'expect',
         'keep-alive', 'te', 'trailer', 'transfer-encoding', 'upgrade', 'via'];
 
-      Object.keys(init.headers).forEach(item =>  {
+      Object.keys(init.headers).forEach(item => {
         const LC = item.toLowerCase();
         if (LC.startsWith('proxy-') || LC.startsWith('sec-') || forbiddenHeader.includes(LC)) {
           delete init.headers[item];
@@ -149,75 +262,82 @@ browser.userScripts.onBeforeScript.addListener(script => {
       delete init.anonymous;                                // clean up
     }
 
-    // --------------- xmlHttpRequest callback ---------------
+    // ---------- import -----------------------------------
+    // Support loading content scripts as ES6 modules
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1451545
+    // GM.import() -> importBridge()
+    // internal modules && images
+    // get response.blob() with original type
+    static async importBridge(url) {
+      // --- internal module
+      const mod = {
+        PSL: `${FMUrl}content/psl.js`
+      };
+      if (mod[url]) {
+        return fetch(mod[url])
+        .then(response => response.blob())
+        .then(blob => URL.createObjectURL(blob));
+      }
+
+      // --- remote import
+      url = API.checkURL(url);
+      if (!url) { return; }
+
+      return GM.fetch(url, {responseType: 'blob'})
+      .then(response => response?.blob && URL.createObjectURL(response.blob));
+    }
+    // ---------- /import ----------------------------------
+
+    // ---------- xmlHttpRequest callback ------------------
     /*
-      Ref: robwu (Rob Wu)
+      Ref: Rob Wu (robwu)
       In order to make callback functions visible
       ONLY for GM.xmlHttpRequest(GM_xmlhttpRequest)
     */
-    callUserScriptCallback(object, name, ...args) {
+    static callUserScriptCallback(object, name, ...args) {
       try {
         const cb = object.wrappedJSObject[name];
         typeof cb === 'function' && cb(...args);
-      } catch(error) { api.log(`callUserScriptCallback ➜ ${error.message}`, 'error'); }
+      }
+      catch(error) {
+        API.log(`callUserScriptCallback ➜ ${error.message}`);
+      }
     }
   }
-  const api = new API();
 
-
-  // --------------- GM4 Object based functions ------------
+  // ---------- GM4 Object based functions -----------------
   const GM = {
 
-    async getValue(key, defaultValue) {
-      const response =  await browser.runtime.sendMessage({
-        name,
-        api: 'getValue',
-        data: {key, defaultValue}
-      });
-      return api.prepare(response);
-    },
+    // ---------- background functions ---------------------
+    download(url, filename) {
+      // --- check url
+      url = API.checkURL(url);
+      if (!url) { return Promise.reject(); }
 
-    async listValues() {
-      const response = await browser.runtime.sendMessage({
-        name,
-        api: 'listValues',
-        data: {}
-      });
-      return script.export(response);
-    },
-
-    async setValue(key, value) {
-      storage[key] = value;
       return browser.runtime.sendMessage({
         name,
-        api: 'setValue',
-        data: {key, value}
+        api: 'download',
+        data: {url, filename}
       });
     },
 
-    async deleteValue(key) {
-      delete storage[key];
-       return browser.runtime.sendMessage({
+    notification(text, title, image, onclick) {
+      // GM|TM|VM: (text, title, image, onclick)
+      // TM|VM: {text, title, image, onclick}
+      const txt = text?.text || text;
+      if (typeof txt !== 'string' || !txt.trim()) { return; }
+      return browser.runtime.sendMessage({
         name,
-        api: 'deleteValue',
-        data: {key}
+        api: 'notification',
+        data: typeof text === 'string' ? {text, title, image, onclick} : text
       });
     },
 
-    addValueChangeListener(key, callback) {
-      browser.storage.onChanged.addListener(api.onChanged);
-      valueChange[key] = callback;
-      return key;
-    },
-
-    removeValueChangeListener(key) {
-      delete valueChange[key];
-    },
-
-    async openInTab(url, open_in_background) {
-      // TM|VM compatibility
-      const active = !open_in_background || typeof open_in_background === 'boolean' ?
-                        !open_in_background : !!open_in_background?.active;
+    // opt = open_in_background
+    async openInTab(url, opt) {
+      // GM opt: boolean
+      // TM|VM opt: boolean OR object {active: true/false}
+      const active = typeof opt === 'object' ? !!opt.active : !opt;
       // Error: Return value not accessible to the userScript
       // resolve -> tab object | reject -> undefined
       const tab = await browser.runtime.sendMessage({
@@ -228,7 +348,19 @@ browser.userScripts.onBeforeScript.addListener(script => {
       return !!tab; // true/false
     },
 
+    // As the API is only available to Secure Contexts, it cannot be used from
+    // a content script running on http:-pages, only https:-pages.
+    // See also: https://github.com/w3c/webextensions/issues/378
     setClipboard(data, type) {
+      // VM type: string MIME type e.g. 'text/plain'
+      // TM type: string e.g. 'text' or 'html'
+      // TM type: object e.g. {type: 'text', mimetype: 'text/plain'}
+      type = type?.mimetype || type?.type || type || 'text/plain'; // defaults to 'text/plain'
+
+      // fix short type
+      if (type === 'text') { type = 'text/plain'; }
+      else if (type === 'html') { type = 'text/html'; }
+
       return browser.runtime.sendMessage({
         name,
         api: 'setClipboard',
@@ -236,50 +368,39 @@ browser.userScripts.onBeforeScript.addListener(script => {
       });
     },
 
-    notification(text, title, image, onclick) {
-      // (text, title, image, onclick) | ({text, title, image, onclick})
-      const txt = typeof text === 'string' ? text : text.text;
-      if (typeof txt !== 'string' || !txt.trim()) { return; }
-      return browser.runtime.sendMessage({
-        name,
-        api: 'notification',
-        data: typeof text === 'string' ? {text, title, image, onclick} : text
-      });
-    },
-
     async fetch(url, init = {}) {
-      // --- check url
-      url = url && api.checkURL(url);
-      if (!url) { return Promise.reject(); }
+      // check url
+      url = url && API.checkURL(url);
+      if (!url) { return; }
 
       const data = {
         url,
-        init: {
-          headers: {}
-        }
+        init: {headers: {}}
       };
 
-      ['method', 'headers', 'body', 'mode', 'credentials', 'cache', 'redirect', 'referrer', 'referrerPolicy', 'integrity',
-          'keepalive', 'signal', 'responseType'].forEach(item => init.hasOwnProperty(item) && (data.init[item] = init[item]));
+      ['method', 'headers', 'body', 'mode', 'credentials', 'cache', 'redirect',
+        'referrer', 'referrerPolicy', 'integrity', 'keepalive', 'signal',
+        'responseType'].forEach(item => init.hasOwnProperty(item) && (data.init[item] = init[item]));
 
       // exclude credentials in request, ignore credentials sent back in response (e.g. Set-Cookie header)
       init.anonymous && (data.init.credentials = 'omit');
 
-      api.prepareInit(data.init);
+      API.prepareInit(data.init);
 
       const response = await browser.runtime.sendMessage({
         name,
         api: 'fetch',
         data
       });
+
       // cloneInto() work around for https://bugzilla.mozilla.org/show_bug.cgi?id=1583159
-      return response ? cloneInto(response, window) : null;
+      return response ? cloneInto(response, window) : undefined;
     },
 
     async xmlHttpRequest(init = {}) {
-      // --- check url
-      const url = init.url && api.checkURL(init.url);
-      if (!url) { return Promise.reject(); }
+      // check url
+      const url = init.url && API.checkURL(init.url);
+      if (!url) { return; }
 
       const data = {
         method: 'GET',
@@ -296,7 +417,7 @@ browser.userScripts.onBeforeScript.addListener(script => {
       ['method', 'headers', 'data', 'overrideMimeType', 'user', 'password', 'timeout',
         'responseType'].forEach(item => init.hasOwnProperty(item) && (data[item] = init[item]));
 
-      api.prepareInit(data);
+      API.prepareInit(data);
 
       const response = await browser.runtime.sendMessage({
         name,
@@ -312,221 +433,147 @@ browser.userScripts.onBeforeScript.addListener(script => {
       // convert text responseXML to XML DocumentFragment
       response.responseXML &&
         (response.responseXML = document.createRange().createContextualFragment(response.responseXML.trim()));
-      api.callUserScriptCallback(init, type,
+      API.callUserScriptCallback(init, type,
          typeof response.response === 'string' ? script.export(response) : cloneInto(response, window));
     },
+    // ---------- /background functions --------------------
 
-    async getResourceText(resourceName) {
-      const response = await browser.runtime.sendMessage({
-        name,
-        api: 'fetch',
-        data: {url: resource[resourceName], init: {}}
-      });
-      return response ? script.export(response.text) : '';
+    // ---------- storage ----------------------------------
+    async getValue(key, defaultValue) {
+      const data = await API.getData();
+      const value = data.storage.hasOwnProperty(key) ? data.storage[key] : defaultValue;
+      return API.prepare(value);                            // object or string
     },
 
-    async getResourceUrl(resourceName) {
-      return resource[resourceName];
+    async setValue(key, value) {
+      storage[key] = value;                                 // update sync storage
+      const data = await API.getData();
+      data.storage[key] = value;
+      return browser.storage.local.set({[id]: data});
     },
 
-    registerMenuCommand(text, onclick, accessKey) {
-      scriptCommand[text] = onclick;
+    async deleteValue(key) {
+      delete storage[key];                                  // update sync storage
+      const data = await API.getData();
+      delete data.storage[key];
+      return browser.storage.local.set({[id]: data});
     },
 
-    unregisterMenuCommand(text) {
-      delete scriptCommand[text];
+    async listValues() {
+      const data = await API.getData();
+      const value = Object.keys(data.storage);
+      return script.export(value);
     },
 
-    download(url, filename) {
-      // --- check url
-      url = api.checkURL(url);
-      if (!url) { return Promise.reject(); }
-
-      return browser.runtime.sendMessage({
-        name,
-        api: 'download',
-        data: {url, filename}
-      });
+    addValueChangeListener(key, callback) {
+      browser.storage.onChanged.addListener(API.onChanged);
+      valueChange[key] = callback;
+      return key;
     },
 
-    addStyle(css) {
-      if (!css.trim()) { return; }
-      try {
-        const node = document.createElement('style');
-        node.textContent = css;
-        node.dataset.src = `${name}.user.js`;
-        (document.head || document.body || document.documentElement || document).appendChild(node);
-      } catch(error) { api.log(`addStyle ➜ ${error.message}`, 'error'); }
+    removeValueChangeListener(key) {
+      delete valueChange[key];
     },
 
-    addScript(js) {
-      if (!js.trim()) { return; }
-      try {
-        const node = document.createElement('script');
-        node.textContent = js;
-        if (injectInto !== 'page') {
-          node.textContent +=
-            `\n\n//# sourceURL=user-script:FireMonkey/${encodeURI(name)}/GM.addScript_${Math.random().toString(36).substring(2)}.js`;
-        }
-        (document.body || document.head || document.documentElement || document).appendChild(node);
-        node.remove();
-      } catch(error) { api.log(`addScript ➜ ${error.message}`, 'error'); }
+    // --- multi-operation
+    async getValues(array) {
+      const data = await API.getData();
+      const obj = {};
+      array.forEach(key => obj[key] = data.storage[key]);
+      return script.export(obj);
+    },
+
+    async setValues(obj) {
+      Object.entries(obj).forEach(([key, value]) => storage[key] = value); // update sync storage
+      const data = await API.getData();
+      Object.entries(obj).forEach(([key, value]) => data.storage[key] = value);
+      return browser.storage.local.set({[id]: data});
+    },
+
+    async deleteValues(array) {
+      array.forEach(key => delete storage[key]);            // update sync storage
+      const data = await API.getData();
+      array.forEach(key => delete data.storage[key]);
+      return browser.storage.local.set({[id]: data});
+    },
+    // ---------- /storage ---------------------------------
+
+    // ---------- DOM functions ----------------------------
+    addStyle(str) {
+      str.trim() && GM.addElement('style', {textContent: str});
+    },
+
+    addScript(str) {
+      str.trim() && GM.addElement('script', {textContent: str});
     },
 
     addElement(parent, tag, attr) {
       if (!parent || !tag) { return; }
-      // mapping (tagName, attributes) & (parentNode, tagName, attributes)
-      if (typeof parent === 'string') {
-        attr = tag;
-        tag = parent;
-        parent = null;
-      }
-      tag = tag.toLowerCase();
+      // mapping (tagName, attributes) vs (parentElement, tagName, attributes)
+      let parentElement = attr && parent;
+      const tagName = (attr ? tag : parent).toLowerCase();
+      const attributes = attr || tag;
+      const script = tagName === 'script';
 
       switch (true) {
-        case !!parent:
+        case !!parentElement:
           break;
 
-        case ['script', 'link', 'style', 'meta'].includes(tag):
-          parent = document.head || document.body;
+        case ['link', 'meta'].includes(tagName):
+          parentElement = document.head || document.body;
+          break;
+
+        case ['script', 'style'].includes(tagName):
+          parentElement = document.head || document.body || document.documentElement || document;
           break;
 
         default:
-          parent = document.body || document.documentElement;
+          parentElement = document.body || document.documentElement || document;
       }
 
-      const elem = document.createElement(tag);
+      const elem = document.createElement(tagName);
       elem.dataset.src = `${name}.user.js`;
-      Object.entries(attr).forEach(([key, value]) =>
-        key === 'textContent' ? elem.append(value) : elem.setAttribute(key, value) );
+      Object.entries(attributes)?.forEach(([key, value]) =>
+        key === 'textContent' ? elem.append(value) : elem.setAttribute(key, value));
+
+
+      if (script && attributes.textContent && injectInto !== 'page') {
+        elem.textContent +=
+          `\n\n//# sourceURL=${FMUrl}userscript/${encodeURI(name)}/inject-into-page/${Math.random().toString(36).substring(2)}.js`;
+      }
 
       try {
-        return parent.appendChild(elem);
-      } catch(error) { api.log(`addElement ➜ ${tag} ${error.message}`, 'error'); }
+        const el = parentElement.appendChild(elem);
+        script && el.remove();
+        // userscript may record UUID in element's textContent
+        return script ? undefined : elem;
+      }
+      catch(error) { API.log(`addElement ➜ ${tagName} ${error.message}`); }
     },
 
     popup({type = 'center', modal = true} = {}) {
-      const host = document.createElement('gm-popup');    // shadow DOM host
-      const shadow = host.attachShadow({mode: 'closed'});
+      const host = document.createElement('gm-popup');      // shadow DOM host
+      const shadow = host.attachShadow({mode: 'closed'});   // closed: inaccessible from the outside
 
       const style = document.createElement('style');
+      // support use_dynamic_url in web_accessible_resources
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=1713196
+      // userscript can access UUID in element's textContent
+      // style.textContent = `@import "${FMUrl}content/api-popup.css";`;
+      style.textContent = popupCSS;
       shadow.appendChild(style);
 
-      const content = document.createElement('div');      // main content
+      const content = document.createElement('div');        // main content
       content.className = 'content';
       shadow.appendChild(content);
 
-      const close = document.createElement('span');       // close button
+      const close = document.createElement('span');         // close button
       close.className = 'close';
       close.textContent = '✖';
       content.appendChild(close);
 
       [host, content].forEach(item => item.classList.add(type)); // process options
       host.classList.toggle('modal', type.startsWith('panel-') ? modal : true); // process modal
-
-      style.textContent = `
-        :host, *, ::before, ::after {
-          box-sizing: border-box;
-        }
-
-        :host {
-          display: none;
-          align-items: center;
-          justify-content: center;
-          background: transparent;
-          margin: 0;
-          position: fixed;
-          z-index: 10000;
-          transition: all 0.5s ease-in-out;
-        }
-
-        :host(.on) { display: flex; }
-        .content { background: #fff; }
-        .content.center, .content[class*="slide-"] {
-          min-width: 10em;
-          min-height: 10em;
-        }
-
-        .close {
-          color: #ccc;
-          margin: 0.1em 0.3em;
-          float: right;
-          font-size: 1.5em;
-          border: 0px solid #ddd;
-          border-radius: 2em;
-          cursor: pointer;
-        }
-        .close:hover { color: #f70; }
-        .panel-right .close { float: left; }
-        .panel-top .close, .panel-bottom .close { margin-right: 0.5em; }
-
-        :host(.panel-left), :host(.panel-right), .panel-left, .panel-right { min-width: 14em;  height: 100%; }
-        :host(.panel-top), :host(.panel-bottom), .panel-top, .panel-bottom { width: 100%; min-height: 4em; }
-
-        :host(.panel-left)        { top: 0; left: 0; justify-content: start; }
-        :host(.panel-right)       { top: 0; right: 0; justify-content: end; }
-        :host(.panel-top)         { top: 0; left: 0; align-items: start; }
-        :host(.panel-bottom)      { bottom: 0; left: 0; align-items: end; }
-
-        :host(.on) .center        { animation: center 0.5s ease-in-out; }
-        :host(.on) .slide-top     { animation: slide-top 0.5s ease-in-out; }
-        :host(.on) .slide-bottom  { animation: slide-bottom 0.5s ease-in-out; }
-        :host(.on) .slide-left    { animation: slide-left 0.5s ease-in-out; }
-        :host(.on) .slide-right   { animation: slide-right 0.5s ease-in-out; }
-
-        :host(.on) .panel-top     { animation: panel-top 0.5s ease-in-out; }
-        :host(.on) .panel-bottom  { animation: panel-bottom 0.5s ease-in-out; }
-        :host(.on) .panel-left    { animation: panel-left 0.5s ease-in-out; }
-        :host(.on) .panel-right   { animation: panel-right 0.5s ease-in-out; }
-
-        :host(.modal) { width: 100%; height: 100%; top: 0; left: 0; background: rgba(0, 0, 0, 0.4); }
-
-        @keyframes center {
-            0%  { transform: scale(0.8); }
-          100%  { transform: scale(1); }
-        }
-
-        @keyframes slide-top {
-            0%  { transform: translateY(-200%) scale(0.8); }
-          100%  { transform: translateY(0) scale(1); }
-        }
-
-        @keyframes slide-bottom {
-            0%  { transform: translateY(200%) scale(0.8); }
-          100%  { transform: translateY(0) scale(1); }
-        }
-
-        @keyframes slide-left {
-            0%  { transform: translateX(-200%) scale(0.8); }
-          100%  { transform: translateX(0) scale(1); }
-        }
-
-        @keyframes slide-right {
-            0%  { transform: translateX(200%) scale(0.8); }
-          100%  { transform: translateX(0) scale(1); }
-        }
-
-        @keyframes panel-top {
-            0%  { transform: translateY(-100%); }
-          100%  { transform: translateY(0); }
-        }
-
-        @keyframes panel-bottom {
-            0%  { transform: translateY(100%); }
-          100%  { transform: translateY(0); }
-        }
-
-        @keyframes panel-left {
-            0%  { transform: translateX(-100%); }
-          100%  { transform: translateX(0); }
-        }
-
-        @keyframes panel-right {
-            0%  { transform: translateX(100%); }
-          100%  { transform: translateX(0); }
-        }
-      `;
-
       document.body.appendChild(host);
 
       const obj = {
@@ -566,44 +613,90 @@ browser.userScripts.onBeforeScript.addListener(script => {
 
       return script.export(obj);
     },
+    // ---------- /DOM functions ---------------------------
 
-    log(...text) { console.log(`${name}:`, ...text); },
-    info
+    // ---------- import -----------------------------------
+    createObjectURL(val, option = {type: 'text/javascript'}) {
+      const blob = new Blob([val], {type: option.type});
+      return URL.createObjectURL(blob);
+    },
+    // ---------- /import ----------------------------------
+
+    // --- async promise return GM.getResourceText
+    async getResourceText(resourceName) {
+      return resourceData[resourceName] || '';
+    },
+
+    // --- async Promise return GM.getResourceUrl
+    async getResourceUrl(resourceName) {
+      return resource[resourceName];
+    },
+
+    registerMenuCommand(text, onclick, accessKey) {
+      scriptCommand[text] = onclick;
+    },
+
+    unregisterMenuCommand(text) {
+      delete scriptCommand[text];
+    },
+
+    log(...text) {
+      console.log(`${name}:`, ...text);
+    },
+
+    info,
   };
 
   const globals = {
     GM,
+
+    // background functions
+    GM_download:                  GM.download,
+    GM_fetch:                     GM.fetch,
+    GM_notification:              GM.notification,
+    GM_openInTab:                 GM.openInTab,
+    GM_setClipboard:              GM.setClipboard,
+    GM_xmlhttpRequest:            GM.xmlHttpRequest,        // http -> Http
+
+    // Storage
+    GM_getValue:                  API.GM_getValue,
+    GM_setValue:                  GM.setValue,
+    GM_deleteValue:               GM.deleteValue,
+    GM_listValues:                API.GM_listValues,
+
+    GM_getValues:                 API.GM_getValues,
+    GM_setValues:                 GM.setValues,
+    GM_deleteValues:              GM.deleteValues,
+
+    // DOM functions
     GM_addElement:                GM.addElement,
     GM_addScript:                 GM.addScript,
     GM_addStyle:                  GM.addStyle,
-    GM_addValueChangeListener:    GM.addValueChangeListener,
-    GM_deleteValue:               GM.deleteValue,
-    GM_download:                  GM.download,
-    GM_fetch:                     GM.fetch,
-    GM_getResourceText:           api.GM_getResourceText,
-    GM_getResourceURL:            api.getResourceUrl,
-    GM_getValue:                  api.GM_getValue,
-    GM_info:                      GM.info,
-    GM_listValues:                api.GM_listValues,
-    GM_log:                       GM.log,
-    GM_notification:              GM.notification,
-    GM_openInTab:                 GM.openInTab,
     GM_popup:                     GM.popup,
-    GM_registerMenuCommand:       GM.registerMenuCommand,
-    GM_removeValueChangeListener: GM.removeValueChangeListener,
-    GM_setClipboard:              GM.setClipboard,
-    GM_setValue:                  GM.setValue,
-    GM_unregisterMenuCommand:     GM.unregisterMenuCommand,
-    GM_xmlhttpRequest:            GM.xmlHttpRequest,
 
-    setStorage:                   api.setStorage,
-    cloneInto:                    api.cloneIntoFM,
+    // other
+    GM_getResourceText:           API.GM_getResourceText,
+    GM_getResourceURL:            API.getResourceUrl,       // URL -> Url
+    GM_addValueChangeListener:    GM.addValueChangeListener,
+    GM_removeValueChangeListener: GM.removeValueChangeListener,
+    GM_registerMenuCommand:       GM.registerMenuCommand,
+    GM_unregisterMenuCommand:     GM.unregisterMenuCommand,
+    GM_createObjectURL:           GM.createObjectURL,
+    GM_info:                      GM.info,
+    GM_log:                       GM.log,
+
+    // Firefox functions
+    cloneInto:                    API.cloneIntoBridge,
     exportFunction,
-    matchURL:                     api.matchURL,
+
+    // internal use
+    matchURL:                     API.matchURL,
+    setStorage:                   API.setStorage,
+    importBridge:                 API.importBridge,
   };
 
-  // auto-disable sync GM API if async GM API are supported
-  grantRemove.forEach(item => delete globals[item]);
+  // auto-disable sync GM API if async GM API are granted
+  grantRemove.forEach(i => delete globals[i]);
 
   script.defineGlobals(globals);
 });

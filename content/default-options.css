@@ -1,5 +1,6 @@
 /* ----- Dark Theme ----- */
-:root, body.dark {
+:root,
+body.dark {
   --shadow: #fff8;
   --selected-bg: #555;
   --btn-hover: #444;
@@ -215,8 +216,8 @@ nav label a:hover {
 }
 
 @keyframes sect {
-    0%  { opacity: 0; }
-  100%  { opacity: 1; }
+    0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 /* ----- /Navigation ----- */
 
@@ -235,7 +236,7 @@ button[data-i18n^="export"] {
 }
 
 label[data-i18n^="import"]::before,
-button[data-i18n^="import"]::before  {
+button[data-i18n^="import"]::before {
   content: '📥';
   margin-right: 0.3em;
 }
@@ -289,8 +290,8 @@ button[type="submit"]:active::before {
 }
 
 @keyframes rainbow {
-    0%  { background-position: 0% 100%; }
-   50%  { background-position: 100% 200%; }
-  100%  { background-position: 0% 100%; }
+    0% { background-position: 0% 100%; }
+   50% { background-position: 100% 200%; }
+  100% { background-position: 0% 100%; }
 }
 /* ----- /Progress Bar ----- */

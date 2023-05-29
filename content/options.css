@@ -1,0 +1,632 @@
+@import 'default.css';
+@import 'default-options.css';
+@import 'cm.css';
+
+/* ----- Mobile ----- */
+@media screen and (max-width: 600px) {
+  nav label span {
+    display: none;
+  }
+}
+
+/* ----- Aside Scripts ----- */
+:root {
+  --aside: 13.5rem;
+}
+
+article {
+  transition: padding 0.5s ease-in-out;
+}
+
+#sidebar:checked ~ article {
+  padding-left: calc(var(--aside) + 1em);
+}
+
+#sidebar:checked ~ aside {
+  transform: translateX(0);
+}
+
+aside {
+  margin: 0;
+  padding: 0;
+  font-size: 0.9em;
+  width: var(--aside);
+  height: calc(100vh - var(--nav-height));
+  position: absolute;
+  top: var(--nav-height);
+  left: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  transition: 0.5s ease-in-out;
+  transform: translateX(calc(var(--aside) * -1));
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-rows: auto 1fr auto auto;
+}
+
+.list {
+  display: grid;
+  grid-auto-flow: column;
+  padding: 0.3em 0.5em;
+  background: var(--hover);
+  text-align: center;
+}
+
+.list label {
+  padding: 0;
+  border: 0;
+  opacity: 0.5;
+}
+
+.list label img {
+  width: 1.5em;
+}
+
+.list label:nth-of-type(2) img {
+  filter: grayscale(1);
+}
+
+#listEnable:checked ~ div label[for="listEnable"],
+#listDisable:checked ~ div label[for="listDisable"],
+#listJS:checked ~ div label[for="listJS"],
+#listCSS:checked ~ div label[for="listCSS"]{
+  opacity: 1;
+}
+
+#listEnable:not(:checked) ~ ul li:not(.disabled),
+#listDisable:not(:checked) ~ ul li.disabled,
+#listJS:not(:checked) ~ ul li.js,
+#listCSS:not(:checked) ~ ul li.css {
+  display: none;
+}
+
+aside ul {
+  list-style: none;
+  margin: 0.5em 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+aside ul:hover {
+  scrollbar-color: auto;
+}
+
+aside li {
+  transition: 0.5s;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-right: 4px solid transparent;
+  padding-left: 0.5em;
+  user-select: none;
+}
+
+aside li:hover {
+  background: var(--hover);
+}
+
+aside li.on {
+  background-color: var(--selected-bg);
+  border-color: var(--highlight);
+}
+
+aside li.error::after {
+  content: '✘';
+  font-weight: 900;
+  display: inline-block;
+  vertical-align: text-bottom;
+  margin-left: 1em;
+  color: #f80;
+}
+
+aside li::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: text-bottom;
+  margin-right: 0.5em;
+}
+
+aside li.disabled::first-line {
+  opacity: 0.5;
+}
+
+aside li.disabled::before {
+  filter: grayscale(1);
+}
+
+aside li.js::before {
+  background: url('../image/js.svg');
+}
+
+aside li.css::before {
+  background: url('../image/css.svg');
+}
+
+aside div:last-of-type {
+  padding: 0.5em;
+}
+
+aside div.button {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 0.5em;
+}
+
+aside div label.flat,
+aside div button.flat {
+  padding: 0.3em;
+}
+/* ----- /Aside Scripts ----- */
+
+/* ----- Counter ----- */
+aside ul {
+  counter-reset: n;
+}
+
+aside li {
+  counter-increment: n;
+}
+
+aside ul + div {
+  text-align: right;
+  position: absolute;
+  bottom: 3em;
+  right: 1em;
+  opacity: 0.5;
+}
+
+aside ul + div::after {
+  content: counter(n);
+}
+/* ----- /Counter ----- */
+
+/* ----- Options ----- */
+.options fieldset {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  column-gap: 0.5em;
+}
+
+.options p,
+.options textarea,
+.options details {
+  grid-column: span 2;
+}
+
+.options fieldset label img {
+  vertical-align: unset;
+}
+
+.options textarea {
+  margin-bottom: 1em;
+}
+
+.options details {
+  margin-top: 1em;
+}
+
+.options summary {
+  margin-bottom: 1em;
+  list-style: none;
+  outline: 0;
+}
+
+.options summary ~ * {
+  opacity: 0;
+  transition: 0.5s;
+}
+
+.options details[open] summary ~ * {
+  opacity: 1;
+}
+
+.invalid {
+  background-color: #fff0f5;
+  border-color: #f50;
+}
+
+option {
+  width: 10em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.options div.button {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  column-gap: 0.5em;
+}
+/* ----- /Options ----- */
+
+/* ----- Scripts ----- */
+/* override default-options.css */
+#nav4:checked ~ article section:nth-of-type(4) {
+  display: grid;
+}
+
+section.script {
+  padding: 0 0.5em;
+  /* menu + editor + footer */
+  grid-template-rows: auto 1fr auto;
+}
+
+.menu {
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(7, auto) 1fr repeat(6, auto);
+}
+
+.menu span.plus,
+.menu details summary img {
+  filter: var(--img-filter);
+}
+
+.menu > label {
+  font-size: 0.8em;
+  min-width: 6em;
+  margin: auto;
+  cursor: pointer;
+}
+
+.menu > button {
+  background-color: transparent;
+  padding: 0.4em 0.6em;
+  font-size: 0.8em;
+  border: 0;
+  min-width: 6em;
+  white-space: nowrap;
+  outline: 0;
+}
+
+.menu > button:hover {
+  background-color: var(--hover);
+}
+
+.menu > button[data-i18n^="new"],
+.menu > button[data-i18n^="beautify"] {
+  min-width: unset;
+}
+
+.menu > button[data-i18n^="beautify"] img {
+  width: 1.6em;
+}
+
+.menu > button img {
+  width: 1.3em;
+}
+
+button.bin {
+  min-width: 3em;
+  margin-left: 0.5em;
+}
+
+button.bin img {
+  width: 1.4em;
+}
+
+/* --- menu popup --- */
+.menu details {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.menu summary {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  transition: 0.5s;
+  height: 2em;
+  width: 2em;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+}
+
+.menu summary img {
+  width: 1em;
+  filter: opacity(0.4);
+  margin: 0 auto;
+}
+
+.menu summary:hover, .menu details[open] {
+  background: var(--hover);
+}
+
+.menu details[open] summary ~ * {
+  animation: fade-in 0.5s ease-in-out;
+}
+
+@keyframes fade-in {
+    0% { opacity: 0; transform: translateY(-1em); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.menu details > div {
+  font-size: 0.9em;
+  margin: 0;
+  padding: 0;
+  width: 15em;
+  position: absolute;
+  top: 3em;
+  right: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-radius: 5px;
+  box-shadow: 0 8px 16px 0 var(--shadow);
+  transition: 0.5s;
+}
+
+.menu details > div::after {
+  content: '';
+  position: absolute;
+  top: -1.5em;
+  right: 0.5em;
+  border-width: 0.8em;
+  border-style: solid;
+  border-color: transparent transparent #888 transparent;
+}
+
+.menu details > div.expand {
+  width: 40vw;
+}
+
+.menu details ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu details li {
+  padding: 0.3em 0.5em;
+  white-space: nowrap;
+  transition: 0.5s;
+}
+
+.menu details li.button {
+  cursor: pointer;
+}
+
+.menu details li.button:hover {
+  background-color: var(--hover);
+}
+
+.menu details li img {
+  width: 1em;
+}
+
+.menu details li.separator {
+  margin: 0.5em 0;
+  padding: 0;
+  cursor: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.menu details li.theme {
+  color: #fff;
+  background: #777;
+  border-radius: 5px 5px 0 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.menu details li select {
+  color: inherit;
+  border: 1px solid #ccc;
+}
+
+.menu details li.theme select {
+  background: inherit;
+}
+
+.menu details li:last-of-type {
+  padding-top: 0;
+}
+
+.menu #userMeta {
+  white-space: pre;
+}
+
+.menu details textarea {
+  margin-top: 0.5em;
+  resize: none;
+  height: 20vh;
+}
+
+/* --- menu report/userVar --- */
+.menu div.report,
+.menu div.userVar {
+  width: 40vw;
+}
+
+.menu div.report h4,
+.menu div.userVar h4 {
+  color: #fff;
+  background: #777;
+  border-radius: 5px 5px 0 0;
+  margin: 0;
+  padding: 0.5em;
+  text-align: center;
+}
+
+.menu div.report ul,
+.menu div.userVar ul {
+  max-height: 70vh;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.menu div.report li {
+  padding: 0 0.5em;
+  white-space: normal;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--option-bg);
+  background-repeat: no-repeat;
+  transition: none;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.menu div.report li::before {
+  content: attr(data-line);
+  width: 3em;
+  text-align: right;
+  margin: 0 0.5em auto 0.8em;
+  color: var(--fieldset-color);
+}
+
+.menu div.userVar li {
+  padding: 0.5em;
+  white-space: normal;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--option-bg);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  justify-items: self-start;
+}
+
+.menu div.userVar li input[type="text"],
+.menu div.userVar li select {
+  grid-column: span 2;
+}
+
+.menu div.userVar li input[type="color"] {
+  border: 0;
+}
+
+.menu div.userVar li output {
+  margin-right: 0.5em;
+}
+
+.menu div.userVar li.default {
+  background-color: var(--hover);
+}
+
+.menu div.userVar button {
+  border: 0;
+  padding: 0.8em;
+  width: 100%;
+}
+/* --- menu report/userVar --- */
+
+.script fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0 0 0.5em;
+  background: unset;
+  font-size: 1.1em;
+}
+
+.script legend {
+  border: 0;
+  margin: 0.5em 0;
+  padding: 0;
+  background: unset;
+}
+
+legend.js::before, legend.css::before {
+  content: '';
+  width: 1.2em;
+  height: 1.2em;
+  display: inline-block;
+  vertical-align: text-bottom;
+  margin-left: 0.2em;
+  margin-right: 0.5em;
+}
+
+legend.js::before {
+  background: url('../image/js.svg');
+}
+
+legend.css::before {
+  background: url('../image/css.svg');
+}
+
+legend.disabled::before {
+  filter: grayscale(1);
+}
+
+legend.antifeature::after {
+  content: '⚠️';
+  margin-left: 2em;
+}
+
+legend span {
+  margin-left: 0.5em;
+  font-size: 0.9em;
+  color: #999;
+}
+
+.script textarea.box {
+  visibility: hidden;
+}
+
+footer {
+  color: #555;
+  font-size: 0.8em;
+  text-align: right;
+  padding-bottom: 0.3em;
+}
+/* ----- /Scripts ----- */
+
+/* ----- log ----- */
+.log tbody tr {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.log td:nth-of-type(1) {
+  width: 15em;
+  white-space: nowrap;
+}
+
+.log td:nth-of-type(2) {
+  width: 15em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.log tr.info td:nth-of-type(3)::before {
+  content: '⚠️';
+  margin-right: 0.5em;
+}
+
+.log tr.error td:nth-of-type(3)::before {
+  content: '❗';
+  margin-right: 0.5em;
+}
+
+.log tr:hover {
+  background: var(--hover);
+}
+
+.log tbody { counter-reset: n; }
+.log tbody tr td:first-child::before {
+  display: inline-block;
+  color: #aaa;
+  min-width: 1.5em;
+  text-align: right;
+  vertical-align: middle;
+  margin-right: 0.4em;
+  pointer-events: none;
+  counter-increment: n;
+  content: counter(n);
+  font-size: 0.8em;
+}
+
+.log input[type="number"] {
+  color: var(--color);
+}
+
+.log td a {
+  margin-left: 1em;
+}
+/* ----- /log ----- */

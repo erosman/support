@@ -1,29 +1,40 @@
-import {pref, App, Meta} from './app.js';
+import {pref, App} from './app.js';
+import {ProgressBar} from './progress-bar.js';
+import {ImportExport} from './import-export.js';
+import {Meta} from './meta.js';
 import {RemoteUpdate} from './remote-update.js';
+import {Pattern} from './pattern.js';
+import {Color} from './color.js';
+import {Nav} from './nav.js';
+import './cm-config.js';
+import './log.js';
 import './i18n.js';
 
-// ----------------- Progress Bar --------------------------
-class ProgressBar {
+// ---------- User Preference ------------------------------
+await App.getPref();
 
-  static bar = document.querySelector('.progressBar');
-
-  static show() {
-    this.bar.classList.toggle('on');
-    setTimeout(() => this.bar.classList.toggle('on'), 2000);
-  }
-}
-
-// ----------------- Options -------------------------------
+// ---------- Options --------------------------------------
 class Options {
 
-  constructor(keys = Object.keys(pref)) {
-    this.prefNode = document.querySelectorAll('#' + keys.join(',#')); // defaults to pref keys
+  static {
+    document.querySelector('button[data-i18n="importFromUrl"]').addEventListener('click', this.importFromUrl);
     document.querySelector('button[type="submit"]').addEventListener('click', () => this.check()); // submit button
 
-    this.globalScriptExcludeMatches = document.querySelector('#globalScriptExcludeMatches');
+    this.init(['autoUpdateInterval', 'cmOptions', 'counter', 'sync',
+      'customOptionsCSS', 'customPopupCSS', 'globalScriptExcludeMatches']);
   }
 
-  process(save) {
+  static init(keys = Object.keys(pref)) {
+    this.prefNode = document.querySelectorAll('#' + keys.join(',#')); // defaults to pref keys
+    this.globalScriptExcludeMatches = document.querySelector('#globalScriptExcludeMatches');
+
+    // --- add custom style
+    pref.customOptionsCSS && (document.querySelector('style').textContent = pref.customOptionsCSS);
+
+    this.process();
+  }
+
+  static process(save) {
     // 'save' is only set when clicking the button to save options
     this.prefNode.forEach(node => {
       // value: 'select-one', 'textarea', 'text', 'number'
@@ -34,7 +45,7 @@ class Options {
     save && !ProgressBar.show() && browser.storage.local.set(pref); // update saved pref
   }
 
-  check() {
+  static check() {
     // --- check Global Script Exclude Matches
     if(!Pattern.validate(this.globalScriptExcludeMatches)) { return; }
 
@@ -57,16 +68,31 @@ class Options {
     // --- save options
     this.process(true);
   }
-}
-const options = new Options(['autoUpdateInterval', 'globalScriptExcludeMatches', 'sync',
-  'counter', 'customOptionsCSS', 'customPopupCSS', 'cmOptions']);
-// ----------------- /Options ------------------------------
 
-// ----------------- Scripts -------------------------------
+  static importFromUrl() {
+    const url = prompt(browser.i18n.getMessage('importFromUrlMessage'), localStorage.getItem('importFromUrl') || '')?.trim();
+    if (!url) { return; }
+
+    localStorage.setItem('importFromUrl', url);
+
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      // FireMonkey has userscripts which are not in default pref keys
+      Object.keys(data).forEach(item =>
+        (pref.hasOwnProperty(item) || item.startsWith('_')) && (pref[item] = data[item]));
+      Options.process();                                    // set options after the pref update
+      Script.process();                                     // update page display
+    })
+    .catch(error => App.notify(browser.i18n.getMessage('error') + '\n\n' + error.message));
+  }
+}
+// ---------- /Options -------------------------------------
+
+// ---------- Scripts --------------------------------------
 class Script {
 
-  constructor() {
-    // class RemoteUpdate in app.js
+  static {
     RemoteUpdate.callback = this.processResponse.bind(this);
 
     this.docFrag = document.createDocumentFragment();
@@ -109,15 +135,14 @@ class Script {
       item.addEventListener('click', e => this.processButtons(e)));
 
     window.addEventListener('beforeunload', e =>
-      this.unsavedChanges() ? e.preventDefault() : this.box.value = ''
-    );
+      this.unsavedChanges() ? e.preventDefault() : this.box.value = '');
 
 
     this.template = {
       js:
 `// ==UserScript==
 // @name
-// @match
+// @match            *://*/*
 // @version          1.0
 // ==/UserScript==`,
 
@@ -125,7 +150,7 @@ class Script {
 `/*
 ==UserCSS==
 @name
-@match
+@match            *://*/*
 @version          1.0
 ==/UserCSS==
 */`
@@ -134,7 +159,7 @@ class Script {
     // --- Import/Export Script
     document.getElementById('fileScript').addEventListener('change', e => this.processFileSelect(e));
 
-    // --- menu dropdown
+    // --- menu dropdown (close when clicking body)
     const menuDetails = document.querySelectorAll('.menu details');
     document.body.addEventListener('click', e =>
       menuDetails.forEach(item => !item.contains(e.explicitOriginalTarget) && (item.open = false))
@@ -142,7 +167,7 @@ class Script {
 
     // --- textarea resize
     const divUser = document.querySelector('.menu details div.user');
-    divUser.parentNode.addEventListener('toggle', e => !e.target.open && divUser.classList.remove('expand'));
+    divUser.parentElement.addEventListener('toggle', e => !e.target.open && divUser.classList.remove('expand'));
     divUser.querySelectorAll('textarea').forEach(item => {
       item.addEventListener('focus', () => divUser.classList.toggle('expand', true));
     });
@@ -153,7 +178,7 @@ class Script {
 
     const themeSelect = document.querySelector('#theme');
     this.theme = localStorage.getItem('theme') ||
-      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'darcula' : 'defualt');
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'darcula' : 'default');
     themeSelect.value = this.theme;
     if (themeSelect.selectedIndex === -1) {                 // bad value correction
       this.theme = 'default';
@@ -163,20 +188,20 @@ class Script {
     this.defaultLink = document.querySelector('link[rel="stylesheet"]');
     this.addTheme(localStorage.getItem('dark') === 'true');
 
-    themeSelect.addEventListener('change', (e) => {
+    themeSelect.addEventListener('change', e => {
       const opt = themeSelect.selectedOptions[0];
       this.theme = opt.value;
       localStorage.setItem('theme', this.theme);
 
-      const dark = opt.parentNode.dataset.type === 'dark';
+      const dark = opt.parentElement.dataset.type === 'dark';
       localStorage.setItem('dark', dark);
       this.addTheme(dark);
-      [0, 1].forEach(i => window.frames[i]?.document?.body?.classList.toggle('dark', dark));
+      document.querySelectorAll('iframe').forEach(i => i.contentDocument.body.classList.toggle('dark', dark));
     });
 
     // --- color picker
     this.inputColor = document.querySelector('.script input[type="color"]');
-    this.inputColor.addEventListener('change', (e) => this.changeColor());
+    this.inputColor.addEventListener('change', e => this.changeColor(e));
 
     // --- sidebar
     this.sidebar = document.querySelector('#sidebar');
@@ -207,10 +232,47 @@ class Script {
         }
       });
     });
+
+    Script.process();
   }
 
-  addTheme(dark) {
-    const url =  `../lib/codemirror/theme/${this.theme}.css`;
+  static processButtons(e) {
+    const action = e.target.dataset.i18n;
+    switch (action) {
+      case 'saveScript': return this.saveScript();
+      case 'update': return this.updateScript();
+      case 'delete|title': return this.deleteScript();
+      // case 'newJS':
+      case 'newJS|title': return this.newScript('js');
+      // case 'newCSS':
+      case 'newCSS|title': return this.newScript('css');
+      case 'beautify|title': return this.beautify();
+      case 'saveTemplate': return this.saveTemplate();
+      case 'export': return this.exportScript();
+      case 'exportAll': return this.exportScriptAll();
+
+      case 'tabToSpaces':
+      case 'toLowerCase':
+      case 'toUpperCase':
+      case 'wrapIIFE':
+        return this.edit(action);
+    }
+  }
+
+  static process() {
+    this.navUL.textContent = '';                            // clear data
+
+    App.getIds(pref).sort(Intl.Collator().compare).forEach(item => this.addScript(pref[item]));
+    this.navUL.appendChild(this.docFrag);
+
+    if (this.box.id) {                                      // refresh previously loaded content
+      this.box.value = '';
+      document.getElementById(this.box.id).click();
+    }
+  }
+
+  static addTheme(dark) {
+    const url = `../lib/codemirror/theme/${this.theme}.css`;
     if (this.theme === 'default' || document.querySelector(`link[href="${url}"]`)) { // already added
       document.body.classList.toggle('dark', dark);
       this.cm?.setOption('theme', this.theme);
@@ -227,8 +289,8 @@ class Script {
     };
   }
 
-  setCodeMirror() {
-    const js =  this.legend.classList.contains('js');
+  static setCodeMirror() {
+    const js = this.legend.classList.contains('js');
     const jshint = {
         browser: true,
         curly: true,
@@ -236,16 +298,22 @@ class Script {
         eqeqeq: true,
         esversion: 11,
         expr: true,
-  //      forin: true,
+        // forin: true,
         freeze: true,
         globals: {
-          GM: false, GM_addScript: false, GM_addStyle: false, GM_addValueChangeListener: false, GM_deleteValue: false,
-          GM_download: false, GM_fetch: false, GM_getResourceText: false, GM_getResourceURL: false, GM_info: false,
+          GM: false,
+          GM_getValue: false, GM_setValue: false, GM_deleteValue: false, GM_listValues: false,
+          GM_getValues: false, GM_setValues: false, GM_deleteValues: false,
+          GM_addValueChangeListener: false, GM_removeValueChangeListener: false,
+
+          GM_addElement: false, GM_addScript: false, GM_addStyle: false, GM_download: false,
+          GM_getResourceText: false, GM_getResourceURL: false, GM_info: false,
           GM_log: false, GM_notification: false, GM_openInTab: false, GM_popup: false,
-          GM_registerMenuCommand: false, GM_removeValueChangeListener: false, GM_setClipboard: false,
-          GM_setValue: false, GM_unregisterMenuCommand: false, GM_xmlhttpRequest: false, unsafeWindow: false
+          GM_registerMenuCommand: false, GM_unregisterMenuCommand: false, GM_setClipboard: false,
+          GM_fetch: false, GM_xmlhttpRequest: false, unsafeWindow: false,
+          exportFunction: false, cloneInto: false
         },
-        jquery: js && !!this.box.id && (pref[this.box.id].require || []).some(item => /lib\/jquery-/.test(item)),
+        jquery: js && !!this.box.id && pref[this.box.id]?.require.some(item => /\bjquery\b/i.test(item)),
         latedef: 'nofunc',
         leanswitch: true,
         maxerr: 100,
@@ -255,7 +323,6 @@ class Script {
         unused: true,
         validthis: true,
         varstmt: true,
-
         highlightLines: true                                // CodeMirror 5.62.0
       };
 
@@ -271,29 +338,29 @@ class Script {
       autoCloseBrackets: true,
       search: {bottom: true},
       lint: js ? jshint : {highlightLines: true},           // CodeMirror 5.62.0
-//      hint: {hintOptions: {}},
+      // hint: {hintOptions: {}},
+      // rulers: [{ color: '#f50', column: 20, lineStyle: 'solid' }], // v2.68
       foldGutter: true,
       gutters: ['CodeMirror-lint-markers', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
       highlightSelectionMatches: {wordsOnly: true, annotateScrollbar: true},
       extraKeys: {
         // conflict with 'toggleComment'
-//      "Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }
-//      'Ctrl-Q': (cm)=> cm.foldCode(cm.getCursor()),
-
-        'Ctrl-Q': 'toggleComment',
+        // "Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }
+        // 'Ctrl-Q': (cm)=> cm.foldCode(cm.getCursor()),
+        // 'Ctrl-Q': 'toggleComment', // conflict with Firefox Quit
+        'Ctrl-/': 'toggleComment',
         'Ctrl-Space': 'autocomplete',
         'Alt-F': 'findPersistent',
-        F11: (cm) => {
+        F11: cm => {
           cm.setOption('fullScreen', !cm.getOption('fullScreen'));
           this.sidebar.checked = !cm.getOption('fullScreen');
         },
-        Esc: (cm) => {
+        Esc: cm => {
           cm.getOption('fullScreen') && cm.setOption('fullScreen', false);
           this.sidebar.checked = true;
         }
       }
     };
-
 
     // Custom CodeMirror Options
     const cmOptions = App.JSONparse(pref.cmOptions) || {};
@@ -310,248 +377,43 @@ class Script {
     CodeMirror.commands.save = () => this.saveScript();
 
     // --- stats
-    this.makeStats(js);
+    this.makeStats();
 
     // converter + color picker
     this.cm.on('mousedown', (cm, e) => {
       const node = e.explicitOriginalTarget;
       if (node.nodeName === '#text') { return; }
       e.stopPropagation();
-      node.classList.contains('cm-fm-color') && this.colorPicker(cm, node);
+      node.classList.contains('cm-fm-color') && this.colorPicker(node);
     });
   }
 
-  colorPicker(cm, node) {
-    this.oldColor = node.style.getPropertyValue('--fm-color');
-    let color = this.oldColor;
-    switch (true) {
-      case this.oldColor.startsWith('rgb'):                 // convert rgba?() -> #rrggbb
-        color = this.rgbToHex(color);
-        break;
-
-      case /^#\w{3}$/.test(this.oldColor):                  // convert #rgb -> #rrggbb
-        color = this.hex3to6(color);
-        break;
-
-      case !this.oldColor.startsWith('#'):                  // convert named -> #rrggbb
-        color = this.namedColors(color);
-        break;
-    }
-
-    this.inputColor.value = color;
+  static colorPicker(node) {
+    const fmColor = node.style.getPropertyValue('--fm-color');
+    const clr = Color.convertToHex(fmColor);
+    this.inputColor.dataset.fmColor = fmColor;
+    this.inputColor.value = clr;
     this.inputColor.click();
   }
 
-  changeColor() {
-    if (this.oldColor === this.inputColor.value) { return; } // no change
-
-    let color = this.inputColor.value;
-    switch (true) {
-      case this.oldColor.startsWith('rgb'):                 // convert #rrggbb -> rgba?()
-        color = this.hexToRgb(color);
-        break;
-
-      case /^#\w{3}$/.test(this.oldColor):                  // convert #rrggbb -> #rgb
-        const m = this.oldColor.match(/[\d.]+/g);
-        color = this.hex6to3(color, m && m[3]);
-        break;
-
-      case !this.oldColor.startsWith('#'):
-        color = this.namedColors(color, true);              // // convert #rrggbb -> named
-        break;
-    }
+  static changeColor(e) {
+    const fmColor = e.target.dataset.fmColor;
+    const clr = Color.convertToFmColor(e.target.value, fmColor);
 
     const {line, ch} = this.cm.getCursor();
-    this.cm.replaceRange(color, {line, ch}, {line, ch: ch + this.oldColor.length});
+    this.cm.replaceRange(clr, {line, ch}, {line, ch: ch + fmColor.length});
   }
 
-  rgbToHex(color) {
-    const m = color.replace(/\s+/g, '').match(/rgba?\((\d+),(\d+),(\d+)/);
-    return m ? '#' + m.slice(1).map(d => (d*1).toString(16).padStart(2, 0)).join('') : color;
-  }
-
-  hexToRgb(color) {
-    const m = color.substring(1).match(/.{2}/g).map(hex => parseInt(hex, 16));
-    const op = this.oldColor.match(/[\d.]+/g)?.[3];
-    op && m.push(op);
-    return (op ? 'rgba(' : 'rgb(') + m.join(',') + ')';
-  }
-
-  hex3to6(color) {
-    return color.split('').map(hex => hex+hex).join('').substring(1);
-  }
-
-  hex6to3(color) {
-    const m = color.match(/#(.)\1(.)\2(.)\3/);
-    return m ? '#' + m.slice(1).join('') : color;
-  }
-
-  namedColors(color, back) {
-    const names = {
-      'aliceblue': '#f0f8ff',
-      'antiquewhite': '#faebd7',
-      'aqua': '#00ffff',
-      'aquamarine': '#7fffd4',
-      'azure': '#f0ffff',
-      'beige': '#f5f5dc',
-      'bisque': '#ffe4c4',
-      'black': '#000000',
-      'blanchedalmond': '#ffebcd',
-      'blue': '#0000ff',
-      'blueviolet': '#8a2be2',
-      'brown': '#a52a2a',
-      'burlywood': '#deb887',
-      'cadetblue': '#5f9ea0',
-      'chartreuse': '#7fff00',
-      'chocolate': '#d2691e',
-      'coral': '#ff7f50',
-      'cornflowerblue': '#6495ed',
-      'cornsilk': '#fff8dc',
-      'crimson': '#dc143c',
-      'cyan': '#00ffff',
-      'darkblue': '#00008b',
-      'darkcyan': '#008b8b',
-      'darkgoldenrod': '#b8860b',
-      'darkgray': '#a9a9a9',
-      'darkgrey': '#a9a9a9',
-      'darkgreen': '#006400',
-      'darkkhaki': '#bdb76b',
-      'darkmagenta': '#8b008b',
-      'darkolivegreen': '#556b2f',
-      'darkorange': '#ff8c00',
-      'darkorchid': '#9932cc',
-      'darkred': '#8b0000',
-      'darksalmon': '#e9967a',
-      'darkseagreen': '#8fbc8f',
-      'darkslateblue': '#483d8b',
-      'darkslategray': '#2f4f4f',
-      'darkslategrey': '#2f4f4f',
-      'darkturquoise': '#00ced1',
-      'darkviolet': '#9400d3',
-      'deeppink': '#ff1493',
-      'deepskyblue': '#00bfff',
-      'dimgray': '#696969',
-      'dimgrey': '#696969',
-      'dodgerblue': '#1e90ff',
-      'firebrick': '#b22222',
-      'floralwhite': '#fffaf0',
-      'forestgreen': '#228b22',
-      'fuchsia': '#ff00ff',
-      'gainsboro': '#dcdcdc',
-      'ghostwhite': '#f8f8ff',
-      'gold': '#ffd700',
-      'goldenrod': '#daa520',
-      'gray': '#808080',
-      'grey': '#808080',
-      'green': '#008000',
-      'greenyellow': '#adff2f',
-      'honeydew': '#f0fff0',
-      'hotpink': '#ff69b4',
-      'indianred': '#cd5c5c',
-      'indigo': '#4b0082',
-      'ivory': '#fffff0',
-      'khaki': '#f0e68c',
-      'lavender': '#e6e6fa',
-      'lavenderblush': '#fff0f5',
-      'lawngreen': '#7cfc00',
-      'lemonchiffon': '#fffacd',
-      'lightblue': '#add8e6',
-      'lightcoral': '#f08080',
-      'lightcyan': '#e0ffff',
-      'lightgoldenrodyellow': '#fafad2',
-      'lightgray': '#d3d3d3',
-      'lightgrey': '#d3d3d3',
-      'lightgreen': '#90ee90',
-      'lightpink': '#ffb6c1',
-      'lightsalmon': '#ffa07a',
-      'lightseagreen': '#20b2aa',
-      'lightskyblue': '#87cefa',
-      'lightslategray': '#778899',
-      'lightslategrey': '#778899',
-      'lightsteelblue': '#b0c4de',
-      'lightyellow': '#ffffe0',
-      'lime': '#00ff00',
-      'limegreen': '#32cd32',
-      'linen': '#faf0e6',
-      'magenta': '#ff00ff',
-      'maroon': '#800000',
-      'mediumaquamarine': '#66cdaa',
-      'mediumblue': '#0000cd',
-      'mediumorchid': '#ba55d3',
-      'mediumpurple': '#9370db',
-      'mediumseagreen': '#3cb371',
-      'mediumslateblue': '#7b68ee',
-      'mediumspringgreen': '#00fa9a',
-      'mediumturquoise': '#48d1cc',
-      'mediumvioletred': '#c71585',
-      'midnightblue': '#191970',
-      'mintcream': '#f5fffa',
-      'mistyrose': '#ffe4e1',
-      'moccasin': '#ffe4b5',
-      'navajowhite': '#ffdead',
-      'navy': '#000080',
-      'oldlace': '#fdf5e6',
-      'olive': '#808000',
-      'olivedrab': '#6b8e23',
-      'orange': '#ffa500',
-      'orangered': '#ff4500',
-      'orchid': '#da70d6',
-      'palegoldenrod': '#eee8aa',
-      'palegreen': '#98fb98',
-      'paleturquoise': '#afeeee',
-      'palevioletred': '#db7093',
-      'papayawhip': '#ffefd5',
-      'peachpuff': '#ffdab9',
-      'peru': '#cd853f',
-      'pink': '#ffc0cb',
-      'plum': '#dda0dd',
-      'powderblue': '#b0e0e6',
-      'purple': '#800080',
-      'rebeccapurple': '#663399',
-      'red': '#ff0000',
-      'rosybrown': '#bc8f8f',
-      'royalblue': '#4169e1',
-      'saddlebrown': '#8b4513',
-      'salmon': '#fa8072',
-      'sandybrown': '#f4a460',
-      'seagreen': '#2e8b57',
-      'seashell': '#fff5ee',
-      'sienna': '#a0522d',
-      'silver': '#c0c0c0',
-      'skyblue': '#87ceeb',
-      'slateblue': '#6a5acd',
-      'slategray': '#708090',
-      'slategrey': '#708090',
-      'snow': '#fffafa',
-      'springgreen': '#00ff7f',
-      'steelblue': '#4682b4',
-      'tan': '#d2b48c',
-      'teal': '#008080',
-      'thistle': '#d8bfd8',
-      'tomato': '#ff6347',
-      'turquoise': '#40e0d0',
-      'violet': '#ee82ee',
-      'wheat': '#f5deb3',
-      'white': '#ffffff',
-      'whitesmoke': '#f5f5f5',
-      'yellow': '#ffff00',
-      'yellowgreen': '#9acd32'
-    };
-
-    if (back) { return Object.keys(names).find(item => names[item] === color) || color; }
-    return names[color] || color;
-  }
-
-  makeStats(js, text = this.box.value) {
+  static makeStats(text = this.box.value) {
     const nf = new Intl.NumberFormat();
     const stats = [];
 
-    stats.push('Size  ' + nf.format((text.length/1024).toFixed(1)) + ' KB');
+    stats.push('Size ' + nf.format((text.length/1024).toFixed(1)) + ' KB');
     stats.push('Lines ' + nf.format(this.cm.lineCount()));
-//    stats.push(/\r\n/.test(text) ? 'DOS' : 'UNIX');
+    // stats.push(/\r\n/.test(text) ? 'DOS' : 'UNIX');
 
     const storage = this.storage.value.trim().length;
-    storage && stats.push('Storage  ' + nf.format((storage/1024).toFixed(1)) + ' KB');
+    storage && stats.push('Storage ' + nf.format((storage/1024).toFixed(1)) + ' KB');
 
     const tab = text.match(/\t/g);
     tab && stats.push('Tabs ' + nf.format(tab.length));
@@ -559,31 +421,10 @@ class Script {
     const tr = text.match(/[ ]+((?=\r?\n))/g);
     tr && stats.push('Trailing Spaces ' + nf.format(tr.length));
 
-    this.footer.textContent = stats.join(' \u{1f539} ');
+    this.footer.textContent = stats.join(' 🔹 ');
   }
 
-  processButtons(e) {
-    const action = e.target.dataset.i18n;
-    switch (action) {
-      case 'saveScript': return this.saveScript();
-      case 'update': return this.updateScript();
-      case 'delete|title': return this.deleteScript();
-      case 'newJS': case 'newJS|title': return this.newScript('js');
-      case 'newCSS': case 'newCSS|title': return this.newScript('css');
-      case 'beautify|title': return this.beautify();
-      case 'saveTemplate': return this.saveTemplate();
-      case 'export': return this.exportScript();
-      case 'exportAll': return this.exportScriptAll();
-
-      case 'tabToSpaces':
-      case 'toLowerCase':
-      case 'toUpperCase':
-      case 'wrapIIFE':
-        return this.edit(action);
-    }
-  }
-
-  edit(action) {
+  static edit(action) {
     if (!this.cm) { return; }
 
     let text;
@@ -611,7 +452,7 @@ class Script {
     }
   }
 
-  beautify() {
+  static beautify() {
     if (!this.cm) { return; }
 
     const options = {
@@ -619,12 +460,12 @@ class Script {
     };
 
     let text = this.cm.getValue();
-    text = this.legend.classList.contains('js') ? js_beautify(text, options) :  css_beautify(text, options);
+    text = this.legend.classList.contains('js') ? js_beautify(text, options) : css_beautify(text, options);
     this.cm.setValue(text);
     this.makeStats(text);
   }
 
-  newScript(type) {
+  static newScript(type) {
     const {box, legend} = this;
     this.enable.checked = true;
     document.querySelector('aside li.on')?.classList.remove('on');
@@ -647,30 +488,21 @@ class Script {
     this.setCodeMirror();
   }
 
-  saveTemplate() {
+  static saveTemplate() {
     this.cm?.save();                                        // save CodeMirror to textarea
     const text = this.box.value;
     const metaData = text.match(Meta.regEx);
+    if (!metaData) {
+      App.notify(browser.i18n.getMessage('metaError'));
+      return;
+    }
 
-    if (!metaData) { App.notify(browser.i18n.getMessage('metaError')); return; }
     const type = metaData[1].toLowerCase() === 'userscript' ? 'js' : 'css';
     pref.template[type] = text.trimStart();
     browser.storage.local.set({template: pref.template});   // update saved pref
   }
 
-  process() {
-    this.navUL.textContent = '';                            // clear data
-
-    App.getIds().sort(Intl.Collator().compare).forEach(item => this.addScript(pref[item]));
-    this.navUL.appendChild(this.docFrag);
-
-    if (this.box.id) {                                      // refresh previously loaded content
-      this.box.textContent = '';
-      document.getElementById(this.box.id).click();
-    }
-  }
-
-  addScript(item) {
+  static addScript(item) {
     const li = this.liTemplate.cloneNode(true);
     li.classList.add(item.js ? 'js' : 'css');
     item.enabled || li.classList.add('disabled');
@@ -681,7 +513,7 @@ class Script {
     li.addEventListener('click', e => this.showScript(e));
   }
 
-  showScript(e) {
+  static showScript(e) {
     const {box} = this;
     const li = e.target;
     li.classList.add('on');
@@ -708,14 +540,13 @@ class Script {
 
     // --- if showing another page
     document.getElementById('nav4').checked = true;
-
     this.cm?.save();                                        // save CodeMirror to textarea
     if(this.unsavedChanges()) {
       li.classList.remove('on');
       box.id && document.getElementById(box.id)?.classList.add('on');
       return;
     }
-    this.cm?.toTextArea();                        // reset CodeMirror
+    this.cm?.toTextArea();                                  // reset CodeMirror
 
     const id = li.id;
     box.id = id;
@@ -728,7 +559,7 @@ class Script {
     const i18nName = pref[id].i18n.name[lang] || pref[id].i18n.name[lang.substring(0, 2)]; // fallback to primary language
     if (i18nName !== pref[id].name) {                       // i18n if different
       const sp = document.createElement('span');
-      sp.textContent =  i18nName;
+      sp.textContent = i18nName;
       this.legend.appendChild(sp);
     }
 
@@ -739,7 +570,7 @@ class Script {
     pref[id].antifeatures[0] && this.legend.classList.add('antifeature');
     this.userMeta.value = pref[id].userMeta || '';
 
-    this.storage.parentNode.style.display = pref[id].js ? 'list-item' : 'none';
+    this.storage.parentElement.style.display = pref[id].js ? 'list-item' : 'none';
     this.storage.value = Object.keys(pref[id].storage).length ? JSON.stringify(pref[id].storage, null, 2) : '';
 
     // --- userVar
@@ -749,36 +580,7 @@ class Script {
     this.setCodeMirror();
   }
 
-  prepareColor(node, color) {
-    switch (true) {
-      case color.startsWith('rgba'):                         // convert rgba() -> #rrggbb
-        const op = color.match(/[\d.]+/g)?.[3];
-        op && (node.dataset.opacity = Math.round(op * 255).toString(16).padStart(2, '0'));
-        return this.rgbToHex(color);
-
-      case color.startsWith('rgb'):                         // convert rgba() -> #rrggbb
-        return this.rgbToHex(color);
-
-      case /^#\w{8}$/.test(color):                          // #rrggbbaa
-        node.dataset.opacity = color.slice(-2);
-        return color.slice(0,-2);
-
-      case /^#\w{4}$/.test(color):                          // convert #rgba -> #rrggbbaa
-        node.dataset.opacity = color.slice(-1).repeat(2);
-        return this.hex3to6(color.slice(0,-1));
-
-      case /^#\w{3}$/.test(color):                          // convert #rgb -> #rrggbb
-        return this.hex3to6(color);
-
-      case !color.startsWith('#'):                          // convert named -> #rrggbb
-        return this.namedColors(color);
-
-      default:
-        return color;
-    }
-  }
-
-  showUserVar(id) {
+  static showUserVar(id) {
     this.userVar.textContent = '';                          // reset
     delete this.userVar.dataset.reset;
     const tmp = this.liTemplate.cloneNode();
@@ -787,74 +589,75 @@ class Script {
     const output = document.createElement('output');
 
     Object.entries(pref[id].userVar || {}).forEach(([key, value]) => {
-      if (!value.hasOwnProperty('user')) { return; }                          // skip
+      if (!value.hasOwnProperty('user')) { return; }        // skip
       const li = tmp.cloneNode(true);
+      const elem = li.children;
       switch (value.type) {
         case 'text':
-          li.children[0].textContent = value.label;
-          li.children[1].dataset.id = key;
-          li.children[1].type = value.type;
-          li.children[1].value = value.user;
-          li.children[1].dataset.default = value.value;
+          elem[0].textContent = value.label;
+          elem[1].dataset.id = key;
+          elem[1].type = value.type;
+          elem[1].value = value.user;
+          elem[1].dataset.default = value.value;
           break;
 
         case 'color':
-          const clr = this.prepareColor(li.children[1], value.user);
-          li.children[0].textContent = value.label;
-          li.children[1].dataset.id = key;
-          li.children[1].type = value.type;
-          li.children[1].value = clr;
-          li.children[1].dataset.default = value.value;
+          const clr = Color.prepareColor(elem[1], value.user);
+          elem[0].textContent = value.label;
+          elem[1].dataset.id = key;
+          elem[1].type = value.type;
+          elem[1].value = clr;
+          elem[1].dataset.default = value.value;
           break;
 
         case 'checkbox':
-          li.children[0].textContent = value.label;
-          li.children[1].dataset.id = key;
-          li.children[1].type = value.type;
-          li.children[1].checked = Boolean(value.user);
-          li.children[1].dataset.default = value.value;
+          elem[0].textContent = value.label;
+          elem[1].dataset.id = key;
+          elem[1].type = value.type;
+          elem[1].checked = Boolean(value.user);
+          elem[1].dataset.default = value.value;
           break;
 
         case 'number':
-          li.children[0].textContent = value.label;
-          li.children[1].dataset.id = key;
-          li.children[1].type = value.type;
-          li.children[1].value = value.user;
-          value.value[1] !== null && (li.children[1].min = value.value[1]);
-          value.value[2] !== null && (li.children[1].max = value.value[2]);
-          li.children[1].step = value.value[3];
-          li.children[1].dataset.default = value.value[0];
+          elem[0].textContent = value.label;
+          elem[1].dataset.id = key;
+          elem[1].type = value.type;
+          elem[1].value = value.user;
+          value.value[1] !== null && (elem[1].min = value.value[1]);
+          value.value[2] !== null && (elem[1].max = value.value[2]);
+          elem[1].step = value.value[3];
+          elem[1].dataset.default = value.value[0];
           break;
 
         case 'range':
-          li.children[0].after(output.cloneNode());
-          li.children[0].textContent = value.label;
-          li.children[1].textContent = value.user + (value.value[4] || '');
-          li.children[2].dataset.id = key;
-          li.children[2].type = value.type;
-          li.children[2].value = value.user;
-          value.value[1] !== null && (li.children[2].min = value.value[1]);
-          value.value[2] !== null && (li.children[2].max = value.value[2]);
-          li.children[2].step = value.value[3];
-          li.children[2].dataset.default = value.value[0];
-          li.children[2].addEventListener('input',
-            e => li.children[1].textContent = e.target.value + (value.value[4] || ''));
+          li.appendChild(output.cloneNode());
+          elem[0].textContent = value.label;
+          elem[1].dataset.id = key;
+          elem[1].type = value.type;
+          elem[1].value = value.user;
+          value.value[1] !== null && (elem[1].min = value.value[1]);
+          value.value[2] !== null && (elem[1].max = value.value[2]);
+          elem[1].step = value.value[3];
+          elem[1].dataset.default = value.value[0];
+          elem[1].addEventListener('input',
+            e => elem[2].textContent = e.target.value + (value.value[4] || ''));
+          elem[2].textContent = value.user + (value.value[4] || '');
           break;
 
         case 'select':
         case 'dropdown':
         case 'image':
-          li.children[1].remove();
+          elem[1].remove();
           li.appendChild(sel.cloneNode());
-           li.children[0].textContent = value.label;
-          li.children[1].dataset.id = key;
+          elem[0].textContent = value.label;
+          elem[1].dataset.id = key;
           // add option
           Array.isArray(value.value) ?
-            value.value.forEach(item => li.children[1].appendChild(new Option(item.replace(/\*$/, ''), item))) :
-             Object.entries(value.value).forEach(([k, v]) => li.children[1].appendChild(new Option(k.replace(/\*$/, ''), v)));
-          li.children[1].value = value.user;
+            value.value.forEach(item => elem[1].appendChild(new Option(item.replace(/\*$/, ''), item))) :
+             Object.entries(value.value).forEach(([k, v]) => elem[1].appendChild(new Option(k.replace(/\*$/, ''), v)));
+          elem[1].value = value.user;
 
-          li.children[1].dataset.default =
+          elem[1].dataset.default =
             Array.isArray(value.value) ? value.value.find(item => item.endsWith('*')) || value.value[0] :
               value.value[Object.keys(value.value).find(item => item.endsWith('*')) || Object.keys(value.value)[0]];
           break;
@@ -864,7 +667,7 @@ class Script {
     this.userVar.appendChild(this.docFrag);
   }
 
-  resetUserVar() {
+  static resetUserVar() {
     if(!this.userVar.children[0]) { return; }
 
     this.userVar.dataset.default = 'true';
@@ -884,16 +687,16 @@ class Script {
           default:
             item.value = item.dataset.default;
         }
-        item.parentNode.classList.add('default');
+        item.parentElement.classList.add('default');
       }
     });
   }
 
-  noSpace(str) {
+  static noSpace(str) {
     return str.replace(/\s+/g, '');
   }
 
-  unsavedChanges() {
+  static unsavedChanges() {
     const {box} = this;
     const text = this.noSpace(this.box.value);
     switch (true) {
@@ -909,7 +712,7 @@ class Script {
     }
   }
 
-  toggleEnable() {
+  static toggleEnable() {
     const enabled = this.enable.checked;
 
     const multi = document.querySelectorAll('aside li.on');
@@ -927,7 +730,7 @@ class Script {
     browser.storage.local.set(obj);                         // update saved pref
   }
 
-  toggleAutoUpdate() {
+  static toggleAutoUpdate() {
     const id = this.box.id;
     if (!id) { return; }
 
@@ -943,7 +746,7 @@ class Script {
     browser.storage.local.set({[id]: pref[id]});            // update saved pref
   }
 
-  deleteScript() {
+  static deleteScript() {
     const {box} = this;
     const multi = document.querySelectorAll('aside li.on');
     if (!multi[0]) { return; }
@@ -973,7 +776,7 @@ class Script {
     box.value = '';
   }
 
-  async saveScript() {
+  static async saveScript() {
     const {box} = this;
     this.cm?.save();                                        // save CodeMirror to textarea
 
@@ -981,23 +784,24 @@ class Script {
     const regex = /[ ]+(?=\r?\n)/g;
     this.userMeta.value = this.userMeta.value.trim().replace(regex, '');
     box.value = box.value.trim().replace(regex, '');
- //   this.cm.setValue(box.value);
+    // this.cm.setValue(box.value); //resets the cursor to the top :(
+    this.makeStats();
 
-    // --- chcek metadata
-    const data = Meta.get(box.value);
+    // --- check metadata
+    const data = Meta.get(box.value, pref);
     if (!data) { throw 'Meta Data Error'; }
     else if (data.error) {
       App.notify(browser.i18n.getMessage('metaError'));
       return;
     }
 
-    // --- check if patterns are valid match mattern
+    // --- check if patterns are valid match pattern
     let matchError = 0;
     for (const item of [...data.matches, ...data.excludeMatches]) { // use for loop to break early
       const error = Pattern.hasError(item);
       if (error) {
         matchError++;
-        if (matchError > 3) { return; }                       // max 3 notifications
+        if (matchError > 3) { return; }                     // max 3 notifications
         App.notify(item + '\n' + error);
       }
     }
@@ -1054,18 +858,15 @@ class Script {
       li.id = id;
     }
 
-    // --- check storage JS only
+    // --- check storage, JS only
     if (data.js) {
       if (!this.storage.value.trim()) {
         data.storage = {};                                  // clear storage
       }
       else {
-        const storage = App.JSONparse(this.storage.value);
-        if (!storage) {
-          App.notify(browser.i18n.getMessage('storageError')) ;
-          return;
-        }
-        data.storage = storage;
+        let storage = App.JSONparse(this.storage.value);
+        Array.isArray(storage) && (storage = null);         // must be an Object, not an array
+        storage ? data.storage = storage : App.notify(browser.i18n.getMessage('storageError'));
       }
     }
 
@@ -1084,7 +885,7 @@ class Script {
   }
 
   // --- Remote Update
-  updateScript() {                                          // manual update, also for disabled and disabled autoUpdate
+  static updateScript() {                                   // manual update, also for disabled and disabled autoUpdate
     const {box} = this;
     if (!box.id) { return; }
 
@@ -1098,8 +899,8 @@ class Script {
     RemoteUpdate.getUpdate(pref[id], true);                 // to class RemoteUpdate in app.js
   }
 
-  processResponse(text, name, updateURL) {                  // from class RemoteUpdate in app.js
-    const data = Meta.get(text);
+  static processResponse(text, name, updateURL) {           // from class RemoteUpdate in app.js
+    const data = Meta.get(text, pref);
     if (!data) { throw `${name}: Update Meta Data error`; }
 
     const id = `_${data.name}`;                             // set id as _name
@@ -1111,16 +912,16 @@ class Script {
       return;
     }
 
-    // ---  log message to display in Options -> Log
-    App.log(data.name, `Updated version ${pref[id].version} ➜ ${data.version}`);
+    // --- log message to display in Options -> Log
+    App.log(data.name, `Updated version ${pref[id].version} ➜ ${data.version}`, '', updateURL);
 
     // --- check name change
     if (data.name !== name) {                               // name has changed
       if (pref[id]) { throw `${name}: Update new name already exists`; } // name already exists
       else {
-        pref[id] = pref[oldId];                               // copy to new id
-        delete pref[oldId];                                   // delete old id
-        browser.storage.local.remove(oldId);                  // remove old data
+        pref[id] = pref[oldId];                             // copy to new id
+        delete pref[oldId];                                 // delete old id
+        browser.storage.local.remove(oldId);                // remove old data
       }
     }
 
@@ -1128,13 +929,14 @@ class Script {
     pref[id] = data;                                        // save to pref
     browser.storage.local.set({[id]: pref[id]});            // update saved pref
 
+
+
+    this.cm.setValue('');                                   // clear box avoid unsavedChanges warning
     this.process();                                         // update page display
-    this.box.value = '';                                    // clear box avoid unsavedChanges warning
-    document.getElementById(id)?.click();                   // reload the new script
   }
 
-  // ----------------- Import Script -----------------------
-  processFileSelect(e) {
+  // ---------- Import Script ------------------------------
+  static processFileSelect(e) {
     // --- check for Stylus import
     if (e.target.files[0].type === 'application/json') {
       this.processFileSelectStylus(e);
@@ -1152,23 +954,20 @@ class Script {
           return;
       }
 
-      const reader  = new FileReader();
-      reader.onloadend = () => script.readDataScript(reader.result);
-      reader.onerror = () => App.notify(browser.i18n.getMessage('fileReadError'));
-      reader.readAsText(file);
+      ImportExport.fileReader(file, r => Script.readDataScript(r));
     });
   }
 
-  readDataScript(text) {
-    // --- chcek meta data
-    const data = Meta.get(text);
+  static readDataScript(text) {
+    // --- check meta data
+    const data = Meta.get(text, pref);
     if (!data) { throw 'Meta Data Error'; }
     else if (data.error) {
       App.notify(browser.i18n.getMessage('metaError'));
       return;
     }
 
-    let id = `_${data.name}`;                             // set id as _name
+    let id = `_${data.name}`;                               // set id as _name
 
     // --- check name
     if (pref[id]) {
@@ -1181,6 +980,10 @@ class Script {
       }
     }
 
+    // --- log message to display in Options -> Log
+    const message = pref[id] ? `Updated version ${pref[id].version} ➜ ${data.version}` : `Installed version ${data.version}`
+    App.log(data.name, message, '', data.updateURL);
+
     pref[id] = data;                                        // save to pref
     this.obj[id] = pref[id];
 
@@ -1191,21 +994,18 @@ class Script {
     this.process();                                         // update page display
     browser.storage.local.set(this.obj);                    // update saved pref
   }
-  // ----------------- /Import Script ----------------------
+  // ---------- /Import Script -----------------------------
 
-  // ----------------- Import Stylus -----------------------
-  processFileSelectStylus(e) {
+  // ---------- Import Stylus ------------------------------
+  static processFileSelectStylus(e) {
     const file = e.target.files[0];
-    const reader  = new FileReader();
-    reader.onloadend = () => script.prepareStylus(reader.result);
-    reader.onerror = () => App.notify(browser.i18n.getMessage('fileReadError'));
-    reader.readAsText(file);
+    ImportExport.fileReader(file, r => Script.prepareStylus(r));
   }
 
-  prepareStylus(data) {
+  static prepareStylus(data) {
     const importData = App.JSONparse(data);
     if (!importData) {
-      App.notify(browser.i18n.getMessage('fileParseError'));           // display the error
+      App.notify(browser.i18n.getMessage('fileParseError')); // display the error
       return;
     }
 
@@ -1239,7 +1039,7 @@ class Script {
         r[0] && (text += '\n\n@-moz-document ' + r.join(', ') +' {\n  ' + sec.code + '\n}');
       });
 
-      const data = Meta.get(text);
+      const data = Meta.get(text, pref);
       data.enabled = item.enabled;
       if (pref[`_${data.name}`]) { data.name += ' (Stylus)'; }
       const id = `_${data.name}`;                           // set id as _name
@@ -1247,13 +1047,13 @@ class Script {
       obj[id] = pref[id];
     });
 
-    this.process();                                         // update page display
     browser.storage.local.set(obj);                         // update saved pref
+    this.process();                                         // update page display
   }
-  // ----------------- /Import Stylus ----------------------
+  // ---------- /Import Stylus -----------------------------
 
-  // ----------------- Export ------------------------------
-  exportScript() {
+  // ---------- Export -------------------------------------
+  static exportScript() {
     if (!this.box.id) { return; }
 
     const id = this.box.id;
@@ -1262,204 +1062,32 @@ class Script {
     this.export(data, ext, pref[id].name);
   }
 
-  exportScriptAll() {
-    if (this.android) { return; }                           // disable on Andriod
+  static exportScriptAll() {
+    if (App.android) { return; }                            // disable on Android
 
     const multi = document.querySelectorAll('aside li.on');
-    const target = multi.length > 1 ? [...multi].map(item => item.id) : App.getIds();
+    const target = multi.length > 1 ? [...multi].map(i => i.id) : App.getIds(pref);
     target.forEach(id => {
-
       const ext = pref[id].js ? '.js' : '.css';
       const data = pref[id].js || pref[id].css;
       this.export(data, ext, pref[id].name, 'FireMonkey_' + new Date().toISOString().substring(0, 10) + '/', false);
     });
   }
 
-  export(data, ext, name, folder = '', saveAs = true) {
+  static export(data, ext, name, folder = '', saveAs = true) {
     navigator.userAgent.includes('Windows') && (data = data.replace(/\r?\n/g, '\r\n'));
     const filename = folder + name.replace(/[<>:"/\\|?*]/g, '') + '.user' + ext; // removing disallowed characters
-    App.saveFile({data, filename, saveAs});
+    ImportExport.saveFile({data, filename, saveAs});
   }
 }
-const script = new Script();
+// ---------- /Scripts -------------------------------------
 
-// ----------------- Log -----------------------------------
-class ShowLog {
-
-  constructor() {
-    const logTemplate = document.querySelector('.log template');
-    this.template = logTemplate.content.firstElementChild;
-    this.tbody = logTemplate.parentNode;
-
-    this.aTemp = document.createElement('a');
-    this.aTemp.target = '_blank';
-    this.aTemp.textContent = '\u{1f5d3} History';
-
-    this.log = App.JSONparse(localStorage.getItem('log')) || [];
-//    this.log[0] && this.process(this.log);
-    const logSize = document.querySelector('#logSize');
-    logSize.value = localStorage.getItem('logSize') || 100;
-    logSize.addEventListener('change', function(){ localStorage.setItem('logSize', this.value); });
-  }
-
-  process(list = this.log) {
-    list.forEach(([time, ref, message, type]) => {
-      const tr = this.template.cloneNode(true);
-      type && tr.classList.add(type);
-      const td = tr.children;
-      td[0].textContent = time;
-      td[1].title = ref;
-      td[1].textContent = ref;
-      td[2].textContent = message;
-
-      // --- History diff link
-      if (message.startsWith('Updated version') && pref[`_${ref}`]?.updateURL) {
-        const updateURL = pref[`_${ref}`].updateURL;
-        switch (true) {
-          // --- get meta.js
-          case updateURL.startsWith('https://greasyfork.org/scripts/'):
-          case updateURL.startsWith('https://sleazyfork.org/scripts/'):
-            const a = this.aTemp.cloneNode(true);
-            a.href = updateURL.replace(/(\/\d+)-.+/, '$1/versions');
-            td[2].appendChild(a);
-            break;
-        }
-      }
-
-      this.tbody.insertBefore(tr, this.tbody.firstElementChild); // in reverse order, new on top
-    });
-  }
-
-  update(newLog) {
-    newLog = App.JSONparse(newLog) || [];
-    if (!newLog[0]) { return; }
-
-    const old = this.log.map(item => item.toString());      // need to conver to array of strings for Array.includes()
-    const newItems = newLog.filter(item => !old.includes(item.toString()));
-
-    if (newItems[0]) {
-      this.log = newLog;
-      this.process(newItems);
-    }
-  }
-}
-const showLog = new ShowLog();
-// ---------------- /Log -----------------------------------
-
-// ----------------- Match Pattern Tester ------------------
-class Pattern {
-
-  static validate(node) {
-    node.classList.remove('invalid');
-    node.value = node.value.trim();
-    if (!node.value) { return true; }                       // emtpy
-
-    // use for loop to be able to break early
-    for (const item of node.value.split(/\s+/)) {
-      const error = this.hasError(item);
-      if (error) {
-        node.classList.add('invalid');
-        App.notify(`${browser.i18n.getMessage(node.id)}\n${item}\n${error}`);
-        return false;                                       // end execution
-      }
-    }
-    return true;
-  }
-
-  static hasError(p) {
-    if (Meta.validPattern(p)) { return false; }
-
-    if (!p.includes('://')) { return 'Invalid Pattern'; }
-    p = p.toLowerCase();
-    const [scheme, host, path] = p.split(/:\/{2,3}|\/+/);
-    const file = scheme === 'file';
-
-    // --- common pattern errors
-    switch (true) {
-      case !['http', 'https', 'file', '*'].includes(scheme):
-        return scheme.includes('*') ? '"*" in scheme must be the only character' : 'Unsupported scheme';
-
-      case file && !p.startsWith('file:///'):
-        return 'file:/// must have 3 slashes';
-
-       case !host:
-        return 'Missing Host';
-
-      case host.substring(1).includes('*'):
-        return '"*" in host must be at the start';
-
-      case host[0] === '*' && host[1] && host[1] !== '.':
-        return '"*" in host must be the only character or be followed by "."';
-
-      case !file && host.includes(':'):
-        return 'Host must not include a port number';
-
-      case !file && typeof path === 'undefined':
-        return 'Missing Path';
-
-      default:
-        return 'Invalid Pattern';
-    }
-  }
-}
-// ----------------- /Match Pattern Tester -----------------
-
-// ----------------- Navigation ----------------------------
-class Nav {
-
-  constructor() {
-    // --- from browser pop-up & contextmenu (not in Private Window)
-    window.addEventListener('storage', this.process);
-  }
-
-  process(e = {}) {
-    if (e.key === 'log') {
-      showLog.update(e.newValue);
-      return;
-    }
-
-    const nav = e.key === 'nav' ? e.newValue : localStorage.getItem('nav');
-    localStorage.removeItem('nav');
-    if (!nav) { return; }                                   // end execution if not found
-
-    switch (nav) {
-      case 'help':
-        document.getElementById('nav1').checked = true;
-        break;
-
-      case 'log':
-        document.getElementById('nav5').checked = true;
-        break;
-
-      case 'js':
-      case 'css':
-        document.getElementById('nav4').checked = true;
-        script.newScript(nav);
-        break;
-
-      default:
-        document.getElementById(nav).click();
-    }
-  }
-}
-const nav = new Nav();
-// ----------------- /Navigation ---------------------------
-
-// ----------------- Import/Export Preferences -------------
-App.importExport(() => {
-  options.process();                                        // set options after the pref update
-  script.process();                                         // update page display
+// ---------- Import/Export Preferences --------------------
+ImportExport.init(pref, () => {
+  Options.process();                                        // set options after the pref update
+  Script.process();                                         // update page display
 });
-// ----------------- /Import/Export Preferences ------------
+// ---------- /Import/Export Preferences -------------------
 
-// ----------------- User Preference -----------------------
-App.getPref().then(() => {
-  options.process();
-  script.process();
-  showLog.process();
-  nav.process();
-
-  // --- add custom style
-  pref.customOptionsCSS && (document.querySelector('style').textContent = pref.customOptionsCSS);
-});
-// ----------------- /User Preference ----------------------
+// ---------- Navigation -----------------------------------
+Nav.process(Script);
