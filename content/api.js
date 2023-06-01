@@ -170,20 +170,41 @@ browser.userScripts.onBeforeScript.addListener(script => {
       return JSON.stringify(a) === JSON.stringify(b);
     }
 
+    // based on browser.storage.local.get()
+    // A key (string) or keys (an array of strings, or an object specifying default values)
+    // to identify the item(s) to be retrieved from storage. If you pass an empty object or array here,
+    // an empty object will be retrieved. If you pass null, or an undefined value,
+    // the entire storage contents will be retrieved.
+    static getStorageValue(thisStorage, key, defaultValue) {
+      let obj = {};
+      switch (true) {
+        case !key:
+          obj = thisStorage;
+          break;
+
+        case typeof key === 'string':
+          obj = thisStorage.hasOwnProperty(key) ? thisStorage[key] : defaultValue;
+          break;
+
+        case Array.isArray(key):
+          key.forEach(item => obj[item] = thisStorage[item]);
+          break;
+
+        default:
+          Object.entries(key).forEach(([item, def]) =>
+            obj[item] = thisStorage.hasOwnProperty(item) ? thisStorage[item] : def);
+      }
+
+      return API.prepare(obj);                              // object or string
+    }
+
     // --- synch APIs
     static GM_getValue(key, defaultValue) {
-      const value = storage.hasOwnProperty(key) ? storage[key] : defaultValue;
-      return API.prepare(value);                            // object or string
+      return API.getStorageValue(storage, key, defaultValue);
     }
 
     static GM_listValues() {
       return script.export(Object.keys(storage));
-    }
-
-    static GM_getValues(array) {
-      const obj = {};
-      array.forEach(key => obj[key] = storage[key]);
-      return script.export(obj);
     }
 
     static GM_getResourceText(resourceName) {
@@ -441,21 +462,39 @@ browser.userScripts.onBeforeScript.addListener(script => {
     // ---------- storage ----------------------------------
     async getValue(key, defaultValue) {
       const data = await API.getData();
-      const value = data.storage.hasOwnProperty(key) ? data.storage[key] : defaultValue;
-      return API.prepare(value);                            // object or string
+      return API.getStorageValue(data.storage, key, defaultValue);
     },
 
+    // based on browser.storage.local.set()
+    // An object containing one or more key/value pairs to be stored in storage.
+    // If an item already exists, its value will be updated.
     async setValue(key, value) {
-      storage[key] = value;                                 // update sync storage
+      if (!key) { return; }
+
+      const obj = typeof key === 'string' ? {[key]: value} : key; // change to object
+
+      // update sync storage
+      Object.entries(obj).forEach(([key, value]) => storage[key] = value);
+
+      // update async storage
       const data = await API.getData();
-      data.storage[key] = value;
+      Object.entries(obj).forEach(([key, value]) => data.storage[key] = value);
       return browser.storage.local.set({[id]: data});
     },
 
+    // based on browser.storage.local.remove()
+    // A string, or array of strings, representing the key(s) of the item(s) to be removed.
     async deleteValue(key) {
-      delete storage[key];                                  // update sync storage
+      if (!key) { return; }
+
+      const arr = Array.isArray(key) ? key : [key];         // change to array
+
+      // update sync storage
+      arr.forEach(item => delete storage[item]);
+
+      // update async storage
       const data = await API.getData();
-      delete data.storage[key];
+      arr.forEach(item => delete data.storage[item]);
       return browser.storage.local.set({[id]: data});
     },
 
@@ -473,28 +512,6 @@ browser.userScripts.onBeforeScript.addListener(script => {
 
     removeValueChangeListener(key) {
       delete valueChange[key];
-    },
-
-    // --- multi-operation
-    async getValues(array) {
-      const data = await API.getData();
-      const obj = {};
-      array.forEach(key => obj[key] = data.storage[key]);
-      return script.export(obj);
-    },
-
-    async setValues(obj) {
-      Object.entries(obj).forEach(([key, value]) => storage[key] = value); // update sync storage
-      const data = await API.getData();
-      Object.entries(obj).forEach(([key, value]) => data.storage[key] = value);
-      return browser.storage.local.set({[id]: data});
-    },
-
-    async deleteValues(array) {
-      array.forEach(key => delete storage[key]);            // update sync storage
-      const data = await API.getData();
-      array.forEach(key => delete data.storage[key]);
-      return browser.storage.local.set({[id]: data});
     },
     // ---------- /storage ---------------------------------
 
@@ -663,10 +680,6 @@ browser.userScripts.onBeforeScript.addListener(script => {
     GM_setValue:                  GM.setValue,
     GM_deleteValue:               GM.deleteValue,
     GM_listValues:                API.GM_listValues,
-
-    GM_getValues:                 API.GM_getValues,
-    GM_setValues:                 GM.setValues,
-    GM_deleteValues:              GM.deleteValues,
 
     // DOM functions
     GM_addElement:                GM.addElement,

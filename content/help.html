@@ -2298,25 +2298,38 @@ body {
     </tbody>
   </table>
 
-
-  <h3>New APIs: getValues, setValues, deleteValues <span>(v2.68)</span></h3>
-  <p>Userscripts often need to get/set multiple values. Each storage operation result in costly asynchronous read/write which means resources, time, and hard disk wear (especially for SSDs). These new APIs aim to alleviate the aforementioned.</p>
+  <p class="warning">Setting multiple asynchronous GM_setValue in succession may result in setting mishap.</p>
 
 
+  <h4>New API Options: getValue, setValue, deleteValue <span>(v2.69)</span></h4>
+  <p>Userscripts often need to get/set multiple values. Each storage operation result in costly asynchronous read/write which means resources, time, and hard disk wear (especially for SSDs). These new API options aim to alleviate the aforementioned. The new options are based on <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea/get" target="_blank">StorageArea.get()</a>, <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea/set" target="_blank">StorageArea.set()</a> & <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea/remove" target="_blank">StorageArea.remove()</a>.</p>
 
   <p><b>Return value:</b> GM.* Promise | GM_* sync return</p>
-  <ul>
-    <li>getValue: value || default</li>
-    <li>setValue: <code>undefined</code></li>
-    <li>deleteValue: <code>undefined</code></li>
-    <li>listValues: <code>array</code></li>
 
-    <li>getValues: <code>object</code></li>
-    <li>setValues: <code>undefined</code></li>
-    <li>deleteValue: <code>undefined</code></li>
-  </ul>
+  <dl>
+    <dt>getValue</dt>
+    <dd>Standard: A key with optional default</dd>
+    <dd>New: A key (<code>string</code>) or keys (an array of strings, or an object specifying default values) to identify the item(s) to be retrieved from storage. If you pass an empty object or array here, an empty object will be retrieved. If you pass <code>null</code>, or an <code>undefined</code> value, the entire storage contents will be retrieved.</dd>
+    <dd><b>Return value:</b> value (or default), storage <code>object</code>, key/value <code>object</code></dd>
+
+    <dt>setValue</dt>
+    <dd>Standard: A key/value pair</dd>
+    <dd>New: An <code>object</code> containing one or more key/value pairs to be stored in storage. If an item already exists, its value will be updated.</dd>
+    <dd><b>Return value:</b> <code>undefined</code></dd>
+
+    <dt>deleteValue</dt>
+    <dd>Standard: A key</dd>
+    <dd>New: A <code>string</code>, or <code>array</code> of strings, representing the key(s) of the item(s) to be removed.</dd>
+    <dd><b>Return value:</b> <code>undefined</code></dd>
+
+    <dt>listValues</dt>
+    <dd>Standard: no argument</dd>
+    <dd><b>Return value:</b> <code>array</code></dd>
+  </dl>
 
 
+
+  <p class="caption">Example</p>
 <pre>
 <span class="comment">// stored value for key OR default</span>
 <span class="keyword">const</span> value = <span class="keyword">await</span> <span class="gm">GM.getValue</span>(key, default);
@@ -2332,12 +2345,25 @@ body {
 
 <span class="keyword">await</span> <span class="gm">GM.deleteValue</span>(key);
 <span class="gm">GM_deleteValue</span>(key)
+</pre>
 
-<span class="comment">// new multi-operation</span>
-<span class="keyword">const</span> values = <span class="keyword">await</span> <span class="gm">GM.getValues</span>([key, key2, ...]); <span class="comment">// return {key: value, key2: value2, ...}</span>
-<span class="keyword">const</span> values = <span class="gm">GM_getValues</span>([key, key2, ...]);
-<span class="keyword">await</span> <span class="gm">GM.setValues</span>({key: value, key2: value2, ...});
-<span class="keyword">await</span> <span class="gm">GM.deleteValues</span>([key, key2, ...]);
+  <p class="caption">New Options</p>
+<pre>
+<span class="comment">// get the entire storage</span>
+<span class="keyword">const</span> storage = <span class="keyword">await</span> <span class="gm">GM.getValue</span>();
+<span class="comment">// return {key: value, key2: value2, ...}</span>
+
+<span class="comment">// get values</span>
+<span class="keyword">const</span> values = <span class="keyword">await</span> <span class="gm">GM.getValue</span>([key, key2, ...]);
+<span class="comment">// return {key: value, key2: value2, ...}</span>
+
+<span class="comment">// get values with default</span>
+<span class="keyword">const</span> values = <span class="keyword">await</span> <span class="gm">GM.getValue</span>({key: default, key2: default2, ...});
+<span class="comment">// return {key: value || default, key2: value2 || default2, ...}</span>
+
+<span class="keyword">await</span> <span class="gm">GM.setValue</span>({key: value, key2: value2, ...});
+
+<span class="keyword">await</span> <span class="gm">GM.deleteValue</span>([key, key2, ...]);
 </pre>
 
 
@@ -2490,7 +2516,7 @@ content-type: text/javascript; charset=UTF-8</code>
     <dd>gif, jpeg, jpg, png, webp</dd>
     <dd><i>(Type will be taken from the target so any of the above will be the same)</i></dd>
 
-    <dt><a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment" target="_blank">DocumentFragment</a></dt>
+    <dt><a href="https://developer.mozilla.org/docs/Web/API/DocumentFragment" target="_blank">DocumentFragment</a></dt>
     <dd>html, xhtml, xml, svg</dd>
     <dd><i>(Any of the above will be the same)</i></dd>
 
@@ -4454,16 +4480,21 @@ if(... condition ...) { sendMessage(data); }`</span>;
 
   <h2 id="debugging">Debugging Script & CSS</h2>
   <dl>
+    <dt>Injection Errors</dt>
+    <dd>Check the FireMonkey Log page for recent errors</dd>
+
     <dt>CodeMirror Lint</dt>
     <dd>Check lint messages and report for errors and warnings</dd>
 
     <dt>JavaScript Compile Errors (Syntax Errors)</dt>
     <dd>Usually appear in <b>Browser Console</b> (<kbd>Ctrl + Shift + J</kbd>) with a line number and a clickable link to the blob (with some string name) e.g.
+
 <pre class="error">
 SyntaxError: missing : after property id [Learn More]                 1f0135df-f993-4f26-9127-bc8ffa21951e:18:11</pre></dd>
 
     <dt>JavaScript Run Errors</dt>
     <dd>Some JavaScript run errors in a page can be checked in <b>Developer Tool</b> (<kbd>Ctrl + Shift + I</kbd> or <kbd>F12</kbd>) for the page that the JS is injected into e.g.
+
 <pre class="error">
 ReferenceError: assignment to undeclared variable abc [Learn More]    1f0135df-f993-4f26-9127-bc8ffa21951e:18:11
 ReferenceError: abc is not defined[Learn More]                        1f0135df-f993-4f26-9127-bc8ffa21951e:20:11
@@ -4483,8 +4514,10 @@ ReferenceError: abc is not defined[Learn More]                        1f0135df-f
     <dd>You can check <a href="https://developer.mozilla.org/docs/Tools/Style_Editor" target="_blank">Style Editor</a> tab and the injected CSS shows as a <b>blob</b> with a string of characters e.g. <i>da084755-6d22-45a5-870d-82c369299d55</i>.</dd>
     <dd>More Information: <a href="https://developer.mozilla.org/docs/Learn/CSS/Building_blocks/Debugging_CSS" target="_blank">Debugging CSS</a></dd>
 
-    <dt>Injection Errors</dt>
-    <dd>Check the Log page for recent errors</dd>
+
+
+    <dt>Extension Developer Tools</dt>
+    <dd><i>about:debugging#/runtime/this-firefox</i> ➟ FireMonkey ➟ Inspect</dd>
 
   </dl>
 
