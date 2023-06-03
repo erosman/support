@@ -5,10 +5,10 @@ import {Match} from './match.js';
 import {Script} from './script.js';
 import {Counter} from './counter.js';
 import {Migrate} from './migrate.js';
+import {OnMessage} from './api-message.js';
 import './menus.js'
 import './installer.js';
 import './web-request.js';
-import './api-message.js';
 
 // ---------- User Preference ------------------------------
 await App.getPref();
@@ -24,6 +24,9 @@ class ProcessPref {
     await Sync.get(pref);                                   // storage sync -> local update
 
     await Migrate.init(pref);                               // migrate after storage sync check
+
+    // --- API Message
+    OnMessage.pref = pref;
 
     // --- Script Counter
     Counter.init(pref);
@@ -50,6 +53,7 @@ class ProcessPref {
             delete pref[item];
           });
 
+        OnMessage.pref = pref;                              // update API message pref
         Counter.pref = pref;                                // update Counter pref
         this.processPrefUpdate(changes);                    // apply changes
         Sync.set(changes, pref);                            // set changes to sync

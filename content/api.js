@@ -329,7 +329,67 @@ browser.userScripts.onBeforeScript.addListener(script => {
   // ---------- GM4 Object based functions -----------------
   const GM = {
 
-    // ---------- background functions ---------------------
+    // ---------- storage ----------------------------------
+    async getValue(key, defaultValue) {
+      const data = await API.getData();
+      return API.getStorageValue(data.storage, key, defaultValue);
+    },
+
+    // based on browser.storage.local.set()
+    // An object containing one or more key/value pairs to be stored in storage.
+    // If an item already exists, its value will be updated.
+    async setValue(key, value) {
+      if (!key) { return; }
+
+      const obj = typeof key === 'string' ? {[key]: value} : key; // change to object
+
+      // update sync storage
+      Object.entries(obj).forEach(([key, value]) => storage[key] = value);
+
+      // update async storage
+      return browser.runtime.sendMessage({
+        name,
+        api: 'setValue',
+        data: obj
+      });
+    },
+
+    // based on browser.storage.local.remove()
+    // A string, or array of strings, representing the key(s) of the item(s) to be removed.
+    async deleteValue(key) {
+      if (!key) { return; }
+
+      const arr = Array.isArray(key) ? key : [key];         // change to array
+
+      // update sync storage
+      arr.forEach(item => delete storage[item]);
+
+      // update async storage
+      return browser.runtime.sendMessage({
+        name,
+        api: 'deleteValue',
+        data: arr
+      });
+    },
+
+    async listValues() {
+      const data = await API.getData();
+      const value = Object.keys(data.storage);
+      return script.export(value);
+    },
+
+    addValueChangeListener(key, callback) {
+      browser.storage.onChanged.addListener(API.onChanged);
+      valueChange[key] = callback;
+      return key;
+    },
+
+    removeValueChangeListener(key) {
+      delete valueChange[key];
+    },
+    // ---------- /storage ---------------------------------
+
+    // ---------- other background functions ---------------
     download(url, filename) {
       // --- check url
       url = API.checkURL(url);
@@ -457,63 +517,7 @@ browser.userScripts.onBeforeScript.addListener(script => {
       API.callUserScriptCallback(init, type,
          typeof response.response === 'string' ? script.export(response) : cloneInto(response, window));
     },
-    // ---------- /background functions --------------------
-
-    // ---------- storage ----------------------------------
-    async getValue(key, defaultValue) {
-      const data = await API.getData();
-      return API.getStorageValue(data.storage, key, defaultValue);
-    },
-
-    // based on browser.storage.local.set()
-    // An object containing one or more key/value pairs to be stored in storage.
-    // If an item already exists, its value will be updated.
-    async setValue(key, value) {
-      if (!key) { return; }
-
-      const obj = typeof key === 'string' ? {[key]: value} : key; // change to object
-
-      // update sync storage
-      Object.entries(obj).forEach(([key, value]) => storage[key] = value);
-
-      // update async storage
-      const data = await API.getData();
-      Object.entries(obj).forEach(([key, value]) => data.storage[key] = value);
-      return browser.storage.local.set({[id]: data});
-    },
-
-    // based on browser.storage.local.remove()
-    // A string, or array of strings, representing the key(s) of the item(s) to be removed.
-    async deleteValue(key) {
-      if (!key) { return; }
-
-      const arr = Array.isArray(key) ? key : [key];         // change to array
-
-      // update sync storage
-      arr.forEach(item => delete storage[item]);
-
-      // update async storage
-      const data = await API.getData();
-      arr.forEach(item => delete data.storage[item]);
-      return browser.storage.local.set({[id]: data});
-    },
-
-    async listValues() {
-      const data = await API.getData();
-      const value = Object.keys(data.storage);
-      return script.export(value);
-    },
-
-    addValueChangeListener(key, callback) {
-      browser.storage.onChanged.addListener(API.onChanged);
-      valueChange[key] = callback;
-      return key;
-    },
-
-    removeValueChangeListener(key) {
-      delete valueChange[key];
-    },
-    // ---------- /storage ---------------------------------
+    // ---------- /other background functions --------------
 
     // ---------- DOM functions ----------------------------
     addStyle(str) {

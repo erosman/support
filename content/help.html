@@ -2298,9 +2298,6 @@ body {
     </tbody>
   </table>
 
-  <p class="warning">Setting multiple asynchronous GM_setValue in succession may result in setting mishap.</p>
-
-
   <h4>New API Options: getValue, setValue, deleteValue <span>(v2.69)</span></h4>
   <p>Userscripts often need to get/set multiple values. Each storage operation result in costly asynchronous read/write which means resources, time, and hard disk wear (especially for SSDs). These new API options aim to alleviate the aforementioned. The new options are based on <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea/get" target="_blank">StorageArea.get()</a>, <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea/set" target="_blank">StorageArea.set()</a> & <a href="https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea/remove" target="_blank">StorageArea.remove()</a>.</p>
 

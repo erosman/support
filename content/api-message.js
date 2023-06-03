@@ -1,20 +1,25 @@
 import {App} from './app.js';
 
 // ---------- API Message Handler (Side Effect) ------------
-class OnMessage {
+export class OnMessage {
 
   static {
     // message from api.js
     browser.runtime.onMessage.addListener((...e) => this.process(...e));
+    this.pref = {};
   }
 
-  static process(message, sender) {
+  static async process(message, sender) {
     const {name, api, data: e} = message;
     if (!api) { return; }
+
+    const id = `_${name}`;
+    const pref = this.pref;
 
     // only set if in container/incognito
     const storeId = sender.tab.cookieStoreId !== 'firefox-default' && sender.tab.cookieStoreId;
     const logError = (error) => App.log(name, `${message.api} ➜ ${error.message}`, 'error');
+    let needUpdate = false;
 
     switch (api) {
       // ---------- internal use only (not GM API) ---------
@@ -22,6 +27,35 @@ class OnMessage {
         return App.log(name, e.message, e.type);
 
       // ---------- GM API ---------------------------------
+
+      // ---------- storage --------------------------------
+      case 'setValue':
+        // e is an object of key/value
+        Object.entries(e).forEach(([key, value]) => {
+          if (pref[id].storage[key] !== value) {
+            pref[id].storage[key] = value;
+            needUpdate = true;
+          }
+        });
+
+        if (!needUpdate) { return; }                        // return if storage hasn't changed
+
+        return browser.storage.local.set({[id]: pref[id]}); // Promise with no arguments OR reject with error message
+
+      case 'deleteValue':
+        // e is an array
+        e.forEach(item => {
+          if (pref[id].storage.hasOwnProperty(item)) {
+            delete pref[id].storage[item];
+            needUpdate = true;
+          }
+        });
+
+        if (!needUpdate) { return; }                        // return if storage hasn't changed
+
+        return browser.storage.local.set({[id]: pref[id]}); // Promise with no arguments OR reject with error message
+      // ---------- /storage -------------------------------
+
       case 'download':
         // Promise with id OR reject with error message
         return browser.downloads.download({
