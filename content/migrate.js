@@ -5,10 +5,10 @@ import {Meta} from './meta.js';
 export class Migrate {
 
   static async init(pref) {
-    // --- 2.68 (2023-05-00)
+    // --- 2.68 (2023-05-29)
     localStorage.removeItem('migrate');
 
-    // fix typo
+    // --- fix typo
     const js = localStorage.getItem('scraptchpadJS');
     js && localStorage.setItem('scratchpadJS', js);
     localStorage.removeItem('scraptchpadJS');

@@ -1,5 +1,6 @@
 @import 'default.css';
-@import 'default-options.css';
+@import 'options-default.css';
+@import 'progress-bar.css';
 @import 'cm.css';
 
 /* ----- Mobile ----- */
@@ -467,7 +468,7 @@ button.bin img {
   padding: 0 0.5em;
   white-space: normal;
   border-bottom: 1px solid var(--border);
-  background-color: var(--option-bg);
+  background-color: var(--alt-bg);
   background-repeat: no-repeat;
   transition: none;
   cursor: pointer;
@@ -486,7 +487,7 @@ button.bin img {
   padding: 0.5em;
   white-space: normal;
   border-bottom: 1px solid var(--border);
-  background-color: var(--option-bg);
+  background-color: var(--alt-bg);
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   justify-items: self-start;

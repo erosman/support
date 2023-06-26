@@ -31,6 +31,7 @@ export class ImportExport {
 
     // update pref with the saved version
     // Object.keys(pref).forEach(item => data.hasOwnProperty(item) && (pref[item] = data[item]));
+
     // FireMonkey has userscripts which are not in default pref keys
     Object.keys(data).forEach(item =>
       (pref.hasOwnProperty(item) || item.startsWith('_')) && (pref[item] = data[item]));

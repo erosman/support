@@ -387,7 +387,7 @@ img.bin {
 /* ----- /findScript ----- */
 
 /* ----- Buttons ----- */
-div.button {
+div.buttons {
   display: grid;
   grid-auto-flow: column;
   column-gap: 0.1em;
