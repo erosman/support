@@ -1,21 +1,23 @@
 // ---------- Navigation -----------------------------------
 export class Nav {
 
-  static process(Script) {
-    const pram = location.search.substring(1);
+  static {
+    document.querySelectorAll('label[for^="nav"]').forEach(i =>
+      this[i.dataset.i18n] = i.control);
+  }
+
+  static get(pram = location.search.substring(1)) {
+    if (!pram) { return; }
+
+    this[pram] ? this[pram].checked = true : this.process(pram);
+  }
+
+  static process(pram) {
     switch (pram) {
-      case 'help':
-        document.getElementById('nav1').checked = true;
-        break;
-
-      case 'log':
-        document.getElementById('nav5').checked = true;
-        break;
-
       case 'newJS':
       case 'newCSS':
-        document.getElementById('nav4').checked = true;
-        Script.newScript(pram.substring(3).toLowerCase());
+        this['script'].checked = true;
+        document.querySelector(`button[data-i18n^="${pram}"]`)?.click();
         break;
 
       default:

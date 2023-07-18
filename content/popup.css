@@ -350,7 +350,7 @@ button[data-i18n="undo"] {
 
 .scratchpad h2 img {
   width: 1.2em;
-  vertical-align: bottom;
+  align-self: center;
 }
 
 .scratchpad textarea {
@@ -360,9 +360,13 @@ button[data-i18n="undo"] {
   /* opacity: 0.7; */
 }
 
+#runJS {
+  grid-column: span 3;
+}
+
 img.bin {
   width: 1.2em;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 /* ----- /Scratchpad ----- */
 

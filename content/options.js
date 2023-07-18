@@ -233,7 +233,7 @@ class Script {
       });
     });
 
-    Script.process();
+    this.process();
   }
 
   static processButtons(e) {
@@ -539,7 +539,7 @@ class Script {
     document.querySelectorAll('aside li.on').forEach(item => item !== li && item.classList.remove('on'));
 
     // --- if showing another page
-    document.getElementById('nav4').checked = true;
+    Nav.get('script');
     this.cm?.save();                                        // save CodeMirror to textarea
     if(this.unsavedChanges()) {
       li.classList.remove('on');
@@ -1090,4 +1090,4 @@ ImportExport.init(pref, () => {
 // ---------- /Import/Export Preferences -------------------
 
 // ---------- Navigation -----------------------------------
-Nav.process(Script);
+Nav.get();

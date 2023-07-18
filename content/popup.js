@@ -2,7 +2,7 @@ import {pref, App} from './app.js';
 import {Meta} from './meta.js';
 import {Match} from './match.js';
 import {PSL} from './psl.js';
-import {Scratchpad} from './scratchpad.js';
+import './scratchpad.js';
 import './i18n.js';
 
 // ---------- User Preference ------------------------------
@@ -12,9 +12,6 @@ await App.getPref();
 class Popup {
 
   static {
-    document.querySelectorAll('button').forEach(item => item.addEventListener('click', this.processButtons));
-    this.docFrag = document.createDocumentFragment();
-
     // --- Scripts
     this.liTemplate = document.querySelector('template').content.firstElementChild;
     this.ulTab = document.querySelector('ul.tab');
@@ -26,6 +23,8 @@ class Popup {
     // --- add custom style
     pref.customPopupCSS && (document.querySelector('style').textContent = pref.customPopupCSS);
 
+    this.docFrag = document.createDocumentFragment();
+    document.querySelectorAll('.main button').forEach(item => item.addEventListener('click', this.processButtons));
     this.process();
   }
 
@@ -44,18 +43,6 @@ class Popup {
       case 'help':
         browser.tabs.create({url: '/content/options.html?help'});
         break;
-
-      case 'edit':
-        browser.tabs.create({url: '/content/options.html?script=' + this.parentElement.id.substring(1)});
-        break;
-
-      case 'run':
-        this.id === 'infoRun' ? Info.run(this.parentElement.id) : Scratchpad.run(this.id);
-        return;
-
-      case 'undo':
-        this.id === 'infoUndo' ? Info.undo(this.parentElement.id) : Scratchpad.undo();
-        return;
     }
     window.close();
   }
@@ -121,6 +108,7 @@ class Popup {
     browser.storage.local.set({[id]: pref[id]});            // update saved pref
   }
 
+  // --- set Find scripts for this site
   static setSearch(url) {
     try { url = new URL(url); }
     catch { return; }                                       // unacceptable url
@@ -138,8 +126,6 @@ class Popup {
 class Info {
 
   static {
-    this.docFrag = document.createDocumentFragment();
-
     // --- Info
     this.navInfo = document.querySelector('input#info');
     this.info = document.querySelector('section.info');
@@ -154,6 +140,28 @@ class Info {
 
     // --- i18n
     this.lang = navigator.language;
+
+    this.docFrag = document.createDocumentFragment();
+    document.querySelectorAll('.infoList button').forEach(item => item.addEventListener('click', e => this.processButtons(e)));
+  }
+
+  static processButtons(e) {
+    const parentId = e.target.parentElement.id;
+    const id = e.target.dataset.i18n;
+    switch (id) {
+      case 'edit':
+        browser.tabs.create({url: '/content/options.html?script=' + parentId.substring(1)});
+        window.close();
+        break;
+
+      case 'run':
+        this.run(parentId);
+        break;
+
+      case 'undo':
+        this.undo(parentId);
+        break;
+    }
   }
 
   static show(li) {

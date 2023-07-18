@@ -3,13 +3,6 @@
 @import 'progress-bar.css';
 @import 'cm.css';
 
-/* ----- Mobile ----- */
-@media screen and (max-width: 600px) {
-  nav label span {
-    display: none;
-  }
-}
-
 /* ----- Aside Scripts ----- */
 :root {
   --aside: 13.5rem;

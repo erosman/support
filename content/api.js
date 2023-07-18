@@ -79,7 +79,7 @@ browser.userScripts.onBeforeScript.addListener(script => {
   height: 100%;
   top: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: #0008;
 }
 
 @keyframes center {
@@ -253,7 +253,7 @@ browser.userScripts.onBeforeScript.addListener(script => {
       }
 
       // check protocol
-      if (!['http:', 'https:'].includes(url.protocol)) {
+      if (!['http:', 'https:', 'blob:'].includes(url.protocol)) {
         API.log(`checkURL ${url} ➜ Unsupported Protocol ${url.protocol}`);
         return;
       }
@@ -268,6 +268,7 @@ browser.userScripts.onBeforeScript.addListener(script => {
         'access-control-request-method', 'connection', 'content-length', 'cookie2', 'date', 'dnt', 'expect',
         'keep-alive', 'te', 'trailer', 'transfer-encoding', 'upgrade', 'via'];
 
+      init.headers ||= {};                                  // check init.headers
       Object.keys(init.headers).forEach(item => {
         const LC = item.toLowerCase();
         if (LC.startsWith('proxy-') || LC.startsWith('sec-') || forbiddenHeader.includes(LC)) {
@@ -315,13 +316,13 @@ browser.userScripts.onBeforeScript.addListener(script => {
       In order to make callback functions visible
       ONLY for GM.xmlHttpRequest(GM_xmlhttpRequest)
     */
-    static callUserScriptCallback(object, name, ...args) {
+    static userScriptCallback(object, name, ...args) {
       try {
         const cb = object.wrappedJSObject[name];
         typeof cb === 'function' && cb(...args);
       }
       catch(error) {
-        API.log(`callUserScriptCallback ➜ ${error.message}`);
+        API.log(`userScriptCallback ➜ ${error.message}`);
       }
     }
   }
@@ -514,7 +515,7 @@ browser.userScripts.onBeforeScript.addListener(script => {
       // convert text responseXML to XML DocumentFragment
       response.responseXML &&
         (response.responseXML = document.createRange().createContextualFragment(response.responseXML.trim()));
-      API.callUserScriptCallback(init, type,
+      API.userScriptCallback(init, type,
          typeof response.response === 'string' ? script.export(response) : cloneInto(response, window));
     },
     // ---------- /other background functions --------------

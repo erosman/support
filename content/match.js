@@ -14,19 +14,20 @@ export class Match {                                        // bg & popup
     }
 
     const urls = [...new Set(frames.map(this.cleanUrl).filter(this.supported))];
+    const tabUrl = this.cleanUrl(tab.url);
     const gExclude = pref.globalScriptExcludeMatches ? pref.globalScriptExcludeMatches.split(/\s+/) : [];
     const containerId = tab.cookieStoreId.substring(8);
 
     // --- background
     if (bg) {
-      return ids.filter(id => pref[id].enabled && this.get(pref[id], tab.url, urls, gExclude, containerId))
+      return ids.filter(id => pref[id].enabled && this.get(pref[id], tabUrl, urls, gExclude, containerId))
         .map(id => (pref[id].js ? '🔹 ' : '🔸 ') + id.substring(1));
     }
 
     // --- popup
     const Tab = [], Other = [];
     ids.sort(Intl.Collator().compare).forEach(item =>
-      (this.get(pref[item], tab.url, urls, gExclude, containerId) ? Tab : Other).push(item));
+      (this.get(pref[item], tabUrl, urls, gExclude, containerId) ? Tab : Other).push(item));
     return [Tab, Other, frames.length];
   }
 

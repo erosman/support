@@ -1,6 +1,6 @@
 import {App} from './app.js';
 
-// ---------- API Message Handler (Side Effect) ------------
+// ---------- API Message Handler --------------------------
 export class OnMessage {
 
   static {
@@ -102,11 +102,12 @@ export class OnMessage {
     }
   }
 
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=1670278
+  // Enable extensions to send network requests (fetch) with a specific cookieStoreId (container tab context)
+  // if privacy.firstparty.isolate = true
+  // Error: First-Party Isolation is enabled, but the required 'firstPartyDomain' attribute was not set.
   static async addCookie(url, headers, storeId) {
     // add contextual cookies, only in container/incognito
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=1670278
-    // if privacy.firstparty.isolate = true
-    // Error: First-Party Isolation is enabled, but the required 'firstPartyDomain' attribute was not set.
     const cookies = await browser.cookies.getAll({url, storeId});
     const str = cookies && cookies.map(item => `${item.name}=${item.value}`).join('; ');
     str && (headers['FM-Contextual-Cookie'] = str);

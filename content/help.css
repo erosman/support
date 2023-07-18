@@ -166,7 +166,7 @@ a[href^="https://developer.chrome.com/"]::before,
 a[href^="https://github.com/"]::before,
 a[href*=".github.io/"]::before {
   content: '';
-  background: url('../image/dino.svg') no-repeat center / contain;
+  background: url('../image/logo/dino.svg') no-repeat center / contain;
   display: inline-block;
   height: 0.9em;
   width: 0.9em;
@@ -178,25 +178,25 @@ a[href*=".github.io/"]::before {
 a[href^="https://blog.mozilla.org/"]::before,
 a[href^="https://developer.mozilla.org/"]::before,
 a[href^="https://www.mozilla.org/"]::before {
-  background-image: url('../image/moz.svg');
+  background-image: url('../image/logo/moz.svg');
   border-radius: 1em;
 }
 
 a[href^="https://bugzilla.mozilla.org/show_bug.cgi?id="]::before {
-  background-image: url('../image/bugzilla.png');
+  background-image: url('../image/logo/bugzilla.png');
 }
 
 a[href^="https://github.com/"]::before,
 a[href*=".github.io/"]::before {
-  background-image: url('../image/github.svg');
+  background-image: url('../image/logo/github.svg');
 }
 
 a[href^="https://codemirror.net/"]::before {
-  background-image: url('../image/codemirror.svg');
+  background-image: url('../image/logo/codemirror.svg');
 }
 
 a[href^="https://developer.chrome.com/"]::before {
-  background-image: url('../image/chrome.svg');
+  background-image: url('../image/logo/chrome.svg');
 }
 
 /* ----- Navigation ----- */
@@ -260,10 +260,10 @@ nav ul::after {
 }
 
 nav li {
-  padding: 0.2em 0.5em;
   white-space: nowrap;
   position: relative;
 }
+
 
 nav li.arrow::after {
   content: '›';
@@ -385,7 +385,6 @@ cite {
 cite::before {
   content: '— source: ';
 }
-
 
 kbd {
   color: #333;
