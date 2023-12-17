@@ -183,7 +183,7 @@ a[href^="https://www.mozilla.org/"]::before {
 }
 
 a[href^="https://bugzilla.mozilla.org/show_bug.cgi?id="]::before {
-  background-image: url('../image/logo/bugzilla.png');
+  background-image: url('../image/logo/bugzilla.svg');
 }
 
 a[href^="https://github.com/"]::before,
